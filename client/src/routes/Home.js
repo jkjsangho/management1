@@ -1,5 +1,6 @@
-import React, { Component, useState } from 'react';
+import React from 'react';
 import Customer from '../components/Customer'
+import Header from '../layout/Header';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -9,19 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 //import CustomerAdd from './components/CustomerAdd';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Drawer from '@material-ui/core/Drawer';
-import MenuItem from '@material-ui/core/MenuItem';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
 const styles = theme => ({
   root: {
@@ -144,53 +133,12 @@ class Home extends React.Component {
   render() {
 
     const { classes } = this.props;
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
 
+    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
+    
     return (
       <div className={classes.root}>
-        <AppBar position="relative">
-          <Toolbar>
-            <IconButton
-              onClick={this.handleDrawerToggle}
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Open drawer"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              정보
-                </Typography>
-            <div className={classes.grow} />
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="검색하기"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
-          </Toolbar>
-          <Drawer open={this.state.toggle} onClose={this.handleDrawerToggle}>
-            <MenuItem onClick={this.handleDrawerToggle}>Home</MenuItem>
-            <List>
-              <ListItem button onClick={this.handleDrawerToggle}>
-                <ListItemText>Page 1</ListItemText>
-              </ListItem>
-              <ListItem button onClick={this.handleDrawerToggle}>
-                <ListItemText>Page 2</ListItemText>
-              </ListItem>
-              <ListItem button onClick={this.handleDrawerToggle}>
-                <ListItemText>Page 3</ListItemText>
-              </ListItem>
-            </List>
-          </Drawer>
-        </AppBar>
-
+        <Header />
         <div className={classes.menu}>
           {/*<CustomerAdd stateRefresh={this.stateRefresh} />*/}
         </div>
@@ -209,7 +157,7 @@ class Home extends React.Component {
                   return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
                 }) :
                 <TableRow>
-                  <TableCell colSpan="6" align="center">
+                  <TableCell colSpan="10" align="center">
                     <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
                   </TableCell>
                 </TableRow>
@@ -221,3 +169,7 @@ class Home extends React.Component {
     );
   }
 }
+
+
+
+export default withStyles(styles)(Home);

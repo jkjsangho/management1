@@ -51,7 +51,7 @@ app.get('/api/customers', (req, res) => {
         'job': '디자이너'
     },
     {
-        'id': 5,
+        'id': 6,
         'image': 'https://placeimg.com/64/64/5',
         'name': '이신',
         'birthday': '961127',
