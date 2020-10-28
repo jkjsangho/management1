@@ -1,6 +1,7 @@
 import React from 'react';
 import Customer from '../components/Customer'
 import Header from '../layout/Header';
+import Footer from '../layout/Footer';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -24,8 +25,8 @@ const styles = theme => ({
     justifyContent: 'center'
   },
   paper: {
-    marginLeft: 18,
-    marginRight: 18
+    marginLeft: 25,
+    marginRight: 25
   },
   progress: {
     margin: theme.spacing.unit * 2
@@ -86,6 +87,14 @@ const styles = theme => ({
         width: 200,
       },
     },
+  },
+  loader: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    justifycontent: 'center',
+    alignitems: 'center',
+    fontweight: 300
   }
 
   /*
@@ -108,16 +117,22 @@ class Home extends React.Component {
       toggle: false
     };
   }
-  handleDrawerToggle = () => this.setState({ toggle: !this.state.toggle })
 
   state = {
-    customers: ''
+    customers: '',
+    completed: 0
   }
 
   componentDidMount() {
+
+    this.timer = setInterval(this.progress, 5000);
     this.callApi()
       .then(res => this.setState({ customers: res }))
       .catch(err => console.log(err));
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   callApi = async () => {
@@ -126,16 +141,17 @@ class Home extends React.Component {
     return body;
   }
 
-  onItemClick = title => () => {
-    //setTitle(title);
-  }
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
 
   render() {
 
     const { classes } = this.props;
 
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
-    
+    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업"]
+
     return (
       <div className={classes.root}>
         <Header />
@@ -154,10 +170,10 @@ class Home extends React.Component {
             <TableBody>
               {this.state.customers ?
                 this.state.customers.map(c => {
-                  return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+                  return <Customer stateRefresh={this.stateRefresh} /*key={c.id}*/ id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
                 }) :
                 <TableRow>
-                  <TableCell colSpan="10" align="center">
+                  <TableCell colSpan="7" align="center">
                     <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
                   </TableCell>
                 </TableRow>
@@ -165,6 +181,7 @@ class Home extends React.Component {
             </TableBody>
           </Table>
         </Paper>
+        <Footer />
       </div>
     );
   }

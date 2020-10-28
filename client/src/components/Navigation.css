@@ -1,7 +1,7 @@
 .nav {
   z-index: 1;
   position: fixed;
-  top: 50px;
+  top: 100px;
   left: 10px;
   display: flex;
   flex-direction: column;

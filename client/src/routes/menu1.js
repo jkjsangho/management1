@@ -6,13 +6,13 @@ import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
   menu1__container: {
-    marginTop: 100,
-    marginBottom: 100,
+    marginTop: 15,
+    marginBottom: 15,
     display: 'flex',
     justifyContent: 'center',
-    backgroundcolor: 'white',
+    backgroundcolor: 'DodgerBlue',
     padding: 20,
-    borderradius: 5,
+    borderRadius: 5,
     width: 100,
     maxwidth: 400,
     fontweight: 300,
@@ -20,27 +20,26 @@ const styles = theme => ({
   },
   paper: {
     marginLeft: 38,
-    marginRight: 38,
+    marginRight: 38
   },
   menu: {
     marginTop: 15,
     marginBottom: 15,
+    display: 'flex',
     justifyContent: 'center'
-  },
+  }
 })
 
-function menu1(props) {
+function menu1() {
 
   return (
     <div className="menu1__container">
       <Header />
       <div className="menu">
         <Paper className="paper">
-          <span>
             "Freedom is the freedom to say that two plus two make four. If that i
             granted, all else follows!!!"
-                </span>
-          <span>- George Orwell, 19841</span>
+            - George Orwell, 19841
         </Paper>
       </div>
       <Footer />

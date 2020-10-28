@@ -11,7 +11,7 @@ class Footer extends React.Component{
   render(){
     return(
       <div className="Footer">
-      <h5>footer입니다.</h5>
+      <h5>footer시작</h5>
       </div>
     )
   }
