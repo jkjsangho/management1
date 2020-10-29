@@ -128,7 +128,7 @@ const MyToolbar = withStyles(styles)(
            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
               <Tab label="HOME Tab1" component={Link} to="/" />
               <Tab label="Menu1 Tab2" component={Link} to="/about"/>
-              <Tab label="Menu2 Tab3" component={Link} to="/menu1"/>
+              <Tab label="Menu2 Tab3" component={Link} to="/menu2"/>
             </Tabs>
             </div>
           <div className={classes.grow} />
@@ -176,7 +176,7 @@ const MyDrawer = withStyles(styles)(
         <ListItem button component={Link} to="/about" replace onClick={onItemClick('Menu 1')}>
           <ListItemText>Menu 1</ListItemText>
         </ListItem>
-        <ListItem button component={Link} to="/menu1" replace onClick={onItemClick('Menu 2')}>
+        <ListItem button component={Link} to="/menu2" replace onClick={onItemClick('Menu 2')}>
           {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
           <ListItemText>Menu 2</ListItemText>
         </ListItem>
@@ -187,11 +187,14 @@ const MyDrawer = withStyles(styles)(
 
 function Header({ classes }) {
 
+  /* 메뉴 목록 */
+  let [drawer, setDrawer] = useState(false);
+  
+  /* 타이틀 수정 */
+  let [title, setTitle] = useState('Home');
 
-  const [drawer, setDrawer] = useState(false);
-  const [title, setTitle] = useState('Home');
-
-  const [value, setValue] = useState(0);
+  /* 탭 */
+  let [value, setValue] = useState(0);
 
   const handleChange = (e, value) => {
     setValue(value);
@@ -199,13 +202,14 @@ function Header({ classes }) {
 
   console.log(title);
   console.log(value);
+  console.log(title);
 
   const toggleDrawer = () => {
     setDrawer(!drawer);
   };
 
-  const onItemClick = M_Name => () => {
-    setTitle(M_Name);
+  const onItemClick = title => () => {
+    setTitle(title);
   };
 
   return (
@@ -221,70 +225,5 @@ function Header({ classes }) {
     </div>
   )
 }
-/* 
-class Header extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      toggle: false,
-      title:""
-    };
-  }
-
-  handleDrawerToggle = () => this.setState({ toggle: !this.state.toggle })
-
-  render() {
-
-    const { classes } = this.props;
-
-    return (
-      <div className={classes.root}>
-        <AppBar position="relative">
-          <Toolbar >
-            <IconButton
-              onClick={this.handleDrawerToggle}
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Open drawer"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              정보
-              </Typography>
-            <div className={classes.grow} />
-            <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="검색하기"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-              />
-            </div>
-          </Toolbar>
-          <Drawer open={this.state.toggle} onClose={this.handleDrawerToggle}>
-            <MenuItem button component={Link} to="/" onClick={this.handleDrawerToggle}>Home</MenuItem>
-            <List>
-              <ListItem button component={Link} to="/about" onClick={this.handleDrawerToggle}>
-                <ListItemText>메뉴1</ListItemText>
-              </ListItem>
-              <ListItem button component={Link} to="/menu1" onClick={this.handleDrawerToggle}>
-                <ListItemText>메뉴2</ListItemText>
-              </ListItem>
-              <ListItem button onClick={this.handleDrawerToggle}>
-                <ListItemText>메뉴3</ListItemText>
-              </ListItem>
-            </List>
-          </Drawer>
-        </AppBar>
-      </div>
-    );
-  }
-} */
 
 export default withStyles(styles)(Header);

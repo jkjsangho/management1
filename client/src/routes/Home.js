@@ -114,18 +114,15 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      toggle: false
+      toggle: false,
+      customers: '',
+      completed: 0
     };
+    /* this.stateRefresh = this.stateRefresh.bind(this); */
   }
-
-  state = {
-    customers: '',
-    completed: 0
-  }
-
   componentDidMount() {
 
-    this.timer = setInterval(this.progress, 5000);
+    this.timer = setInterval(this.progress, 30);
     this.callApi()
       .then(res => this.setState({ customers: res }))
       .catch(err => console.log(err));
@@ -146,17 +143,33 @@ class Home extends React.Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
+
+
   render() {
 
     const { classes } = this.props;
 
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업"]
+    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업"];
+
+    const columns = [
+      { field: 'id', headerName: '번호', width: 70 },
+      { field: 'image', headerName: '프로필 이미지', width: 130 },
+      { field: 'Name', headerName: '이름', width: 130 },
+      {
+        field: 'birthday',
+        headerName: '생년월일',
+        type: 'number',
+        width: 90,
+      },
+      { field: 'gender', headerName: '성별', width: 130 },
+      { field: 'job', headerName: '직업', width: 130 }
+    ];
 
     return (
       <div className={classes.root}>
         <Header />
         <div className={classes.menu}>
-          {/*<CustomerAdd stateRefresh={this.stateRefresh} />*/}
+          {/* <CustomerAdd stateRefresh={this.stateRefresh} /> */}
         </div>
         <Paper className={classes.paper}>
           <Table>
@@ -181,6 +194,9 @@ class Home extends React.Component {
             </TableBody>
           </Table>
         </Paper>
+{/*         <div style={{ height: 400, width: '100%' }}>
+          <DataGrid columns={columns} row={this.state.customers} pageSize={5} checkboxSelection/>
+        </div> */}
         <Footer />
       </div>
     );

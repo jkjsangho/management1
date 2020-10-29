@@ -77,6 +77,6 @@ router.get('/', function(req, res, next) {
         }
         ]);
     });
-  }, 2000);
+  }, 20);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
