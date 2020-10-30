@@ -149,7 +149,7 @@ class Home extends React.Component {
 
     const { classes } = this.props;
 
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업"];
+    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "시간", "성별", "직업"];
 
     const columns = [
       { field: 'id', headerName: '번호', width: 70 },
@@ -183,7 +183,7 @@ class Home extends React.Component {
             <TableBody>
               {this.state.customers ?
                 this.state.customers.map(c => {
-                  return <Customer stateRefresh={this.stateRefresh} /*key={c.id}*/ id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+                  return <Customer stateRefresh={this.stateRefresh} /*key={c.id}*/ id={c.id} image={c.image} name={c.name} birthday={c.birthday} time={c.time} gender={c.gender} job={c.job} />
                 }) :
                 <TableRow>
                   <TableCell colSpan="7" align="center">
