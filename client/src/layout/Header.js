@@ -130,7 +130,7 @@ const MyToolbar = withStyles(styles)(
               <Tab label="Menu1 Tab2" component={Link} to="/about"/>
               <Tab label="Menu2 Tab3" component={Link} to="/menu2"/>
             </Tabs>
-            </div>
+          </div>
           <div className={classes.grow} />
           <div className={classes.search}>
             <div className={classes.searchIcon}>

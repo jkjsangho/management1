@@ -15,11 +15,11 @@ import './App.css';
 function App(){
   return(
     <HashRouter>
-      <Navigation />
       <Route path="/" exact={true} component={Home}/>
       <Route path="/about" component={About}/>
       <Route path="/menu1" component={menu1}/>
       <Route path="/menu2" component={menu2}/>
+      <Navigation />
       {/* <Route path="/movie-detail" component={Detail}/> */}
     </HashRouter>
   );
