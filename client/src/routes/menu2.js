@@ -5,7 +5,7 @@ import Footer from '../layout/Footer';
 
 import Button from '@material-ui/core/Button';
 //달력
-/* import CustomDateComponent from '../components/customDateComponent.js'; */
+import CustomDateComponent from '../components/customDateComponent.js';
 
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 
@@ -105,7 +105,43 @@ function getParams() {
   };
 } */
 function Menu2() {
-  
+/* 
+  constructor(props) {
+    super(props);
+  this.state = {
+    columnDefs: [
+      { field: 'id' },
+      {
+        field: 'image',
+      },
+      { field: 'name' },
+      { field: 'birthday' },
+      {
+        field: 'time',
+        minWidth: 190,
+        filter: 'agDateColumnFilter',
+        filterParams: filterParams,
+      },
+      { field: 'gender' },
+      {
+        field: 'job',
+        filter: 'agNumberColumnFilter',
+      },
+    ],
+    defaultColDef: {
+      editable: true,
+      sortable: true,
+      flex: 1,
+      minWidth: 100,
+      filter: true,
+      floatingFilter: true,
+      resizable: true,
+    },
+    rowData: null,
+    frameworkComponents: { agDateInput: CustomDateComponent },
+  };
+} */
+
   const [gridApi, setGridApi] = useState(null);
 
   function onGridReady(params) {
@@ -134,7 +170,7 @@ function Menu2() {
 
   const [rowData, setRowData] = useState([]);
 
-   useEffect(() => {
+  useEffect(() => {
     fetch('/api/customers')
       .then(result => result.json())
       .then(rowData => setRowData(rowData))
@@ -163,72 +199,111 @@ function Menu2() {
   };
 
 
-
   return (
-    <div className="ag-theme-alpine" style={{ height: 400, width: '90%', margin: 'auto'}}>
+    <div className="ag-theme-alpine" style={{ backgroundColor: 'green', height: '100%', width: '90%', margin: '5%' }}>
+
       <Header />
-      <div style={{ display: 'none' }}>
-        <div>
-          <div className="row">
+      
+      <div className="ag-theme-alpine" style={{ backgroundColor: 'yellow', height: '100%', width: '90%', margin: '5%' }}>
+        <div style={{ display: 'none' }}>
+          <div>
+            <div className="row">0
             <label>suppressQuotes = </label>
-            <select id="suppressQuotes">
-              <option value="none">(default)</option>
-              <option value="true">true</option>
-            </select>
+              <select id="suppressQuotes">
+                <option value="none">(default)</option>
+                <option value="true">true</option>
+              </select>
+            </div>
+            <div className="row">
+              <label>columnSeparator = </label>
+              <select id="columnSeparator">
+                <option value="none">(default)</option>
+                <option value="tab">tab</option>
+                <option value="|">bar (|)</option>
+              </select>
+            </div>
           </div>
-          <div className="row">
-            <label>columnSeparator = </label>
-            <select id="columnSeparator">
-              <option value="none">(default)</option>
-              <option value="tab">tab</option>
-              <option value="|">bar (|)</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginLeft: '10px' }}>
-          <div className="row">
-            <label>customHeader = </label>
-            <select id="customHeader">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
+          <div style={{ marginLeft: '10px' }}>
+            <div className="row">
+              <label>customHeader = </label>
+              <select id="customHeader">
+                <option>none</option>
+                <option value="array">
+                  ExcelCell[][] (recommended format)
                   </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>customFooter = </label>
-            <select id="customFooter">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
+                <option value="string">string (legacy format)</option>
+              </select>
+            </div>
+            <div className="row">
+              <label>customFooter = </label>
+              <select id="customFooter">
+                <option>none</option>
+                <option value="array">
+                  ExcelCell[][] (recommended format)
               </option>
-              <option value="string">string (legacy format)</option>
-            </select>
+                <option value="string">string (legacy format)</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
-      <AgGridReact
-        rowData={rowData} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-        onGridSizeChanged={onGridSizeChanged.bind(this)}>
-        {/* /* frameworkComponents={this.state.frameworkComponents} */}
-        <AgGridColumn field="id" sortable={true} filter={true} width={100}></AgGridColumn>
-        <AgGridColumn field="image" sortable={true} filter={true}></AgGridColumn>
-        <AgGridColumn field="name" sortable={true} filter={true}></AgGridColumn>
-        <AgGridColumn field="birthday" sortable={true} filter={true}></AgGridColumn>
-        <AgGridColumn field="time" sortable={true} filter={true}></AgGridColumn>
-        <AgGridColumn field="gender" sortable={true} filter={true}></AgGridColumn>
-        <AgGridColumn field="job" sortable={true} filter={true}></AgGridColumn>
-      </AgGridReact>
-      <div className = "Button1" style={{marginLeft: '89.5%', padding: '0.5%'}}>
-        <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-          CSV Export
+
+      <div align='center' style={{ backgroundColor: 'red', height: '100px', minHeight: '400px', padding: '3%' }}>
+        <AgGridReact
+          rowData={rowData} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true}>
+          {/* frameworkComponents={this.state.frameworkComponents} */}
+          <AgGridColumn field="id" sortable={true} filter={true} width={100}></AgGridColumn>
+          <AgGridColumn field="image" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="name" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="birthday" sortable={true} filter={true} filterParams={filterParams}></AgGridColumn>
+          <AgGridColumn field="time" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="gender" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="job" sortable={true} filter={true}></AgGridColumn>
+        </AgGridReact>
+        
+{/*         <AgGridReact
+            modules={this.state.modules}
+            columnDefs={this.state.columnDefs}
+            defaultColDef={this.state.defaultColDef}
+            rowData={this.state.rowData}
+            frameworkComponents={this.state.frameworkComponents}
+            onGridReady={this.onGridReady}
+          /> */}
+
+        <div className="Button1" style={{ marginLeft: '89%', padding: '0.5%' }}>
+          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
+            CSV Export
         </Button>
+        </div>
       </div>
+
       <Footer />
+
     </div>
   );
 }
+
+var filterParams = {
+  comparator: function (filterLocalDateAtMidnight, cellValue) {
+    var dateAsString = cellValue;
+    var dateParts = dateAsString.split('/');
+    var cellDate = new Date(
+      Number(dateParts[2]),
+      Number(dateParts[1]) - 1,
+      Number(dateParts[0])
+    );
+    if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+      return 0;
+    }
+    if (cellDate < filterLocalDateAtMidnight) {
+      return -1;
+    }
+    if (cellDate > filterLocalDateAtMidnight) {
+      return 1;
+    }
+  },
+};
 
 function getValue(inputSelector) {
   var text = document.querySelector(inputSelector).value;

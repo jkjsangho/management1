@@ -19,7 +19,7 @@ const styles = theme => ({
     minWidth: 920
   },
   menu: {
-    marginTop: 15,
+    marginTop: 50,
     marginBottom: 15,
     display: 'flex',
     justifyContent: 'center'

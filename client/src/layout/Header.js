@@ -101,8 +101,6 @@ const styles = theme => ({
 });
 
 
-
-
 const MyToolbar = withStyles(styles)(
   ({ classes, title, onMenuClick, value, handleChange }) => (
     <Fragment>
@@ -129,7 +127,7 @@ const MyToolbar = withStyles(styles)(
               <Tab label="HOME Tab1" component={Link} to="/" />
               <Tab label="Menu1 Tab2" component={Link} to="/about"/>
               <Tab label="Menu2 Tab3" component={Link} to="/menu2"/>
-            </Tabs>
+           </Tabs>
           </div>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -146,7 +144,7 @@ const MyToolbar = withStyles(styles)(
           </div>
         </Toolbar>
       </AppBar>
-      {value === 0 && (
+{/*       {value === 0 && (
         <Typography component="div" className={classes.tabContent}>
           Item One
         </Typography>
@@ -161,7 +159,7 @@ const MyToolbar = withStyles(styles)(
           Item Three
         </Typography>
       )}
-      <div className={classes.toolbarMargin} />
+      <div className={classes.toolbarMargin} /> */}
     </Fragment>
   )
 );
@@ -180,6 +178,9 @@ const MyDrawer = withStyles(styles)(
           {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
           <ListItemText>Menu 2</ListItemText>
         </ListItem>
+        <ListItem button component={Link} to="/Device_Info" replace onClick={onItemClick('Device_Info')}>
+          <ListItemText>Device_Info</ListItemText>
+          </ListItem>
       </List>
     </Drawer>
   )

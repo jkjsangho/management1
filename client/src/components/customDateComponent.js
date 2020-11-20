@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-/* import flatpickr from 'flatpickr'; */
+import flatpickr from 'react-flatpickr';
 
 export default class CustomDateComponent extends Component {
   constructor(props) {
