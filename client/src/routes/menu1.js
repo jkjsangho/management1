@@ -4,7 +4,7 @@ import Footer from "../layout/Footer";
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 
-const styles = theme => ({
+const styles = ({
   menu1__container: {
     marginTop: 15,
     marginBottom: 15,

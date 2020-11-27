@@ -4,14 +4,17 @@ import Header from '../layout/Header';
 import Footer from '../layout/Footer';
 
 import Button from '@material-ui/core/Button';
+
 //달력
-import CustomDateComponent from '../components/customDateComponent.js';
+import CustomDateComponent from '../components/customDateComponent';
 
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+
+import axios from "axios";
 
 const styles = theme => ({
 
@@ -105,42 +108,44 @@ function getParams() {
   };
 } */
 function Menu2() {
-/* 
-  constructor(props) {
-    super(props);
-  this.state = {
-    columnDefs: [
-      { field: 'id' },
-      {
-        field: 'image',
+  /* 
+    constructor(props) {
+      super(props);
+    this.state = {
+      columnDefs: [
+        { field: 'id' },
+        {
+          field: 'image',
+        },
+        { field: 'name' },
+        { field: 'birthday' },
+        {
+          field: 'time',
+          minWidth: 190,
+          filter: 'agDateColumnFilter',
+          filterParams: filterParams,
+        },
+        { field: 'gender' },
+        {
+          field: 'job',
+          filter: 'agNumberColumnFilter',
+        },
+      ],
+      defaultColDef: {
+        editable: true,
+        sortable: true,
+        flex: 1,
+        minWidth: 100,
+        filter: true,
+        floatingFilter: true,
+        resizable: true,
       },
-      { field: 'name' },
-      { field: 'birthday' },
-      {
-        field: 'time',
-        minWidth: 190,
-        filter: 'agDateColumnFilter',
-        filterParams: filterParams,
-      },
-      { field: 'gender' },
-      {
-        field: 'job',
-        filter: 'agNumberColumnFilter',
-      },
-    ],
-    defaultColDef: {
-      editable: true,
-      sortable: true,
-      flex: 1,
-      minWidth: 100,
-      filter: true,
-      floatingFilter: true,
-      resizable: true,
-    },
-    rowData: null,
-    frameworkComponents: { agDateInput: CustomDateComponent },
-  };
-} */
+      rowData: null,
+      frameworkComponents: { agDateInput: CustomDateComponent },
+    };
+  } */
+
+  var frameworkComponents = { agDateInput: CustomDateComponent };
 
   const [gridApi, setGridApi] = useState(null);
 
@@ -169,14 +174,24 @@ function Menu2() {
   }
 
   const [rowData, setRowData] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/GetUserInfo")
+      .then(({data:{data:{UserInfo}}}) => setRowData({data:{data:{UserInfo}}}));
+  }, []);
+
+
+/*   const [rowData, setRowData] = useState([]);
 
   useEffect(() => {
     fetch('/api/customers')
       .then(result => result.json())
       .then(rowData => setRowData(rowData))
-  }, []);
+  }, []); */
 
+  console.log('================');
   console.log(rowData);
+  console.log('================');
 
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
@@ -200,69 +215,34 @@ function Menu2() {
 
 
   return (
-    <div className="ag-theme-alpine" style={{ backgroundColor: 'green', height: '100%', width: '90%', margin: '5%' }}>
-
-      <Header />
-      
-      <div className="ag-theme-alpine" style={{ backgroundColor: 'yellow', height: '100%', width: '90%', margin: '5%' }}>
-        <div style={{ display: 'none' }}>
-          <div>
-            <div className="row">0
-            <label>suppressQuotes = </label>
-              <select id="suppressQuotes">
-                <option value="none">(default)</option>
-                <option value="true">true</option>
-              </select>
-            </div>
-            <div className="row">
-              <label>columnSeparator = </label>
-              <select id="columnSeparator">
-                <option value="none">(default)</option>
-                <option value="tab">tab</option>
-                <option value="|">bar (|)</option>
-              </select>
-            </div>
-          </div>
-          <div style={{ marginLeft: '10px' }}>
-            <div className="row">
-              <label>customHeader = </label>
-              <select id="customHeader">
-                <option>none</option>
-                <option value="array">
-                  ExcelCell[][] (recommended format)
-                  </option>
-                <option value="string">string (legacy format)</option>
-              </select>
-            </div>
-            <div className="row">
-              <label>customFooter = </label>
-              <select id="customFooter">
-                <option>none</option>
-                <option value="array">
-                  ExcelCell[][] (recommended format)
-              </option>
-                <option value="string">string (legacy format)</option>
-              </select>
-            </div>
-          </div>
+    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
+      <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
+        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
+          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
+            CSV Export
+        </Button>
         </div>
-      </div>
 
-      <div align='center' style={{ backgroundColor: 'red', height: '100px', minHeight: '400px', padding: '3%' }}>
+        <Header />
+
+      </div>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
+afsfafsa
+      </div>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
           rowData={rowData} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true}>
-          {/* frameworkComponents={this.state.frameworkComponents} */}
-          <AgGridColumn field="id" sortable={true} filter={true} width={100}></AgGridColumn>
-          <AgGridColumn field="image" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="name" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="birthday" sortable={true} filter={true} filterParams={filterParams}></AgGridColumn>
-          <AgGridColumn field="time" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="gender" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="job" sortable={true} filter={true}></AgGridColumn>
+          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
+          <AgGridColumn field="CLIENTID" sortable={true} filter={true} width={100}></AgGridColumn>
+          <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
+          <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
-        
-{/*         <AgGridReact
+
+        {/*         <AgGridReact
             modules={this.state.modules}
             columnDefs={this.state.columnDefs}
             defaultColDef={this.state.defaultColDef}
@@ -271,15 +251,52 @@ function Menu2() {
             onGridReady={this.onGridReady}
           /> */}
 
-        <div className="Button1" style={{ marginLeft: '89%', padding: '0.5%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
       </div>
 
-      <Footer />
-
+      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+        <Footer />
+      </div>
+      <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
+        <div>
+          <div className="row">0
+            <label>suppressQuotes = </label>
+            <select id="suppressQuotes">
+              <option value="none">(default)</option>
+              <option value="true">true</option>
+            </select>
+          </div>
+          <div className="row">
+            <label>columnSeparator = </label>
+            <select id="columnSeparator">
+              <option value="none">(default)</option>
+              <option value="tab">tab</option>
+              <option value="|">bar (|)</option>
+            </select>
+          </div>
+        </div>
+        <div style={{ marginLeft: '10px' }}>
+          <div className="row">
+            <label>customHeader = </label>
+            <select id="customHeader">
+              <option>none</option>
+              <option value="array">
+                ExcelCell[][] (recommended format)
+                  </option>
+              <option value="string">string (legacy format)</option>
+            </select>
+          </div>
+          <div className="row">
+            <label>customFooter = </label>
+            <select id="customFooter">
+              <option>none</option>
+              <option value="array">
+                ExcelCell[][] (recommended format)
+              </option>
+              <option value="string">string (legacy format)</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
