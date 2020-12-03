@@ -10,7 +10,7 @@ import axios from "axios";
 function About(props) {
     console.log(props);
 
-    /* const socket = socketio.connect('/');
+/*     const socket = socketio.connect('/');
 
     (() => {
         socket.emit('init', { name: 'bella' });

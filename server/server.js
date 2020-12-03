@@ -6,6 +6,8 @@ const port = process.env.PORT || 5000;
 const api = require('./routes/index');
 /* var cookieParser = require('cookie-parser'); */
 
+const sqlite3 = require('sqlite3').verbose();
+
 //app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -18,12 +20,59 @@ app.use(bodyParser.urlencoded({ extended: true })); //req.body를 만들어줌
 /* app.use('/', express.static(path.join(__dirname, './../public'))); */
 
 
-app.get('/bbb', function(err, req, res, next){
+// open database in memory
+let db = new sqlite3.Database('./db/EE7DB.sqlite', (err) => {
+    if (err) {
+        console.log("==============");
+        console.error(err.message);
+    }
+    console.log('Connected to the EE7 database.');
+})
+
+// close the database connection
+/* db.close((err) => {
+    if (err) {
+        console.log("=-=-=-=-=-=-=-=");
+        return console.error(err.message);
+    }
+    console.log('Close the database connection.');
+}); */
+
+app.get('/GetUserInfo',(req, res, next)=>{
+
+    /* res.send(['SQLite 접속완료']); */
+
+    var parms = [];
+    const query = `SELECT * FROM EE7_USERINFO`;
+
+    db.serialize();
+    db.all(query, parms,(err,row)=>{
+        if(err){
+            console.log(err);
+            console.log("err err err err err");
+/*             callback(err) */
+        }
+        else {
+            res.json({
+                "message":"success",
+                "data":row
+            })
+            /* console.log(row); */
+/*             row.forEach((row)=>{
+                console.log(row);
+            }) */
+            console.log("ok ok ok ok ok");
+/*             callback(data) */
+        }
+    });
+})
+
+/* app.get('/bbb', function(err, req, res, next){
     console.error(err.stack)
     res.status(500).send('Something broke!')
     res.send({greeting:'Hello React x Node.js'});
   })
-
+ */
 //index의 /api/hello 호출
 app.get('/api/hello', api);
 
@@ -43,7 +92,7 @@ app.post('/post', (req, res) => {
     console.log(req.body)
     console.log('==============')
     res.send({greeting:'Post Data Success'});
-    res.status(400).end();
+    res.status(404).end();
 });
 
 setTimeout(() => {
