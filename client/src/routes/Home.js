@@ -29,7 +29,7 @@ const styles = theme => ({
     marginRight: 25
   },
   progress: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing(2)
   },
   grow: {
     flexGrow: 1,
@@ -62,7 +62,7 @@ const styles = theme => ({
     },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -78,7 +78,7 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -183,7 +183,7 @@ class Home extends React.Component {
             <TableBody>
               {this.state.customers ?
                 this.state.customers.map(c => {
-                  return <Customer stateRefresh={this.stateRefresh} /*key={c.id}*/ id={c.id} image={c.image} name={c.name} birthday={c.birthday} time={c.time} gender={c.gender} job={c.job} />
+                  return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} time={c.time} gender={c.gender} job={c.job} />
                 }) :
                 <TableRow>
                   <TableCell colSpan="7" align="center">

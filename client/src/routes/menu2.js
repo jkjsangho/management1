@@ -173,25 +173,62 @@ function Menu2() {
     };
   }
 
-  const [rowData, setRowData] = useState([]);
+  const [data, setData] = useState({ hits: [] });
+ 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/GetUserInfo")
-      .then(({data:{data:{UserInfo}}}) => setRowData({data:{data:{UserInfo}}}));
+    const fetchData = async () => {
+      const result = await axios.get(
+        '/GetUserInfo',
+      );
+ 
+      setData(result.data);
+    };
+ 
+    fetchData();
   }, []);
 
+  console.log('================');
+  console.log(data.UserInfo);
+  console.log('================');
+
+
+
+/*   const [data, setData] = useState({ hits: [] });
+ 
+  useEffect(async () => {
+    const result = await axios(
+      '/GetUserInfo',
+    );
+ 
+    setData(result.data);
+  }, []); */
+
+/*   const [rowData, setRowData] = useState([]);
+  useEffect(() => {
+    axios.get("api/customers")
+      .then(({data}) => setRowData({data}));
+  }, []); */
 
 /*   const [rowData, setRowData] = useState([]);
 
   useEffect(() => {
-    fetch('/api/customers')
-      .then(result => result.json())
-      .then(rowData => setRowData(rowData))
+    fetch('/GetUserInfo')
+      .then(res => res.json())
+      .then(rowData => setRowData(rowData.UserInfo))
+  }, []);
+
+  const [rowCount, setCount] = useState([]);
+  useEffect(() => {
+    fetch('/GetCountInfo')
+      .then(res1 => res1.json())
+      .then(rowCount => setCount(rowCount.CountInfo))
   }, []); */
 
+/*   console.log('================');
+  console.log(result.UserInfo);
   console.log('================');
-  console.log(rowData);
-  console.log('================');
+  console.log(rowCount);
+  console.log('================'); */
 
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
@@ -231,7 +268,7 @@ afsfafsa
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={rowData} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          rowData={data.UserInfo} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
           onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
           <AgGridColumn field="CLIENTID" sortable={true} filter={true} width={100}></AgGridColumn>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>

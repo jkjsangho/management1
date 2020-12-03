@@ -21,12 +21,29 @@ app.use(bodyParser.urlencoded({ extended: true })); //req.body를 만들어줌
 app.get('/bbb', function(err, req, res, next){
     console.error(err.stack)
     res.status(500).send('Something broke!')
+    res.send({greeting:'Hello React x Node.js'});
   })
 
+//index의 /api/hello 호출
 app.get('/api/hello', api);
 
+//abc로 접근하면 /api/customers로 리다이렉트
 app.get('/abc', function (req, res, next) {
     res.redirect('/api/customers');
+});
+
+app.get('/post', (req, res) => {
+    console.log('a user connected');
+    res.send({greeting:'This is Post Server'});
+
+});
+
+app.post('/post', (req, res) => {
+    console.log('==============')
+    console.log(req.body)
+    console.log('==============')
+    res.send({greeting:'Post Data Success'});
+    res.status(400).end();
 });
 
 setTimeout(() => {

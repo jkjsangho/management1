@@ -32,7 +32,7 @@ const styles = theme => ({
     marginRight: 18
   },
   progress: {
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing(2)
   },
   grow: {
     flexGrow: 1
@@ -65,7 +65,7 @@ const styles = theme => ({
     },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -84,7 +84,7 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingLeft: theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -122,7 +122,7 @@ const MyToolbar = withStyles(styles)(
             {title}
           </Typography>
           <div className={classes.grow} />
-          <div classname={classes.Tab}>
+          <div className={classes.Tab}>
            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
               <Tab label="HOME Tab1" component={Link} to="/" />
               <Tab label="Menu1 Tab2" component={Link} to="/about"/>
