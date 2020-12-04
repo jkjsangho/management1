@@ -22,8 +22,8 @@ function About(props) {
     })(); */
 
     axios.post('post', {
-        firstName: 'Fred',
-        lastName: 'Flintstone'
+        Post: 'Success',
+        Data: 'Complate'
       })
       .then(function (response) {
         console.log(response)

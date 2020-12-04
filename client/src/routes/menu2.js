@@ -2,8 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import Customer from '../components/Customer'
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
+import Right from '../layout/right';
 
 import Button from '@material-ui/core/Button';
+
+import { List as VirtualList, AutoSizer } from 'react-virtualized';
+
+import { makeStyles } from '@material-ui/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 //달력
 import CustomDateComponent from '../components/customDateComponent';
@@ -250,6 +264,36 @@ function Menu2() {
     params.api.sizeColumnsToFit();
   };
 
+  //Right
+  const MaybeSelectedIcon = ({ selected, Icon }) =>
+    selected ? <CheckCircleOutlineIcon /> : <Icon />;
+
+  const [items, setItems] = useState([
+/*     { name: 'First User' },
+    { name: 'Second User' },
+    { name: 'Third User' },
+    { name: 'Four User' },
+    { name: 'Five User' },
+    { name: 'Six User' } */
+  ]);
+
+  const onClick = index => () => {
+    console.log(data.data[index].MACHINEID);
+    const item = items[index];
+/*     const item = data.data[index].MACHINEID; */
+    const newItems = [...items];
+
+    newItems[index] = { ...item, selected: !item.selected };
+    setItems(newItems);
+    console.log("item : ",item);
+    console.log("items[index] : ", items[index]);
+    console.log("index : ", index);
+
+  };
+
+
+  //Right
+
 
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
@@ -264,9 +308,28 @@ function Menu2() {
 
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
-        <ul>
-        
-        </ul>
+
+        <Paper className='paper'>
+          <List>
+            {items.map((item, index) => (
+              <ListItem
+                key={index}
+                button
+                selected={item.selected}
+                onClick={onClick(index)}
+              >
+                <ListItemText primary={item.name} />
+                <ListItemIcon>
+                  <MaybeSelectedIcon
+                    selected={item.selected}
+                    Icon={AccountCircleIcon}
+                  />
+                </ListItemIcon>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact

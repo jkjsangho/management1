@@ -17,6 +17,7 @@
     "react-dom": "^16.13.1",
     "react-flatpickr": "^3.10.6",
     "react-scripts": "3.4.3",
+    "react-virtualized": "^9.22.2",
     "socket.io-client": "^3.0.3"
   },
   "scripts": {

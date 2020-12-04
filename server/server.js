@@ -38,6 +38,7 @@ let db = new sqlite3.Database('./db/EE7DB.sqlite', (err) => {
     console.log('Close the database connection.');
 }); */
 
+//SQLite 접속 및 REST API 출력
 app.get('/GetUserInfo',(req, res, next)=>{
 
     /* res.send(['SQLite 접속완료']); */
@@ -45,7 +46,7 @@ app.get('/GetUserInfo',(req, res, next)=>{
     var parms = [];
     const query = `SELECT * FROM EE7_USERINFO`;
 
-    db.serialize();
+    db.serialize(); //DB 사용선언?
     db.all(query, parms,(err,row)=>{
         if(err){
             console.log(err);
@@ -61,7 +62,7 @@ app.get('/GetUserInfo',(req, res, next)=>{
 /*             row.forEach((row)=>{
                 console.log(row);
             }) */
-            console.log("ok ok ok ok ok");
+            console.log("OK OK OK OK OK");
 /*             callback(data) */
         }
     });
