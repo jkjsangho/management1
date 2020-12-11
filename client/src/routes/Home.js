@@ -122,7 +122,7 @@ class Home extends React.Component {
   }
   componentDidMount() {
 
-    this.timer = setInterval(this.progress, 30);
+    this.timer = setInterval(this.progress, 1000);
     this.callApi()
       .then(res => this.setState({ customers: res }))
       .catch(err => console.log(err));

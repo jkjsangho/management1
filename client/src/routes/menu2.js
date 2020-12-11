@@ -17,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import DevicesIcon from '@material-ui/icons/Devices';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 //달력
@@ -29,6 +30,11 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 import axios from "axios";
+import { result } from 'lodash';
+import { post } from 'request';
+
+let flag;
+
 
 const styles = theme => ({
 
@@ -36,130 +42,12 @@ const styles = theme => ({
 
 })
 
-
-
-/* const onGridReady = (params) => {
-  this.gridApi = params.api;
-  //gridColumnApi = params.columnApi;
-};
-
-const onBtnExport = () => {
-  var params = getParams();
-  if (params.suppressQuotes || params.columnSeparator) {
-    alert(
-      'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-    );
-  }
-  this.gridApi.exportDataAsCsv(params);
-};
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    case 'none':
-      return;
-    default:
-      return text;
-  }
-}
-
-function getParams() {
-  return {
-    suppressQuotes: getValue('#suppressQuotes'),
-    columnSeparator: getValue('#columnSeparator'),
-    customHeader: getValue('#customHeader'),
-    customFooter: getValue('#customFooter'),
-  };
-} */
 function Menu2() {
-  /* 
-    constructor(props) {
-      super(props);
-    this.state = {
-      columnDefs: [
-        { field: 'id' },
-        {
-          field: 'image',
-        },
-        { field: 'name' },
-        { field: 'birthday' },
-        {
-          field: 'time',
-          minWidth: 190,
-          filter: 'agDateColumnFilter',
-          filterParams: filterParams,
-        },
-        { field: 'gender' },
-        {
-          field: 'job',
-          filter: 'agNumberColumnFilter',
-        },
-      ],
-      defaultColDef: {
-        editable: true,
-        sortable: true,
-        flex: 1,
-        minWidth: 100,
-        filter: true,
-        floatingFilter: true,
-        resizable: true,
-      },
-      rowData: null,
-      frameworkComponents: { agDateInput: CustomDateComponent },
-    };
-  } */
 
   var frameworkComponents = { agDateInput: CustomDateComponent };
+
+
+  console.log("flag_start", flag);
 
   const [gridApi, setGridApi] = useState(null);
 
@@ -187,6 +75,7 @@ function Menu2() {
     };
   }
 
+  //REST API에서 받아옴
   const [data, setData] = useState({ hits: [] });
 
   useEffect(() => {
@@ -194,16 +83,19 @@ function Menu2() {
       const result = await axios.get(
         '/GetUserInfo',
       );
-
       setData(result.data);
+      console.log("result.data = ", result.data);
+      console.log("result.data.data = ", result.data.data);
     };
 
     fetchData();
   }, []);
 
-  console.log('================');
-  console.log(data.data);
-  console.log('================');
+  console.log('1================1');
+  console.log("Right = ", Right);
+  console.log("data =", data);
+  console.log("data.data = ", data.data);
+  console.log('1================1');
 
 
 
@@ -264,36 +156,112 @@ function Menu2() {
     params.api.sizeColumnsToFit();
   };
 
-  //Right
+  const searchBtn = () => {
+    //Search 클릭 시 Post 전송
+    console.log("posts = ", posts);
+    console.log("posts.data = ", posts.data);
+
+    axios.post('post', {
+      Post: 'Need Device Info',
+      Data: posts.data[0].MACHINEID
+    })
+      .then(function (response) {
+        console.log("response = ", response);
+      })
+      .catch(function (error) {
+        console.log("error = ", error);
+      });
+  }
+
+
+  //Left
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-  const [items, setItems] = useState([
-/*     { name: 'First User' },
-    { name: 'Second User' },
-    { name: 'Third User' },
-    { name: 'Four User' },
-    { name: 'Five User' },
-    { name: 'Six User' } */
-  ]);
+  console.log("data.data2 = ", data.data);
 
+
+  const [posts, setPosts] = useState();
+  useEffect(() => {
+    axios
+      .get("/GetUserInfo")
+      .then(({ data }) => setPosts(data));
+  }, []);
+
+  console.log("posts = ", posts);
+
+  const [items, setItems] = useState([]
+    /*     [
+          { name: 'First User' },
+          { name: 'Second User' },
+          { name: 'Third User' }
+        ] */
+  );
+
+  //리스트 아이템 클릭 selected 작업
   const onClick = index => () => {
-    console.log(data.data[index].MACHINEID);
-    const item = items[index];
-/*     const item = data.data[index].MACHINEID; */
+    console.log("index = ", index)
+    console.log("post.data.length = ", posts.data.length)
+    console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
+
+    //flag로 selected 선택
+    console.log("flag = ", flag);
+    if(flag == null){
+      posts.data[index].selected = true;
+      flag = true;
+    }else if(flag == true){
+      posts.data[index].selected = false;
+      flag = false;
+    }else if(flag == false){
+      flag = true;
+      posts.data[index].selected = true;
+    }
+
+    /*    const item = items[index]; */
+    const item = posts.data[index];
+    /* let item; */
+
+    /*     if (item ==null){
+          item = posts.data[index];
+          console.log("=====true=====", item);
+        }
+        else{
+          item = items[index];
+          console.log("=====false=====", item);
+        } */
+    console.log("=================");
+    console.log("item = ", item);
+    console.log("=================");
+
+    //왼쪽 리스트 목록을 지속적으로 RESTAPI에서 받아와서 selected 초기값 null로 인식
+
+    console.log("flag2 = ", flag);
     const newItems = [...items];
+    console.log("newItems = ", newItems);
 
     newItems[index] = { ...item, selected: !item.selected };
     setItems(newItems);
-    console.log("item : ",item);
-    console.log("items[index] : ", items[index]);
+
+    console.log("item : ", item);
+    console.log("items[index] : ", posts.data[index]);
     console.log("index : ", index);
+    console.log("selected : ", posts.data.selected);
 
+    //Left 클릭 시 Post 전송
+    axios.post('post', {
+      Event: 'Device_Info',
+      Data: posts.data[index].MACHINEID
+    })
+      .then(function (response) {
+        console.log(response)
+        console.log('response')
+      })
+      .catch(function (error) {
+        console.log(error)
+        console.log('error')
+      });
   };
-
-
-  //Right
-
+  //Left
 
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
@@ -308,21 +276,22 @@ function Menu2() {
 
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
-
         <Paper className='paper'>
+          {/* <Right/> */}
+
           <List>
-            {items.map((item, index) => (
+            {posts && posts.data.map((post, index) => (
               <ListItem
                 key={index}
                 button
-                selected={item.selected}
+                selected={post.selected}
                 onClick={onClick(index)}
               >
-                <ListItemText primary={item.name} />
+                <ListItemText primary={post.MACHINEID} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
-                    selected={item.selected}
-                    Icon={AccountCircleIcon}
+                    selected={post.selected}
+                    Icon={DevicesIcon}
                   />
                 </ListItemIcon>
               </ListItem>
@@ -333,7 +302,7 @@ function Menu2() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={data.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          rowData={items} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
           onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
           <AgGridColumn field="CLIENTID" sortable={true} filter={true} width={100}></AgGridColumn>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
@@ -356,6 +325,7 @@ function Menu2() {
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>

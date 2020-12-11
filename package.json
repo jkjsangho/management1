@@ -111,6 +111,7 @@
     "shebang-command": "^1.2.0",
     "shebang-regex": "^1.0.0",
     "signal-exit": "^3.0.3",
+    "socket.io-client": "^3.0.4",
     "spawn-command": "^0.0.2-1",
     "spdx-correct": "^3.1.1",
     "spdx-exceptions": "^2.3.0",

@@ -6,6 +6,14 @@ const port = process.env.PORT || 5000;
 const api = require('./routes/index');
 /* var cookieParser = require('cookie-parser'); */
 
+//socket.io 통신
+const socketio = require('socket.io-client');
+/* import socketio from 'socket.io-client'; */
+
+//tcp/ip socket
+const net = require('net');
+
+//SQLite 선언
 const sqlite3 = require('sqlite3').verbose();
 
 //app.set('views', path.join(__dirname, 'views'));
@@ -18,7 +26,6 @@ app.use(bodyParser.urlencoded({ extended: true })); //req.body를 만들어줌
 //static 파일들 여기서 찾아
 /* app.use(express.static(path.join(__dirname, './../client/public'))); */
 /* app.use('/', express.static(path.join(__dirname, './../public'))); */
-
 
 // open database in memory
 let db = new sqlite3.Database('./db/EE7DB.sqlite', (err) => {
@@ -39,7 +46,7 @@ let db = new sqlite3.Database('./db/EE7DB.sqlite', (err) => {
 }); */
 
 //SQLite 접속 및 REST API 출력
-app.get('/GetUserInfo',(req, res, next)=>{
+app.get('/GetUserInfo', (req, res, next) => {
 
     /* res.send(['SQLite 접속완료']); */
 
@@ -47,23 +54,52 @@ app.get('/GetUserInfo',(req, res, next)=>{
     const query = `SELECT * FROM EE7_USERINFO`;
 
     db.serialize(); //DB 사용선언?
-    db.all(query, parms,(err,row)=>{
-        if(err){
+    db.all(query, parms, (err, row) => {
+        if (err) {
             console.log(err);
             console.log("err err err err err");
-/*             callback(err) */
+            /*             callback(err) */
         }
         else {
             res.json({
-                "message":"success",
-                "data":row
+                /* "message":"success", */
+                "data": row
             })
             /* console.log(row); */
-/*             row.forEach((row)=>{
-                console.log(row);
-            }) */
+            /*             row.forEach((row)=>{
+                            console.log(row);
+                        }) */
             console.log("OK OK OK OK OK");
-/*             callback(data) */
+            /*             callback(data) */
+        }
+    });
+})
+
+app.get('/GetCountInfo', (req, res, next) => {
+
+    /* res.send(['SQLite 접속완료']); */
+
+    var parms = [];
+    const query = `SELECT * FROM EE7_COUNTINFO`;
+
+    db.serialize(); //DB 사용선언?
+    db.all(query, parms, (err, row) => {
+        if (err) {
+            console.log(err);
+            console.log("err err err err err");
+            /*             callback(err) */
+        }
+        else {
+            res.json({
+                /* "message":"success", */
+                "data": row
+            })
+            /* console.log(row); */
+            /*             row.forEach((row)=>{
+                            console.log(row);
+                        }) */
+            console.log("OK OK OK OK OK");
+            /*             callback(data) */
         }
     });
 })
@@ -84,15 +120,65 @@ app.get('/abc', function (req, res, next) {
 
 app.get('/post', (req, res) => {
     console.log('a user connected');
-    res.send({greeting:'This is Post Server'});
-
+    res.send({ greeting: 'This is Post Server' });
 });
 
 app.post('/post', (req, res) => {
     console.log('==============')
-    console.log(req.body)
+    console.log("req.body = ", req.body)
+/*     console.log("req.body = ", JSON.stringify(req.body,null, 6)); */
+    console.log("Client Post Success");
     console.log('==============')
-    res.send({greeting:'Post Data Success'});
+    res.send({ greeting: 'Post Data Success' });
+
+    //Search시 Socket으로 디바이스 데이터 요청
+    /*     const socket = socketio.connect('http://localhost:4000/'); */
+
+    var socket = net.connect({port:10000, host:'192.168.0.53'});
+
+    /*     (() => {
+            socket.emit('init', { name: req.body });
+    
+            socket.on('welcome', (msg) => {
+                console.log("recive msg = ", msg);
+            });
+    
+        })(); */
+
+    socket.on('connect', function () {
+        console.log('connected to server!');
+        
+        console.log('데이터 전송');
+
+        socket.write(JSON.stringify(req.body));
+
+        console.log("전송 데이터 = ", req.body)
+
+        // 1000ms의 간격으로 banana hong을 서버로 요청
+/*         setInterval(function () {
+            console.log('데이터 전송');
+            socket.write(JSON.stringify(req.body));
+        }, 3000); */
+    });
+
+    // 서버로부터 받은 데이터를 화면에 출력
+    socket.on('data', function (chunk) {
+        console.log('recv:' + chunk);
+        socket.destroy();
+    });
+    // 접속이 종료됬을때 메시지 출력
+    socket.on('end', function () {
+        console.log('Server Disconnected.');
+    });
+    // 에러가 발생할때 에러메시지 화면에 출력
+    socket.on('error', function (err) {
+        console.log(err);
+    });
+    // connection에서 timeout이 발생하면 메시지 출력
+    socket.on('timeout', function () {
+        console.log('connection timeout.');
+    });
+
     res.status(404).end();
 });
 
@@ -196,7 +282,7 @@ setTimeout(() => {
     res.status(err.status || 500);
     res.render('error');
   }); */
-  
+
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

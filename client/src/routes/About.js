@@ -8,9 +8,9 @@ import axios from "axios";
 /* import socketio from 'socket.io-client'; */
 
 function About(props) {
-    console.log(props);
+    console.log("props = ", props);
 
-/*     const socket = socketio.connect('/');
+/*     const socket = socketio.connect('localhost:4000/');
 
     (() => {
         socket.emit('init', { name: 'bella' });
@@ -19,19 +19,17 @@ function About(props) {
             console.log(msg);
         });
 
-    })(); */
-
+    })();
+ */
     axios.post('post', {
         Post: 'Success',
         Data: 'Complate'
       })
       .then(function (response) {
-        console.log(response)
-        console.log('response')
+        console.log('response = ', response)
       })
       .catch(function (error) {
-        console.log(error)
-        console.log('error')
+        console.log('error = ', error)
       });
 
 /*     axios.post('/',{
@@ -42,7 +40,7 @@ function About(props) {
 
     const { location } = props;
 
-    console.log(location.props);
+    console.log("location = ", location.props);
 
     return (
         <div className="Header">

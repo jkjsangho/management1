@@ -1,60 +1,54 @@
-import React, { useState } from 'react';
-import { List as VirtualList, AutoSizer } from 'react-virtualized';
+import React, { Component } from 'react';
+import axios from 'axios';
+import './main.css';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+class list extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: [],
+    }
+  }
 
-import Paper from '@material-ui/core/Paper';
+  componentDidMount() {
+    this._getListData()
+  }
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+  _getListData = async function () {
+    /*     const data_list = await axios('/GetUserInfo', {
+          method: 'GET',
+          headers: new Headers()
+        }) */
 
-const MaybeSelectedIcon = ({ selected, Icon }) =>
-  selected ? <CheckCircleOutlineIcon /> : <Icon />;
+    const data_list = await axios('/GetUserInfo')
 
-export default function ListIcons() {
-  const [items, setItems] = useState([
-    { name: 'First User' },
-    { name: 'Second User' },
-    { name: 'Third User' },
-    { name: 'Four User' },
-    { name: 'Five User' },
-    { name: 'Six User' }
-  ]);
+    this.setState({ data: data_list })
+  }
 
-  const onClick = index => () => {
-    const item = items[index];
-    const newItems = [...items];
+  render() {
+    const list = this.state.data.data
+    console.log("list1 == ", list);
+    console.log("list2 == ", this.state.data.data);
+    console.log("list3 == ", this.state.data);
 
-    newItems[index] = { ...item, selected: !item.selected };
-    setItems(newItems);
-    console.log(item);
-    console.log(newItems);
-    console.log(index);
-  };
+    return (
+      <div className='List'>
 
-  return (
-    <Paper className='paper'>
-    <List>
-      {items.map((item, index) => (
-        <ListItem
-          key={index}
-          button
-          selected={item.selected}
-          onClick={onClick(index)}
-        >
-          <ListItemText primary={item.name} />
-          <ListItemIcon>
-            <MaybeSelectedIcon
-              selected={item.selected}
-              Icon={AccountCircleIcon}
-            />
-          </ListItemIcon>
-        </ListItem>
-      ))}
-    </List>
-    </Paper>
-  );
+        <div className='list_grid list_tit'>
+          <div> MACHINEID </div>
+        </div>
+
+        {list ? list.map( (el, key) => {
+          return (
+            <div className='list_grid list_data' key={key}>
+              <div> {el.MACHINEID} </div>
+            </div>
+          )
+        })
+          : null}
+      </div>
+    );
+  }
 }
+
+export default list;
