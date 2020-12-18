@@ -252,7 +252,7 @@ function Menu2() {
     //Left 클릭 시 Post 전송
     axios.post('post', 
     {
-      command: 'CMDCNTI',
+      command: 'GETCNTI',
       clientid: posts.data[0].CLIENTID,
       date: '2020110120201205'
     })
@@ -277,9 +277,9 @@ function Menu2() {
         </div>
           <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'gold', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'pink', width: '20%', height: '75%' }}>
         <Paper className='paper'>
-          {/* <Right/> */}
+          {/* <left/> */}
 
           <List>
             {posts && posts.data.map((post, index) => (
@@ -290,6 +290,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
+                <ListItemText secondary={post.MACHINESN} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -304,9 +305,10 @@ function Menu2() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={items} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true} width={100}></AgGridColumn>
+          rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>
+          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="ALIAS" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>

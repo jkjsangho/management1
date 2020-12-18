@@ -7,6 +7,11 @@ import { withStyles } from '@material-ui/core/styles';
 //import CustomerAdd from './components/CustomerAdd';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import TurnedInIcon from '@material-ui/icons/TurnedIn';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+import CheckIcon from '@material-ui/icons/Check';
+
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import Typography from '@material-ui/core/Typography';
@@ -169,17 +174,50 @@ const MyDrawer = withStyles(styles)(
     <Drawer open={open} onClose={onClose}>
       <List>
         <ListItem button component={Link} to="/" replace onClick={onItemClick('Home')}>
+        <TurnedInIcon color="primary"/>
           <ListItemText>Home</ListItemText>
         </ListItem>
         <ListItem button component={Link} to="/about" replace onClick={onItemClick('Menu 1')}>
+        <TurnedInIcon color="primary"/>
           <ListItemText>Menu 1</ListItemText>
         </ListItem>
         <ListItem button component={Link} to="/menu2" replace onClick={onItemClick('Menu 2')}>
           {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
+          <TurnedInIcon color="primary"/>
           <ListItemText>Menu 2</ListItemText>
         </ListItem>
-        <ListItem button component={Link} to="/Device_Info" replace onClick={onItemClick('Device_Info')}>
-          <ListItemText>Device_Info</ListItemText>
+        <ListItem button component={Link} to="/deviceinfo" replace onClick={onItemClick('DeviceInfo')}>
+        <ListItemIcon>
+            <CheckIcon color="primary"/>
+          </ListItemIcon>
+          <ListItemText>DeviceInfo</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
+          <ListItemIcon>
+          <CheckIcon/>
+          </ListItemIcon>
+          <ListItemText>CountInfo</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
+          <ListItemIcon>
+            <CheckIcon/>
+          </ListItemIcon>
+          <ListItemText>SerialNum</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/blacklist" replace onClick={onItemClick('BlackList')}>
+          <ListItemText>BlackList</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/racog" replace onClick={onItemClick('Racog')}>
+          <ListItemText>Racog</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
+          <ListItemText>Settings</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/upgrade" replace onClick={onItemClick('upgrade')}>
+          <ListItemText>Upgrade</ListItemText>
+          </ListItem>
+          <ListItem button component={Link} to="/user" replace onClick={onItemClick('User')}>
+          <ListItemText>User</ListItemText>
           </ListItem>
       </List>
     </Drawer>

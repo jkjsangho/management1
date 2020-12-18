@@ -8,7 +8,14 @@ import Home from "./routes/Home";
 import About from "./routes/About";
 import menu1 from "./routes/menu1";
 import menu2 from "./routes/menu2";
-import Device_Info from "./routes/Device_Info";
+import userinfo from "./routes/userinfo";
+import countInfo2 from "./routes/countInfo2";
+import serialnum from "./routes/serialnum";
+import blacklist from "./routes/blacklist";
+import racog from "./routes/racog";
+import settings from "./routes/settings";
+import upgrade from "./routes/upgrade";
+import user from "./routes/user";
 import './App.css';
 //import CustomerAdd from './components/CustomerAdd';
 
@@ -20,7 +27,14 @@ function App(){
       <Route path="/about" component={About}/>
       <Route path="/menu1" component={menu1}/>
       <Route path="/menu2" component={menu2}/>
-      <Route path="/Device_Info" component={Device_Info}/>
+      <Route path="/deviceinfo" component={userinfo}/>
+      <Route path="/countinfo" component={countInfo2}/>
+      <Route path="/serialnum" component={serialnum}/>
+      <Route path="/blacklist" component={blacklist}/>
+      <Route path="/racog" component={racog}/>
+      <Route path="/settings" component={settings}/>
+      <Route path="/upgrade" component={upgrade}/>
+      <Route path="/user" component={user}/>
       {/* <Navigation /> */}
       {/* <Route path="/movie-detail" component={Detail}/> */}
     </HashRouter>

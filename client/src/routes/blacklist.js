@@ -159,7 +159,7 @@ function Menu2() {
     /* const searchBtn = () => { */
   const searchBtn = () => {
     //Search 클릭 시 Post 전송
-    console.log("posts = ", posts);
+    console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
 
     axios.post('post', {
@@ -183,9 +183,10 @@ function Menu2() {
 /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
+
   useEffect(() => {
     axios
-      .get("/GetUserInfo")
+      .get("/getuserinfo")
       .then(({ data }) => setPosts(data));
   }, []);
 
@@ -199,11 +200,36 @@ function Menu2() {
         ] */
   );
 
+  const [count, setCount] = useState();
+  console.log("count start", count)
+
+
   //리스트 아이템 클릭 selected 작업
   const onClick = index => () => {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
+
+    const getBreeds = async () => {
+      try {
+        return axios.get('/getblacklistinfo').then(({ data }) => setCount(data));;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const countBreeds = async () => {
+      const breeds = getBreeds();
+      setCount(breeds);
+      console.log("Breeds = ", count);
+   
+    };
+    
+    //getcountinfo 호출
+
+    console.log("count.item1 : ", count);
+    countBreeds();
+    console.log("count.item2 : ", count);
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
@@ -221,6 +247,7 @@ function Menu2() {
 
     /*    const item = items[index]; */
     const item = posts.data[index];
+
     /* let item; */
 
     /*     if (item ==null){
@@ -248,13 +275,13 @@ function Menu2() {
     console.log("items[index] : ", posts.data[index]);
     console.log("index : ", index);
     console.log("selected : ", posts.data.selected);
+    console.log("count.itemEND : ", count);
 
     //Left 클릭 시 Post 전송
     axios.post('post', 
     {
-      command: 'CMDCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
+      command: 'GETBLSI',
+      clientid: posts.data[0].CLIENTID
     })
       .then(function (response) {
         console.log(response)
@@ -266,7 +293,7 @@ function Menu2() {
       });
   };
   //Left
-
+  console.log("count end", count)
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
@@ -277,7 +304,7 @@ function Menu2() {
         </div>
           <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'gold', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'gray', width: '20%', height: '75%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
 
@@ -299,20 +326,35 @@ function Menu2() {
               </ListItem>
             ))}
           </List>
+{/*           <List>
+          <ListItemText>afsafasfa</ListItemText>
+            {count &&count.data.map((ccc, index) => (
+              <ListItem
+                key={index}
+                button
+                onClick={onClick(index)}
+              >
+
+                <ListItemText primary={ccc.CLIENTID} />
+              </ListItem>
+            ))}
+          </List> */}
         </Paper>
 
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={items} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
           onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true} width={100}></AgGridColumn>
-          <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="OPERID" sortable={true} filter={true} ></AgGridColumn>
+          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          <AgGridColumn field="DENOM" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="SNNUMBER" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="DATE" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="TIME" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -323,7 +365,6 @@ function Menu2() {
             frameworkComponents={this.state.frameworkComponents}
             onGridReady={this.onGridReady}
           /> */}
-
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>

@@ -30,7 +30,7 @@ const styles = theme => ({
   }
 })
 
-function Device_Info() {
+function UserInfo() {
 
   return (
     <div className="menu1__container" align='center' style={{ backgroundColor: 'red', height: '100px', minHeight: '200px', padding: '5%' }}>
@@ -51,4 +51,4 @@ function Device_Info() {
   )
 }
 
-export default withStyles(styles)(Device_Info);
+export default withStyles(styles)(UserInfo);

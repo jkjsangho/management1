@@ -50,6 +50,7 @@ function Menu2() {
 
   console.log("flag 초기값 = ", flag);
 
+  //AG-Grid Excel_Export
   const [gridApi, setGridApi] = useState(null);
 
   function onGridReady(params) {
@@ -76,66 +77,67 @@ function Menu2() {
     };
   }
 
-  //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
+  function getValue(inputSelector) {
+    var text = document.querySelector(inputSelector).value;
+    switch (text) {
+      case 'string':
+        return (
+          'Here is a comma, and a some "quotes". You can see them using the\n' +
+          'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
+          'CSV file is opened in Excel because string content passed to\n' +
+          'customHeader and customFooter is not escaped.'
+        );
+      case 'array':
+        return [
+          [],
+          [
+            {
+              data: {
+                value: 'Here is a comma, and a some "quotes".',
+                type: 'String',
+              },
+            },
+          ],
+          [
+            {
+              data: {
+                value:
+                  'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
+                type: 'String',
+              },
+            },
+          ],
+          [
+            {
+              data: {
+                value: 'this cell:',
+                type: 'String',
+              },
+              mergeAcross: 1,
+            },
+            {
+              data: {
+                value: 'is empty because the first cell has mergeAcross=1',
+                type: 'String',
+              },
+            },
+          ],
+          [],
+        ];
+      case 'none':
+        return;
+      case 'tab':
+        return '\t';
+      case 'true':
+        return true;
+      default:
+        return text;
+    }
+  }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
+  //AG-Grid Excel_Export
 
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
-
-
-
-  /*   const [data, setData] = useState({ hits: [] });
-   
-    useEffect(async () => {
-      const result = await axios(
-        '/GetUserInfo',
-      );
-   
-      setData(result.data);
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-    useEffect(() => {
-      axios.get("api/customers")
-        .then(({data}) => setRowData({data}));
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-  
-    useEffect(() => {
-      fetch('/GetUserInfo')
-        .then(res => res.json())
-        .then(rowData => setRowData(rowData.UserInfo))
-    }, []);
-  
-    const [rowCount, setCount] = useState([]);
-    useEffect(() => {
-      fetch('/GetCountInfo')
-        .then(res1 => res1.json())
-        .then(rowCount => setCount(rowCount.CountInfo))
-    }, []); */
-
-  /*   console.log('================');
-    console.log(result.UserInfo);
-    console.log('================');
-    console.log(rowCount);
-    console.log('================'); */
-
+  //AG-Grid Row_AutoSize
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
     var columnsToShow = [];
@@ -155,11 +157,14 @@ function Menu2() {
     params.columnApi.setColumnsVisible(columnsToHide, false);
     params.api.sizeColumnsToFit();
   };
+  //AG-Grid Row_AutoSize
+
+  
   /* const onClick = index => () => { */
     /* const searchBtn = () => { */
   const searchBtn = () => {
     //Search 클릭 시 Post 전송
-    console.log("posts = ", posts);
+    console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
 
     axios.post('post', {
@@ -183,9 +188,10 @@ function Menu2() {
 /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
+
   useEffect(() => {
     axios
-      .get("/GetUserInfo")
+      .get("/getuserinfo")
       .then(({ data }) => setPosts(data));
   }, []);
 
@@ -199,11 +205,36 @@ function Menu2() {
         ] */
   );
 
+  const [count, setCount] = useState();
+  console.log("count start", count)
+
+
   //리스트 아이템 클릭 selected 작업
   const onClick = index => () => {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
+
+    const getBreeds = async () => {
+      try {
+        return axios.get('/GetSerialInfo').then(({ data }) => setCount(data));;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const countBreeds = async () => {
+      const breeds = getBreeds();
+      setCount(breeds);
+      console.log("Breeds = ", count);
+   
+    };
+    
+    //getcountinfo 호출
+
+    console.log("count.item1 : ", count);
+    countBreeds();
+    console.log("count.item2 : ", count);
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
@@ -221,6 +252,7 @@ function Menu2() {
 
     /*    const item = items[index]; */
     const item = posts.data[index];
+
     /* let item; */
 
     /*     if (item ==null){
@@ -248,13 +280,14 @@ function Menu2() {
     console.log("items[index] : ", posts.data[index]);
     console.log("index : ", index);
     console.log("selected : ", posts.data.selected);
+    console.log("count.itemEND : ", count);
 
     //Left 클릭 시 Post 전송
     axios.post('post', 
     {
-      command: 'CMDCNTI',
+      command: 'GETSNOI',
       clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
+      date: '2020110120201216'
     })
       .then(function (response) {
         console.log(response)
@@ -266,7 +299,7 @@ function Menu2() {
       });
   };
   //Left
-
+  console.log("count end", count)
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
@@ -277,7 +310,7 @@ function Menu2() {
         </div>
           <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'gold', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '10%', height: '75%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
 
@@ -299,20 +332,39 @@ function Menu2() {
               </ListItem>
             ))}
           </List>
+{/*           <List>
+          <ListItemText>afsafasfa</ListItemText>
+            {count &&count.data.map((ccc, index) => (
+              <ListItem
+                key={index}
+                button
+                onClick={onClick(index)}
+              >
+
+                <ListItemText primary={ccc.CLIENTID} />
+              </ListItem>
+            ))}
+          </List> */}
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '90%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={items} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true} width={100}></AgGridColumn>
-          <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>
+          <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="OPERID" sortable={true} filter={true} ></AgGridColumn>
+          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          <AgGridColumn field="DENOM" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="SERIALNO" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="DATE" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="IMG_HEIGHT" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="IMG_DATA" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="IMG_WIDTH" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="REJECT" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="TIME" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -323,11 +375,10 @@ function Menu2() {
             frameworkComponents={this.state.frameworkComponents}
             onGridReady={this.onGridReady}
           /> */}
-
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Get SN</Button>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
@@ -395,63 +446,5 @@ var filterParams = {
     }
   },
 };
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    default:
-      return text;
-  }
-}
 
 export default Menu2
