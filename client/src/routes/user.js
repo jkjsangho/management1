@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Customer from '../components/Customer'
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
@@ -7,6 +8,11 @@ import Right from '../layout/right';
 import Button from '@material-ui/core/Button';
 
 import { List as VirtualList, AutoSizer } from 'react-virtualized';
+
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+
+import Input from '@material-ui/core/Input';
 
 import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
@@ -55,87 +61,6 @@ function Menu2() {
   function onGridReady(params) {
     setGridApi(params.api);
   };
-
-  const onBtnExport = () => {
-    var params = getParams();
-    console.log(params)
-    if (params.suppressQuotes || params.columnSeparator) {
-      alert(
-        'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-      );
-    }
-    gridApi.exportDataAsCsv(params);
-  };
-
-  function getParams() {
-    return {
-      suppressQuotes: getValue('#suppressQuotes'),
-      columnSeparator: getValue('#columnSeparator'),
-      customHeader: getValue('#customHeader'),
-      customFooter: getValue('#customFooter'),
-    };
-  }
-
-  //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
-
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
-
-
-
-  /*   const [data, setData] = useState({ hits: [] });
-   
-    useEffect(async () => {
-      const result = await axios(
-        '/GetUserInfo',
-      );
-   
-      setData(result.data);
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-    useEffect(() => {
-      axios.get("api/customers")
-        .then(({data}) => setRowData({data}));
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-  
-    useEffect(() => {
-      fetch('/GetUserInfo')
-        .then(res => res.json())
-        .then(rowData => setRowData(rowData.UserInfo))
-    }, []);
-  
-    const [rowCount, setCount] = useState([]);
-    useEffect(() => {
-      fetch('/GetCountInfo')
-        .then(res1 => res1.json())
-        .then(rowCount => setCount(rowCount.CountInfo))
-    }, []); */
-
-  /*   console.log('================');
-    console.log(result.UserInfo);
-    console.log('================');
-    console.log(rowCount);
-    console.log('================'); */
-
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
     var columnsToShow = [];
@@ -155,17 +80,33 @@ function Menu2() {
     params.columnApi.setColumnsVisible(columnsToHide, false);
     params.api.sizeColumnsToFit();
   };
-  /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
-  const searchBtn = () => {
+  const addBtn = () => {
     //Search 클릭 시 Post 전송
-    console.log("searchposts = ", posts);
+    console.log("posts = ", posts);
     console.log("posts.data = ", posts.data);
 
     axios.post('post', {
-      command: 'CMDCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
+      command: 'ADDUSER',
+      /* mid: posts.data[0].CLIENTID, */
+      mid: TextField.name.MID,
+      sn: TextField.name.SN
+    })
+      .then(function (response) {
+        console.log("response = ", response);
+      })
+      .catch(function (error) {
+        console.log("error = ", error);
+      });
+  }
+  const deleteBtn = () => {
+    //Search 클릭 시 Post 전송
+    console.log("posts = ", posts);
+    console.log("posts.data = ", posts.data);
+
+    axios.post('post', {
+      command: 'DELUSER',
+      mid: this.name.MID,
+      sn: this.name.SN
     })
       .then(function (response) {
         console.log("response = ", response);
@@ -180,13 +121,12 @@ function Menu2() {
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
-
   useEffect(() => {
     axios
-      .get("/getuserinfo")
+      .get("/GetUserInfo")
       .then(({ data }) => setPosts(data));
   }, []);
 
@@ -200,46 +140,21 @@ function Menu2() {
         ] */
   );
 
-  const [count, setCount] = useState();
-  console.log("count start", count)
-
-
   //리스트 아이템 클릭 selected 작업
   const onClick = index => () => {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
 
-    const getBreeds = async () => {
-      try {
-        return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  
-    const countBreeds = async () => {
-      const breeds = getBreeds();
-      setCount(breeds);
-      console.log("Breeds = ", count);
-   
-    };
-    
-    //getcountinfo 호출
-
-    console.log("count.item1 : ", count);
-    countBreeds();
-    console.log("count.item2 : ", count);
-
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    if (flag == null) {
       posts.data[index].selected = true;
       flag = true;
-    }else if(flag == true){
+    } else if (flag == true) {
       posts.data[index].selected = false;
       flag = false;
-    }else if(flag == false){
+    } else if (flag == false) {
       flag = true;
       posts.data[index].selected = true;
     }
@@ -247,7 +162,6 @@ function Menu2() {
 
     /*    const item = items[index]; */
     const item = posts.data[index];
-
     /* let item; */
 
     /*     if (item ==null){
@@ -275,15 +189,14 @@ function Menu2() {
     console.log("items[index] : ", posts.data[index]);
     console.log("index : ", index);
     console.log("selected : ", posts.data.selected);
-    console.log("count.itemEND : ", count);
 
     //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201216'
-    })
+    axios.post('post',
+      {
+        command: 'GETCNTI',
+        clientid: posts.data[0].CLIENTID,
+        date: '2020110120201205'
+      })
       .then(function (response) {
         console.log(response)
         console.log('response')
@@ -294,20 +207,15 @@ function Menu2() {
       });
   };
   //Left
-  console.log("count end", count)
+
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
-      <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
-          <Header />
+      <div className='title' style={{ height: '10%', backgroundColor: 'gold' }}>
+        <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'pink', width: '20%', height: '75%' }}>
         <Paper className='paper'>
-          {/* <Right/> */}
+          {/* <left/> */}
 
           <List>
             {posts && posts.data.map((post, index) => (
@@ -318,6 +226,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
+                <ListItemText secondary={post.MACHINESN} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -327,175 +236,41 @@ function Menu2() {
               </ListItem>
             ))}
           </List>
-{/*           <List>
-          <ListItemText>afsafasfa</ListItemText>
-            {count &&count.data.map((ccc, index) => (
-              <ListItem
-                key={index}
-                button
-                onClick={onClick(index)}
-              >
-
-                <ListItemText primary={ccc.CLIENTID} />
-              </ListItem>
-            ))}
-          </List> */}
         </Paper>
+        <Grid container spacing={2} className="container" style={{ marginLeft: '10px' }}>
+          {/* <inputGrid itemName="MID">
+            <TextField ID="MID" label="Machine ID" />
+          </inputGrid>
+          <Grid itemName="SN">
+            <TextField ID="SN" label="Serial Number" />
+          </Grid> */}
+          <TextField type = "text" name="MID" id="MID" label="Machine ID" />
+          <TextField type = "text" name="SN" id="SN" label="Serial Number" />
+        </Grid>
 
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
+          rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>
           <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="COUNT_DATE" sortable={true} filter={true} ></AgGridColumn>
+          <AgGridColumn field="ALIAS" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
           <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
-          <AgGridColumn field="COUNT_TIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="COUNT_MODE" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="STACKCNT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="REJECTCNT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="DOUBLECNT" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
-
-        {/*         <AgGridReact
-            modules={this.state.modules}
-            columnDefs={this.state.columnDefs}
-            defaultColDef={this.state.defaultColDef}
-            rowData={this.state.rowData}
-            frameworkComponents={this.state.frameworkComponents}
-            onGridReady={this.onGridReady}
-          /> */}
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+        <Button variant="contained" color="primary" onClick={() => addBtn(TextField.MID, TextField.SN)}>Add</Button>
+        <Button variant="contained" color="primary" onClick={() => deleteBtn()}>Del</Button>
         <Footer />
-      </div>
-      <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
-        <div>
-          <div className="row">0
-            <label>suppressQuotes = </label>
-            <select id="suppressQuotes">
-              <option value="none">(default)</option>
-              <option value="true">true</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>columnSeparator = </label>
-            <select id="columnSeparator">
-              <option value="none">(default)</option>
-              <option value="tab">tab</option>
-              <option value="|">bar (|)</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginLeft: '10px' }}>
-          <div className="row">
-            <label>customHeader = </label>
-            <select id="customHeader">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-                  </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>customFooter = </label>
-            <select id="customFooter">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-              </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-        </div>
       </div>
     </div>
   );
-}
-
-var filterParams = {
-  comparator: function (filterLocalDateAtMidnight, cellValue) {
-    var dateAsString = cellValue;
-    var dateParts = dateAsString.split('/');
-    var cellDate = new Date(
-      Number(dateParts[2]),
-      Number(dateParts[1]) - 1,
-      Number(dateParts[0])
-    );
-    if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-      return 0;
-    }
-    if (cellDate < filterLocalDateAtMidnight) {
-      return -1;
-    }
-    if (cellDate > filterLocalDateAtMidnight) {
-      return 1;
-    }
-  },
-};
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    default:
-      return text;
-  }
 }
 
 export default Menu2

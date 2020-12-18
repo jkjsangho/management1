@@ -8,9 +8,12 @@ import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import TurnedInIcon from '@material-ui/icons/TurnedIn';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-
+import WebIcon from '@material-ui/icons/Web';
 import CheckIcon from '@material-ui/icons/Check';
+
+import { green } from '@material-ui/core/colors';
+
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -187,27 +190,28 @@ const MyDrawer = withStyles(styles)(
           <ListItemText>Menu 2</ListItemText>
         </ListItem>
         <ListItem button component={Link} to="/deviceinfo" replace onClick={onItemClick('DeviceInfo')}>
-        <ListItemIcon>
-            <CheckIcon color="primary"/>
-          </ListItemIcon>
+        
+            <WebIcon color="primary"/>
+        
           <ListItemText>DeviceInfo</ListItemText>
           </ListItem>
           <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
-          <ListItemIcon>
-          <CheckIcon/>
-          </ListItemIcon>
+        
+          <WebIcon color="secondary"/>
+        
           <ListItemText>CountInfo</ListItemText>
           </ListItem>
           <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
-          <ListItemIcon>
-            <CheckIcon/>
-          </ListItemIcon>
+        
+            <WebIcon color="action"/>        
           <ListItemText>SerialNum</ListItemText>
           </ListItem>
           <ListItem button component={Link} to="/blacklist" replace onClick={onItemClick('BlackList')}>
+          <WebIcon color="disabled"/>
           <ListItemText>BlackList</ListItemText>
           </ListItem>
           <ListItem button component={Link} to="/racog" replace onClick={onItemClick('Racog')}>
+          <WebIcon style={{ color: green[500] }}/>
           <ListItemText>Racog</ListItemText>
           </ListItem>
           <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
