@@ -104,6 +104,35 @@ app.get('/GetCountInfo', (req, res, next) => {
     });
 })
 
+app.get('/GetSerialInfo', (req, res, next) => {
+
+    /* res.send(['SQLite 접속완료']); */
+
+    var parms = [];
+    const query = `SELECT * FROM EE7_SERIALNOINFO`;
+
+    db.serialize(); //DB 사용선언?
+    db.all(query, parms, (err, row) => {
+        if (err) {
+            console.log(err);
+            console.log("err err err err err");
+            /*             callback(err) */
+        }
+        else {
+            res.json({
+                /* "message":"success", */
+                "data": row
+            })
+            /* console.log(row); */
+            /*             row.forEach((row)=>{
+                            console.log(row);
+                        }) */
+            console.log("OK OK OK OK OK");
+            /*             callback(data) */
+        }
+    });
+})
+
 /* app.get('/bbb', function(err, req, res, next){
     console.error(err.stack)
     res.status(500).send('Something broke!')
@@ -134,7 +163,9 @@ app.post('/post', (req, res) => {
     //Search시 Socket으로 디바이스 데이터 요청
     /*     const socket = socketio.connect('http://localhost:4000/'); */
 
-    var socket = net.connect({port:10000, host:'192.168.0.53'});
+    /* var socket = net.connect({port:10000, host:'192.168.0.53'}); */
+    /* var socket = net.connect({port:10000, host:'localhost'}); */
+    var socket = net.connect({port:10000, host:'192.168.60.1'});
 
     /*     (() => {
             socket.emit('init', { name: req.body });
