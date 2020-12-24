@@ -13,6 +13,8 @@ import CheckIcon from '@material-ui/icons/Check';
 
 import { green } from '@material-ui/core/colors';
 
+import Divider from '@material-ui/core/Divider';
+
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import InputBase from '@material-ui/core/InputBase';
@@ -27,6 +29,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { closestIndexTo } from 'date-fns';
 
 const styles = theme => ({
   menu: {
@@ -85,7 +95,7 @@ const styles = theme => ({
     color: 'inherit',
     width: '100%',
   },
-  Tab:{
+  Tab: {
     flexGrow: 1
   },
   inputInput: {
@@ -131,11 +141,11 @@ const MyToolbar = withStyles(styles)(
           </Typography>
           <div className={classes.grow} />
           <div className={classes.Tab}>
-           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
               <Tab label="HOME Tab1" component={Link} to="/" />
-              <Tab label="Menu1 Tab2" component={Link} to="/about"/>
-              <Tab label="Menu2 Tab3" component={Link} to="/menu2"/>
-           </Tabs>
+              <Tab label="Menu1 Tab2" component={Link} to="/about" />
+              <Tab label="Menu2 Tab3" component={Link} to="/menu2" />
+            </Tabs>
           </div>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -152,7 +162,7 @@ const MyToolbar = withStyles(styles)(
           </div>
         </Toolbar>
       </AppBar>
-{/*       {value === 0 && (
+      {/*       {value === 0 && (
         <Typography component="div" className={classes.tabContent}>
           Item One
         </Typography>
@@ -173,79 +183,107 @@ const MyToolbar = withStyles(styles)(
 );
 
 const MyDrawer = withStyles(styles)(
+
   ({ open, onClose, onItemClick }) => (
     <Drawer open={open} onClose={onClose}>
       <List>
+
+        <Divider />
+
         <ListItem button component={Link} to="/" replace onClick={onItemClick('Home')}>
-        <TurnedInIcon color="primary"/>
+          <WebIcon color="primary" />
           <ListItemText>Home</ListItemText>
         </ListItem>
-        <ListItem button component={Link} to="/about" replace onClick={onItemClick('Menu 1')}>
+
+        <Divider />
+
+        {/*         <ListItem button component={Link} to="/about" replace onClick={onItemClick('Menu 1')}>
         <TurnedInIcon color="primary"/>
           <ListItemText>Menu 1</ListItemText>
         </ListItem>
-        <ListItem button component={Link} to="/menu2" replace onClick={onItemClick('Menu 2')}>
-          {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
-          <TurnedInIcon color="primary"/>
+        <ListItem button component={Link} to="/menu2" replace onClick={onItemClick('Menu 2')}> */}
+        {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
+        {/*           <TurnedInIcon color="primary"/>
           <ListItemText>Menu 2</ListItemText>
-        </ListItem>
+        </ListItem> */}
         <ListItem button component={Link} to="/deviceinfo" replace onClick={onItemClick('DeviceInfo')}>
-        
-            <WebIcon color="primary"/>
-        
+          <WebIcon color="primary" />
           <ListItemText>DeviceInfo</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
-        
-          <WebIcon color="secondary"/>
-        
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
+          <WebIcon color="secondary" />
           <ListItemText>CountInfo</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
-        
-            <WebIcon color="action"/>        
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
+          <WebIcon color="action" />
           <ListItemText>SerialNum</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/blacklist" replace onClick={onItemClick('BlackList')}>
-          <WebIcon color="disabled"/>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/blacklist" replace onClick={onItemClick('BlackList')}>
+          <WebIcon color="disabled" />
           <ListItemText>BlackList</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/racog" replace onClick={onItemClick('Racog')}>
-          <WebIcon style={{ color: green[500] }}/>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/racog" replace onClick={onItemClick('Racog')}>
+          <WebIcon style={{ color: green[500] }} />
           <ListItemText>Racog</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
+          <WebIcon color="primary" />
           <ListItemText>Settings</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/upgrade" replace onClick={onItemClick('upgrade')}>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/upgrade" replace onClick={onItemClick('upgrade')}>
+          <WebIcon color="primary" />
           <ListItemText>Upgrade</ListItemText>
-          </ListItem>
-          <ListItem button component={Link} to="/user" replace onClick={onItemClick('User')}>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/user" replace onClick={onItemClick('User')}>
+          <WebIcon color="primary" />
           <ListItemText>User</ListItemText>
-          </ListItem>
+        </ListItem>
+
+        <Divider />
+
       </List>
-    </Drawer>
+    </Drawer >
   )
 );
 
 function Header({ classes }) {
 
   /* 메뉴 목록 */
-  let [drawer, setDrawer] = useState(false);
-  
+  const [drawer, setDrawer] = useState(false);
+
   /* 타이틀 수정 */
-  let [title, setTitle] = useState('Home');
+  const [title, setTitle] = useState();
 
   /* 탭 */
-  let [value, setValue] = useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (e, value) => {
     setValue(value);
   };
 
-  console.log(title);
-  console.log(value);
-  console.log(title);
+  console.log("title = ", title);
+  console.log("value = ", value);
 
   const toggleDrawer = () => {
     setDrawer(!drawer);
@@ -257,7 +295,7 @@ function Header({ classes }) {
 
   return (
     <div className={classes.root}>
-      <MyToolbar title={title} onMenuClick={toggleDrawer} value={value} handleChange={handleChange}/>
+      <MyToolbar title={title} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
 
       {/*Navigation으로 빼서 분활?*/}
       <MyDrawer

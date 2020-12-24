@@ -20,6 +20,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DevicesIcon from '@material-ui/icons/Devices';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
+import Divider from '@material-ui/core/Divider';
+
 //달력
 import CustomDateComponent from '../components/customDateComponent';
 
@@ -77,25 +79,25 @@ function Menu2() {
   }
 
   //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
-
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
+  /*   const [data, setData] = useState({ hits: [] });
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        const result = await axios.get(
+          '/GetUserInfo'
+        );
+        setData(result.data);
+        console.log("result.data = ", result.data);
+        console.log("result.data.data = ", result.data.data);
+      };
+      fetchData();
+    }, []);
+  
+    console.log('1================1');
+    console.log("Right = ", Right);
+    console.log("data =", data);
+    console.log("data.data = ", data.data);
+    console.log('1================1'); */
 
 
 
@@ -156,7 +158,7 @@ function Menu2() {
     params.api.sizeColumnsToFit();
   };
   /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
+  /* const searchBtn = () => { */
   const searchBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("posts = ", posts);
@@ -180,7 +182,7 @@ function Menu2() {
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
   useEffect(() => {
@@ -205,19 +207,27 @@ function Menu2() {
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
 
-    //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    console.log("flag 변경 전 index = ", index);
+    console.log("index flag 변경 전 = ",posts.data[index].selected);
+    
+    if(posts.data[index].selected == null){
       posts.data[index].selected = true;
-      flag = true;
-    }else if(flag == true){
+      console.log("index flag = ",posts.data[index].selected);
+      /* flag = true; */
+    }else if(posts.data[index].selected == true){
       posts.data[index].selected = false;
-      flag = false;
-    }else if(flag == false){
-      flag = true;
+      console.log("index flag = ",posts.data[index].selected);
+      /* flag = false; */
+    }else if(posts.data[index].selected == false){
+      /* flag = true; */
       posts.data[index].selected = true;
+      console.log("index flag = ",posts.data[index].selected);
     }
+
+    console.log("index flag 변경 후 = ",posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
+    console.log("flag 변경 후 index = ", index);
 
     /*    const item = items[index]; */
     const item = posts.data[index];
@@ -250,12 +260,11 @@ function Menu2() {
     console.log("selected : ", posts.data.selected);
 
     //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
-    })
+    axios.post('post',
+      {
+        command: 'GETCNTI',
+        clientid: posts.data[index].CLIENTID,
+      })
       .then(function (response) {
         console.log(response)
         console.log('response')
@@ -270,18 +279,16 @@ function Menu2() {
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
-          <Header />
+{/*         <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
+
+        </div> */}
+        <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'pink', width: '20%', height: '75%' }}>
         <Paper className='paper'>
           {/* <left/> */}
-
           <List>
+            <Divider />
             {posts && posts.data.map((post, index) => (
               <ListItem
                 key={index}
@@ -290,7 +297,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText secondary={post.MACHINESN} />
+                <ListItemText secondary={post.CLIENTID} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -299,6 +306,7 @@ function Menu2() {
                 </ListItemIcon>
               </ListItem>
             ))}
+            <Divider />
           </List>
         </Paper>
 
@@ -306,9 +314,9 @@ function Menu2() {
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
           rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>
+          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={frameworkComponents}>
           <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="ALIAS" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="USERSTATUS" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
@@ -330,6 +338,10 @@ function Menu2() {
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
+            CSV Export
+        </Button>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>

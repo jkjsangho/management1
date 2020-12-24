@@ -29,6 +29,9 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+
 import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
@@ -47,8 +50,9 @@ function Menu2() {
 
   var frameworkComponents = { agDateInput: CustomDateComponent };
 
-
   console.log("flag 초기값 = ", flag);
+
+  const tabName = ["On/Off", "Level"];
 
   const [gridApi, setGridApi] = useState(null);
 
@@ -77,25 +81,25 @@ function Menu2() {
   }
 
   //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
-
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
+  /*   const [data, setData] = useState({ hits: [] });
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        const result = await axios.get(
+          '/GetUserInfo'
+        );
+        setData(result.data);
+        console.log("result.data = ", result.data);
+        console.log("result.data.data = ", result.data.data);
+      };
+      fetchData();
+    }, []);
+  
+    console.log('1================1');
+    console.log("Right = ", Right);
+    console.log("data =", data);
+    console.log("data.data = ", data.data);
+    console.log('1================1'); */
 
 
 
@@ -156,7 +160,7 @@ function Menu2() {
     params.api.sizeColumnsToFit();
   };
   /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
+  /* const searchBtn = () => { */
   const searchBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
@@ -180,7 +184,7 @@ function Menu2() {
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
 
@@ -217,14 +221,14 @@ function Menu2() {
         console.error(error);
       }
     };
-  
+
     const countBreeds = async () => {
       const breeds = getBreeds();
       setCount(breeds);
       console.log("Breeds = ", count);
-   
+
     };
-    
+
     //getcountinfo 호출
 
     console.log("count.item1 : ", count);
@@ -233,13 +237,13 @@ function Menu2() {
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    if (flag == null) {
       posts.data[index].selected = true;
       flag = true;
-    }else if(flag == true){
+    } else if (flag == true) {
       posts.data[index].selected = false;
       flag = false;
-    }else if(flag == false){
+    } else if (flag == false) {
       flag = true;
       posts.data[index].selected = true;
     }
@@ -278,12 +282,12 @@ function Menu2() {
     console.log("count.itemEND : ", count);
 
     //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201216'
-    })
+    axios.post('post',
+      {
+        command: 'GETCNTI',
+        clientid: posts.data[0].CLIENTID,
+        date: '2020110120201216'
+      })
       .then(function (response) {
         console.log(response)
         console.log('response')
@@ -303,7 +307,7 @@ function Menu2() {
             CSV Export
         </Button>
         </div>
-          <Header />
+        <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
         <Paper className='paper'>
@@ -327,7 +331,7 @@ function Menu2() {
               </ListItem>
             ))}
           </List>
-{/*           <List>
+          {/*           <List>
           <ListItemText>afsafasfa</ListItemText>
             {count &&count.data.map((ccc, index) => (
               <ListItem
@@ -373,6 +377,13 @@ function Menu2() {
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         <Footer />
+        <ul className="modelsWrapper">
+          {tabName.map((name, index) => {
+            return (
+              <li>{name}</li>
+            );
+          })}
+        </ul>
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
         <div>

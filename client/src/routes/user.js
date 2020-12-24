@@ -53,8 +53,19 @@ function Menu2() {
 
   var frameworkComponents = { agDateInput: CustomDateComponent };
 
-
   console.log("flag 초기값 = ", flag);
+
+  const [value, setValue] = React.useState('');
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const [valueSN, setSN] = React.useState('');
+
+  const handleChangeSN = (event) => {
+    setSN(event.target.value);
+  };
 
   const [gridApi, setGridApi] = useState(null);
 
@@ -88,14 +99,16 @@ function Menu2() {
     axios.post('post', {
       command: 'ADDUSER',
       /* mid: posts.data[0].CLIENTID, */
-      mid: TextField.name.MID,
-      sn: TextField.name.SN
+      mid: value,
+      sn: valueSN
     })
       .then(function (response) {
         console.log("response = ", response);
+        console.log("전송완료");
       })
       .catch(function (error) {
         console.log("error = ", error);
+        console.log("에러");
       });
   }
   const deleteBtn = () => {
@@ -105,14 +118,16 @@ function Menu2() {
 
     axios.post('post', {
       command: 'DELUSER',
-      mid: this.name.MID,
-      sn: this.name.SN
+      mid: value,
+      sn: valueSN
     })
       .then(function (response) {
         console.log("response = ", response);
+        console.log("전송완료");
       })
       .catch(function (error) {
         console.log("error = ", error);
+        console.log("에러");
       });
   }
 
@@ -146,19 +161,26 @@ function Menu2() {
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
 
-    //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if (flag == null) {
+    console.log("flag 변경 전 index = ", index);
+    console.log("index flag 변경 전 = ",posts.data[index].selected);
+    
+    if(posts.data[index].selected == null){
       posts.data[index].selected = true;
-      flag = true;
-    } else if (flag == true) {
+      console.log("index flag = ",posts.data[index].selected);
+      /* flag = true; */
+    }else if(posts.data[index].selected == true){
       posts.data[index].selected = false;
-      flag = false;
-    } else if (flag == false) {
-      flag = true;
+      console.log("index flag = ",posts.data[index].selected);
+      /* flag = false; */
+    }else if(posts.data[index].selected == false){
+      /* flag = true; */
       posts.data[index].selected = true;
+      console.log("index flag = ",posts.data[index].selected);
     }
+    console.log("index flag 변경 후 = ",posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
+    console.log("flag 변경 후 index = ", index);
 
     /*    const item = items[index]; */
     const item = posts.data[index];
@@ -194,8 +216,7 @@ function Menu2() {
     axios.post('post',
       {
         command: 'GETCNTI',
-        clientid: posts.data[0].CLIENTID,
-        date: '2020110120201205'
+        clientid: posts.data[index].CLIENTID,
       })
       .then(function (response) {
         console.log(response)
@@ -213,7 +234,7 @@ function Menu2() {
       <div className='title' style={{ height: '10%', backgroundColor: 'gold' }}>
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'pink', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#ffcdd2', width: '20%', height: '75%' }}>
         <Paper className='paper'>
           {/* <left/> */}
 
@@ -237,16 +258,30 @@ function Menu2() {
             ))}
           </List>
         </Paper>
-        <Grid container spacing={2} className="container" style={{ marginLeft: '10px' }}>
+        <div>
+        <br></br>  
+        </div>
+       {/*  <Grid container spacing={2} className="container" style={{ marginLeft: '10px' }}> */}
           {/* <inputGrid itemName="MID">
             <TextField ID="MID" label="Machine ID" />
           </inputGrid>
           <Grid itemName="SN">
             <TextField ID="SN" label="Serial Number" />
           </Grid> */}
-          <TextField type = "text" name="MID" id="MID" label="Machine ID" />
-          <TextField type = "text" name="SN" id="SN" label="Serial Number" />
-        </Grid>
+          <div>
+          <TextField inputProps = {{maxLength :  3,}} id="MID" label="Machine ID *" value={value} onChange={handleChange} color="secondary" />
+          </div>
+          <br></br>
+          <TextField inputProps = {{maxLength :  7,}}id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary"/>
+          <div>
+          <br></br>
+          <TextField id="filled" label="MachineID_Copy"  value={value} onChange={handleChange} variant="filled" color="secondary"/>
+          </div>
+          <div>
+          <br></br>
+          <TextField id="outlined" label="Password"  type = "password" value={valueSN} onChange={handleChangeSN} variant="outlined" color="secondary"/>
+          </div>
+        {/* </Grid> */}
 
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
@@ -265,7 +300,8 @@ function Menu2() {
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => addBtn(TextField.MID, TextField.SN)}>Add</Button>
+        <Button variant="contained" color="primary" onClick={() => addBtn()}>Add</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => deleteBtn()}>Del</Button>
         <Footer />
       </div>

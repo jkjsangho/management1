@@ -286,7 +286,7 @@ function Menu2() {
     axios.post('post', 
     {
       command: 'GETSNOI',
-      clientid: posts.data[0].CLIENTID,
+      clientid: posts.data[index].CLIENTID,
       date: '2020110120201216'
     })
       .then(function (response) {
@@ -310,7 +310,7 @@ function Menu2() {
         </div>
           <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '10%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '15%', height: '75%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
 
@@ -323,6 +323,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
+                <ListItemText primary={post.CLIENTID} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -348,7 +349,7 @@ function Menu2() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '90%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
           rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>

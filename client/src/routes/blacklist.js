@@ -281,7 +281,7 @@ function Menu2() {
     axios.post('post', 
     {
       command: 'GETBLSI',
-      clientid: posts.data[0].CLIENTID
+      clientid: posts.data[index].CLIENTID
     })
       .then(function (response) {
         console.log(response)
@@ -317,6 +317,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
+                <ListItemText primary={post.CLIENTID} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}

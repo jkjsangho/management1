@@ -76,66 +76,6 @@ function Menu2() {
     };
   }
 
-  //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
-
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
-
-
-
-  /*   const [data, setData] = useState({ hits: [] });
-   
-    useEffect(async () => {
-      const result = await axios(
-        '/GetUserInfo',
-      );
-   
-      setData(result.data);
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-    useEffect(() => {
-      axios.get("api/customers")
-        .then(({data}) => setRowData({data}));
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-  
-    useEffect(() => {
-      fetch('/GetUserInfo')
-        .then(res => res.json())
-        .then(rowData => setRowData(rowData.UserInfo))
-    }, []);
-  
-    const [rowCount, setCount] = useState([]);
-    useEffect(() => {
-      fetch('/GetCountInfo')
-        .then(res1 => res1.json())
-        .then(rowCount => setCount(rowCount.CountInfo))
-    }, []); */
-
-  /*   console.log('================');
-    console.log(result.UserInfo);
-    console.log('================');
-    console.log(rowCount);
-    console.log('================'); */
-
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
     var columnsToShow = [];
@@ -157,10 +97,11 @@ function Menu2() {
   };
   /* const onClick = index => () => { */
     /* const searchBtn = () => { */
-  const searchBtn = () => {
+  const searchBtn = index => () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
+    console.log("index ===", index);
 
     axios.post('post', {
       command: 'CMDCNTI',
@@ -232,17 +173,26 @@ function Menu2() {
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    console.log("flag 변경 전 index = ", index);
+    console.log("index flag 변경 전 = ",posts.data[index].selected);
+    
+    if(posts.data[index].selected == null){
       posts.data[index].selected = true;
-      flag = true;
-    }else if(flag == true){
+      console.log("index flag = ",posts.data[index].selected);
+      /* flag = true; */
+    }else if(posts.data[index].selected == true){
       posts.data[index].selected = false;
-      flag = false;
-    }else if(flag == false){
-      flag = true;
+      console.log("index flag = ",posts.data[index].selected);
+      /* flag = false; */
+    }else if(posts.data[index].selected == false){
+      /* flag = true; */
       posts.data[index].selected = true;
+      console.log("index flag = ",posts.data[index].selected);
     }
+
+    console.log("index flag 변경 후 = ",posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
+    console.log("flag 변경 후 index = ", index);
 
     /*    const item = items[index]; */
     const item = posts.data[index];
@@ -280,8 +230,7 @@ function Menu2() {
     axios.post('post', 
     {
       command: 'GETCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201216'
+      clientid: posts.data[index].CLIENTID
     })
       .then(function (response) {
         console.log(response)
@@ -293,15 +242,10 @@ function Menu2() {
       });
   };
   //Left
-  console.log("count end", count)
+  
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
           <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '15%', height: '75%' }}>
@@ -317,7 +261,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText secondary={post.MACHINESN} />
+                <ListItemText secondary={post.USERSTATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -346,7 +290,7 @@ function Menu2() {
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
           rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ resizable: true }} colResizeDefault={'shift'}
-          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={{ agDateInput: CustomDateComponent }}>
+          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={{ agDateInput: CustomDateComponent }}>
           <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
@@ -370,12 +314,16 @@ function Menu2() {
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+        <Button variant="contained" color="primary" onClick={searchBtn()}>Search</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
+            CSV Export
+        </Button>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
         <div>
-          <div className="row">0
+          <div className="row">
             <label>suppressQuotes = </label>
             <select id="suppressQuotes">
               <option value="none">(default)</option>

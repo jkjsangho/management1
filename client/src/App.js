@@ -16,6 +16,7 @@ import racog from "./routes/racog";
 import settings from "./routes/settings";
 import upgrade from "./routes/upgrade";
 import user from "./routes/user";
+import user2 from "./routes/user2";
 import './App.css';
 //import CustomerAdd from './components/CustomerAdd';
 
@@ -23,7 +24,7 @@ import './App.css';
 function App(){
   return(
     <HashRouter>
-      <Route path="/" exact={true} component={Home}/>
+      <Route path="/" exact={true} component={userinfo}/>
       <Route path="/about" component={About}/>
       <Route path="/menu1" component={menu1}/>
       <Route path="/menu2" component={menu2}/>
@@ -35,6 +36,7 @@ function App(){
       <Route path="/settings" component={settings}/>
       <Route path="/upgrade" component={upgrade}/>
       <Route path="/user" component={user}/>
+      <Route path="/user2" component={user2}/>
       {/* <Navigation /> */}
       {/* <Route path="/movie-detail" component={Detail}/> */}
     </HashRouter>
