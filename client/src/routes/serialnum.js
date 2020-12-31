@@ -323,7 +323,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText primary={post.CLIENTID} />
+                <ListItemText secondary={post.USERSTATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}

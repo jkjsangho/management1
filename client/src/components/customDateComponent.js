@@ -30,7 +30,7 @@ export default forwardRef((props, ref) => {
     setPicker(
       Flatpickr(refFlatPickr.current, {
         onChange: onDateChanged,
-        dateFormat: 'd/m/Y',
+        dateFormat: 'Y-m-d',
         wrap: true,
       })
     );

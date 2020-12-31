@@ -29,6 +29,8 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
+/* import { AllCommunityModules } from '@ag-grid-community/all-modules'; */
+
 import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
@@ -44,16 +46,16 @@ const styles = theme => ({
 function Menu2() {
 
   /* http://localhost:5000 */
-
-  var frameworkComponents = { agDateInput: CustomDateComponent };
-
+  /* var frameworkComponents = { agDateInput: CustomDateComponent }; */
 
   console.log("flag 초기값 = ", flag);
 
   const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
 
-  function onGridReady(params) {
+  const onGridReady = (params) => {
     setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
   };
 
   const onBtnExport = () => {
@@ -95,33 +97,12 @@ function Menu2() {
     params.columnApi.setColumnsVisible(columnsToHide, false);
     params.api.sizeColumnsToFit();
   };
-  /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
-  const searchBtn = index => () => {
-    //Search 클릭 시 Post 전송
-    console.log("searchposts = ", posts);
-    console.log("posts.data = ", posts.data);
-    console.log("index ===", index);
-
-    axios.post('post', {
-      command: 'CMDCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
-    })
-      .then(function (response) {
-        console.log("response = ", response);
-      })
-      .catch(function (error) {
-        console.log("error = ", error);
-      });
-  }
-
 
   //Left
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
 
@@ -144,53 +125,131 @@ function Menu2() {
   const [count, setCount] = useState();
   console.log("count start", count)
 
+  /* const onClick = index => () => { */
+  /* const searchBtn = () => { */
+  const searchBtn = () => {
+    //Search 클릭 시 Post 전송
+    console.log("searchposts = ", posts);
+    console.log("posts.data = ", posts.data);
+    console.log("posts.data[0].selected = ", posts.data[0].selected);
+    console.log("posts.data[0].selected = ", posts.data[1].selected);
 
-  //리스트 아이템 클릭 selected 작업
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+        console.log("index = ", index);
+        console.log("abc = ", list.CLIENTID);
+        console.log("YYYY = ", list.CLIENTID.substring(0, 4));
+        console.log("MM = ", list.CLIENTID.substring(4, 6));
+        console.log("DD = ", list.CLIENTID.substring(6, 8));
+
+        axios.post('post', {
+          command: 'GETCNTI',
+          clientid: posts.data[index].CLIENTID,
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+        const getBreeds = async () => {
+          try {
+            return axios.get('/getcountinfo').then(({ data }) => setCount(data));
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count);
+      }
+    })
+
+    /*     const getBreeds = async () => {
+          try {
+            return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+    
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count); */
+
+    /*     axios.post('post', {
+          command: 'CMDCNTI',
+          clientid: posts.data[0].CLIENTID,
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          }); */
+  }
+
+
+  //Left Click Start
   const onClick = index => () => {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
 
-    const getBreeds = async () => {
-      try {
-        return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  
-    const countBreeds = async () => {
-      const breeds = getBreeds();
-      setCount(breeds);
-      console.log("Breeds = ", count);
-   
-    };
+    /*     const getBreeds = async () => {
+          try {
+            return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+          } catch (error) {
+            console.error(error);
+          }
+        };
     
-    //getcountinfo 호출
-    console.log("count.item1 : ", count);
-    countBreeds();
-    console.log("count.item2 : ", count);
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+    
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count); */
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
     console.log("flag 변경 전 index = ", index);
-    console.log("index flag 변경 전 = ",posts.data[index].selected);
-    
-    if(posts.data[index].selected == null){
+    console.log("index flag 변경 전 = ", posts.data[index].selected);
+
+    if (posts.data[index].selected == null) {
       posts.data[index].selected = true;
-      console.log("index flag = ",posts.data[index].selected);
+      console.log("index flag = ", posts.data[index].selected);
       /* flag = true; */
-    }else if(posts.data[index].selected == true){
+    } else if (posts.data[index].selected == true) {
       posts.data[index].selected = false;
-      console.log("index flag = ",posts.data[index].selected);
+      console.log("index flag = ", posts.data[index].selected);
       /* flag = false; */
-    }else if(posts.data[index].selected == false){
+    } else if (posts.data[index].selected == false) {
       /* flag = true; */
       posts.data[index].selected = true;
-      console.log("index flag = ",posts.data[index].selected);
+      console.log("index flag = ", posts.data[index].selected);
     }
 
-    console.log("index flag 변경 후 = ",posts.data[index].selected);
+    console.log("index flag 변경 후 = ", posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
     console.log("flag 변경 후 index = ", index);
 
@@ -226,27 +285,27 @@ function Menu2() {
     console.log("selected : ", posts.data.selected);
     console.log("count.itemEND : ", count);
 
-    //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETCNTI',
-      clientid: posts.data[index].CLIENTID
-    })
-      .then(function (response) {
-        console.log(response)
-        console.log('response')
-      })
-      .catch(function (error) {
-        console.log(error)
-        console.log('error')
-      });
+    //Left List 아이템 클릭 시 Post 전송
+    /*     axios.post('post',
+          {
+            command: 'GETCNTI',
+            clientid: posts.data[index].CLIENTID
+          })
+          .then(function (response) {
+            console.log(response)
+            console.log('response')
+          })
+          .catch(function (error) {
+            console.log(error)
+            console.log('error')
+          }); */
   };
-  //Left
-  
+  //Left Click End
+
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-          <Header />
+        <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '15%', height: '75%' }}>
         <Paper className='paper'>
@@ -260,8 +319,8 @@ function Menu2() {
                 selected={post.selected}
                 onClick={onClick(index)}
               >
-                <ListItemText primary={post.MACHINEID} />
-                <ListItemText secondary={post.USERSTATUS} />
+                <ListItemText primary={post.MACHINEID}/>
+                <ListItemText primary={post.USERSTATUS} secondary={post.CLIENTID}/>
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -271,7 +330,7 @@ function Menu2() {
               </ListItem>
             ))}
           </List>
-{/*           <List>
+          {/*           <List>
           <ListItemText>afsafasfa</ListItemText>
             {count &&count.data.map((ccc, index) => (
               <ListItem
@@ -289,18 +348,18 @@ function Menu2() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ resizable: true }} colResizeDefault={'shift'}
+          /* modules={AllCommunityModules} */ rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true,  resizable: true }} colResizeDefault={'shift'}
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={{ agDateInput: CustomDateComponent }}>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="COUNT_DATE" sortable={true} filter={true} /* filterParams={filterParams} */></AgGridColumn>
-          <AgGridColumn field="COUNT_TIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="COUNT_MODE" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="STACKCNT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="REJECTCNT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="DOUBLECNT" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="DATETIME" ></AgGridColumn>
+          <AgGridColumn field="IPADDR" ></AgGridColumn>
+          <AgGridColumn field="CLIENTID" ></AgGridColumn>
+          <AgGridColumn field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
+          <AgGridColumn field="COUNT_TIME" ></AgGridColumn>
+          <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
+          <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
+          <AgGridColumn field="STACKCNT" ></AgGridColumn>
+          <AgGridColumn field="REJECTCNT" ></AgGridColumn>
+          <AgGridColumn field="DOUBLECNT" ></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -314,10 +373,10 @@ function Menu2() {
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={searchBtn()}>Search</Button>
+        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
+          CSV Export
         </Button>
         <Footer />
       </div>
@@ -369,12 +428,24 @@ function Menu2() {
 var filterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
-    var dateParts = dateAsString.split('/');
+    /* var dateParts = dateAsString.split('/');
+    
     var cellDate = new Date(
       Number(dateParts[2]),
       Number(dateParts[1]) - 1,
       Number(dateParts[0])
+    ); */
+    var YYYY = dateAsString.substring(0, 4);
+    var MM = dateAsString.substring(4, 6);
+    var DD = dateAsString.substring(6, 8);
+    var cellDate = new Date(
+      Number(DD),
+      Number(MM) - 1,
+      Number(YYYY)
     );
+
+    console.log("cellDate = ", Number(cellDate));
+
     if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
       return 0;
     }
