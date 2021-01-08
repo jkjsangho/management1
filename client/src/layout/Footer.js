@@ -3,7 +3,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   Footer: {
-
+    width: '100%',
+    height: '100%'
   }
 });
 

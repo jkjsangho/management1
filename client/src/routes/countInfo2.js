@@ -205,7 +205,7 @@ function Menu2() {
   }
 
 
-  //Left Click Start
+  //Left Click Start(json에 selected 추가해서 true false로 체크박스 확인)
   const onClick = index => () => {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
@@ -270,8 +270,6 @@ function Menu2() {
     console.log("item = ", item);
     console.log("=================");
 
-    //왼쪽 리스트 목록을 지속적으로 RESTAPI에서 받아와서 selected 초기값 null로 인식
-
     console.log("flag2 = ", flag);
     const newItems = [...items];
     console.log("newItems = ", newItems);
@@ -319,8 +317,8 @@ function Menu2() {
                 selected={post.selected}
                 onClick={onClick(index)}
               >
-                <ListItemText primary={post.MACHINEID}/>
-                <ListItemText primary={post.USERSTATUS} secondary={post.CLIENTID}/>
+                <ListItemText primary={post.MACHINEID} />
+                <ListItemText primary={post.USERSTATUS} secondary={post.CLIENTID} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -348,13 +346,14 @@ function Menu2() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          /* modules={AllCommunityModules} */ rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true,  resizable: true }} colResizeDefault={'shift'}
-          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={{ agDateInput: CustomDateComponent }}>
+          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
+          Components={{ agDateInput: CustomDateComponent }}/* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* modules={AllCommunityModules} */
+          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
           <AgGridColumn field="DATETIME" ></AgGridColumn>
           <AgGridColumn field="IPADDR" ></AgGridColumn>
           <AgGridColumn field="CLIENTID" ></AgGridColumn>
           <AgGridColumn field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
-          <AgGridColumn field="COUNT_TIME" ></AgGridColumn>
+          <AgGridColumn field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
           <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
           <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
           <AgGridColumn field="STACKCNT" ></AgGridColumn>
@@ -372,7 +371,7 @@ function Menu2() {
           /> */}
       </div>
 
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static', height: '90%', width: '100%' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
@@ -428,23 +427,26 @@ function Menu2() {
 var filterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
-    /* var dateParts = dateAsString.split('/');
+/*     console.log("dateAsString = ", dateAsString);
+        var dateParts = dateAsString.split('/');
     
-    var cellDate = new Date(
-      Number(dateParts[2]),
-      Number(dateParts[1]) - 1,
-      Number(dateParts[0])
-    ); */
+        var cellDate = new Date(
+          Number(dateParts[2]),
+          Number(dateParts[1]) - 1,
+          Number(dateParts[0])
+        ); */
     var YYYY = dateAsString.substring(0, 4);
     var MM = dateAsString.substring(4, 6);
     var DD = dateAsString.substring(6, 8);
     var cellDate = new Date(
-      Number(DD),
+      Number(YYYY),
       Number(MM) - 1,
-      Number(YYYY)
-    );
-
-    console.log("cellDate = ", Number(cellDate));
+      Number(DD)
+    ); 
+    console.log("YYYY = ", Number(YYYY));
+    console.log("MM = ", Number(MM));
+    console.log("DD = ", Number(DD));
+    console.log("cellDate = ", cellDate);
 
     if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
       return 0;

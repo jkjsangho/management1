@@ -32,6 +32,7 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
+import { message } from 'statuses';
 
 let flag;
 
@@ -157,7 +158,15 @@ function Menu2() {
   };
   /* const onClick = index => () => { */
     /* const searchBtn = () => { */
-  const searchBtn = () => {
+      const uploadBtn = () => {
+
+        console.log("업로드 진입");
+        
+        
+
+      }
+        
+      const searchBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
@@ -372,6 +381,8 @@ function Menu2() {
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => uploadBtn()}>Upload</Button>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
