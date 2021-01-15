@@ -198,8 +198,6 @@ function Menu2() {
     console.log("item = ", item);
     console.log("=================");
 
-    //왼쪽 리스트 목록을 지속적으로 RESTAPI에서 받아와서 selected 초기값 null로 인식
-
     console.log("flag2 = ", flag);
     const newItems = [...items];
     console.log("newItems = ", newItems);

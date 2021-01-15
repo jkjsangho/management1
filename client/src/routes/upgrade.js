@@ -76,67 +76,6 @@ function Menu2() {
       customFooter: getValue('#customFooter'),
     };
   }
-
-  //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
-
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
-
-
-
-  /*   const [data, setData] = useState({ hits: [] });
-   
-    useEffect(async () => {
-      const result = await axios(
-        '/GetUserInfo',
-      );
-   
-      setData(result.data);
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-    useEffect(() => {
-      axios.get("api/customers")
-        .then(({data}) => setRowData({data}));
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-  
-    useEffect(() => {
-      fetch('/GetUserInfo')
-        .then(res => res.json())
-        .then(rowData => setRowData(rowData.UserInfo))
-    }, []);
-  
-    const [rowCount, setCount] = useState([]);
-    useEffect(() => {
-      fetch('/GetCountInfo')
-        .then(res1 => res1.json())
-        .then(rowCount => setCount(rowCount.CountInfo))
-    }, []); */
-
-  /*   console.log('================');
-    console.log(result.UserInfo);
-    console.log('================');
-    console.log(rowCount);
-    console.log('================'); */
-
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
     var columnsToShow = [];
@@ -156,17 +95,19 @@ function Menu2() {
     params.columnApi.setColumnsVisible(columnsToHide, false);
     params.api.sizeColumnsToFit();
   };
-  /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
-      const uploadBtn = () => {
 
-        console.log("업로드 진입");
-        
-        
+  const uploadBtn = () => {
 
+    console.log("업로드 진입");
+
+    axios.post('post', {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
-        
-      const searchBtn = () => {
+    })
+  }
+
+  const searchBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
@@ -189,7 +130,7 @@ function Menu2() {
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
 
@@ -221,19 +162,19 @@ function Menu2() {
 
     const getBreeds = async () => {
       try {
-        return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+        return axios.get('/getcountinfo').then(({ data }) => setCount(data));
       } catch (error) {
         console.error(error);
       }
     };
-  
+
     const countBreeds = async () => {
       const breeds = getBreeds();
       setCount(breeds);
       console.log("Breeds = ", count);
-   
+
     };
-    
+
     //getcountinfo 호출
 
     console.log("count.item1 : ", count);
@@ -242,13 +183,13 @@ function Menu2() {
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    if (flag == null) {
       posts.data[index].selected = true;
       flag = true;
-    }else if(flag == true){
+    } else if (flag == true) {
       posts.data[index].selected = false;
       flag = false;
-    }else if(flag == false){
+    } else if (flag == false) {
       flag = true;
       posts.data[index].selected = true;
     }
@@ -287,12 +228,12 @@ function Menu2() {
     console.log("count.itemEND : ", count);
 
     //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201216'
-    })
+    axios.post('post',
+      {
+        command: 'GETCNTI',
+        clientid: posts.data[0].CLIENTID,
+        date: '2020110120201216'
+      })
       .then(function (response) {
         console.log(response)
         console.log('response')
@@ -303,6 +244,44 @@ function Menu2() {
       });
   };
   //Left
+
+  const [imgBase64, setImgBase64] = useState(""); // 파일 base64
+  const [imgFile, setImgFile] = useState(null);	//파일	
+
+  const handleChangeFile = (event) => {
+    let reader = new FileReader();
+
+    reader.onloadend = () => {
+      // 2. 읽기가 완료되면 아래코드가 실행됩니다.
+      const base64 = reader.result;
+      if (base64) {
+        setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
+      }
+    }
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
+      setImgFile(event.target.files[0]); // 파일 상태 업데이트
+      console.log("FileState = ", event.target.files[0]);
+    }
+  }
+
+  const handlePost = () => {
+    const formData = new FormData();
+    console.log("file post start");
+    
+    console.log("selectedFile = ", imgFile);
+    formData.append('file', imgFile);
+
+    console.log("file post end");
+
+    return axios.post("/api/upload", formData).then(res => {
+      alert('성공')
+    }).catch(err => {
+      alert('실패')
+    })
+  }
+
+
   console.log("count end", count)
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
@@ -312,7 +291,7 @@ function Menu2() {
             CSV Export
         </Button>
         </div>
-          <Header />
+        <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
         <Paper className='paper'>
@@ -336,7 +315,7 @@ function Menu2() {
               </ListItem>
             ))}
           </List>
-{/*           <List>
+          {/*           <List>
           <ListItemText>afsafasfa</ListItemText>
             {count &&count.data.map((ccc, index) => (
               <ListItem
@@ -382,7 +361,15 @@ function Menu2() {
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button variant="contained" color="primary" onClick={() => uploadBtn()}>Upload</Button>
+        <Button variant="contained" color="primary" onClick={() => handlePost()}>Upload</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div className="App">
+          <div style={{ "backgroundColor": "#efefef", "width": "150px", "height": "150px" }}>
+          </div>
+          <div>
+            <input type="file" name="imgFile" id="imgFile" onChange={handleChangeFile}/>
+          </div>
+        </div>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>

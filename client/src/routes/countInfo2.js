@@ -137,14 +137,14 @@ function Menu2() {
     posts.data.map((list, index) => {
       if (list.selected == true) {
         console.log("index = ", index);
-        console.log("abc = ", list.CLIENTID);
-        console.log("YYYY = ", list.CLIENTID.substring(0, 4));
+        console.log("MAC = ", list.MACADDR);
+/*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
         console.log("MM = ", list.CLIENTID.substring(4, 6));
-        console.log("DD = ", list.CLIENTID.substring(6, 8));
+        console.log("DD = ", list.CLIENTID.substring(6, 8)); */
 
         axios.post('post', {
           command: 'GETCNTI',
-          clientid: posts.data[index].CLIENTID,
+          MacAddr: posts.data[index].MACADDR,
         })
           .then(function (response) {
             console.log("response = ", response);
@@ -318,7 +318,7 @@ function Menu2() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText primary={post.USERSTATUS} secondary={post.CLIENTID} />
+                <ListItemText primary={post.USERSTATUS} secondary={post.MACADDR} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -336,7 +336,6 @@ function Menu2() {
                 button
                 onClick={onClick(index)}
               >
-
                 <ListItemText primary={ccc.CLIENTID} />
               </ListItem>
             ))}
@@ -351,7 +350,9 @@ function Menu2() {
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
           <AgGridColumn field="DATETIME" ></AgGridColumn>
           <AgGridColumn field="IPADDR" ></AgGridColumn>
-          <AgGridColumn field="CLIENTID" ></AgGridColumn>
+          <AgGridColumn field="MACADDR" ></AgGridColumn>
+          <AgGridColumn field="MACHINEID" ></AgGridColumn>
+          <AgGridColumn field="ALIAS" ></AgGridColumn>
           <AgGridColumn field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
           <AgGridColumn field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
           <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
