@@ -43,7 +43,7 @@ const styles = theme => ({
 
 })
 
-function Menu2() {
+function CountInfo() {
 
   /* http://localhost:5000 */
   /* var frameworkComponents = { agDateInput: CustomDateComponent }; */
@@ -132,7 +132,7 @@ function Menu2() {
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
     console.log("posts.data[0].selected = ", posts.data[0].selected);
-    console.log("posts.data[0].selected = ", posts.data[1].selected);
+    /* console.log("posts.data[0].selected = ", posts.data[1].selected); */
 
     posts.data.map((list, index) => {
       if (list.selected == true) {
@@ -357,7 +357,7 @@ function Menu2() {
           <AgGridColumn field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
           <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
           <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
-          <AgGridColumn field="STACKCNT" ></AgGridColumn>
+          <AgGridColumn field="STACKCNT" filter="agNumberColumnFilter"></AgGridColumn>
           <AgGridColumn field="REJECTCNT" ></AgGridColumn>
           <AgGridColumn field="DOUBLECNT" ></AgGridColumn>
         </AgGridReact>
@@ -519,4 +519,4 @@ function getValue(inputSelector) {
   }
 }
 
-export default Menu2
+export default CountInfo

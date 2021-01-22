@@ -41,7 +41,7 @@ const styles = theme => ({
 
 })
 
-function Menu2() {
+function Serialnum() {
 
   /* http://localhost:5000 */
 
@@ -448,4 +448,4 @@ var filterParams = {
   },
 };
 
-export default Menu2
+export default Serialnum

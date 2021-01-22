@@ -260,6 +260,11 @@ const MyDrawer = withStyles(styles)(
           <ListItemText>User</ListItemText>
         </ListItem>
 
+        <ListItem button component={Link} to="/user2" replace onClick={onItemClick('User2')}>
+          <WebIcon color="primary" />
+          <ListItemText>User2</ListItemText>
+        </ListItem>
+
         <Divider />
 
       </List>
@@ -273,7 +278,7 @@ function Header({ classes }) {
   const [drawer, setDrawer] = useState(false);
 
   /* 타이틀 수정 */
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState("");
 
   /* 탭 */
   const [value, setValue] = useState(0);
@@ -282,15 +287,19 @@ function Header({ classes }) {
     setValue(value);
   };
 
-  console.log("title = ", title);
-  console.log("value = ", value);
+  console.log("title 초기값 = ", title);
+  
+  console.log("value 초기값 = ", value);
 
   const toggleDrawer = () => {
     setDrawer(!drawer);
   };
 
   const onItemClick = title => () => {
+    console.log("item 클릭");
+    console.log("title1 =", title);
     setTitle(title);
+    console.log("title2 =", title);
   };
 
   return (

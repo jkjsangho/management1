@@ -41,7 +41,7 @@ const styles = theme => ({
 
 })
 
-function Menu2() {
+function BlackList() {
 
   /* http://localhost:5000 */
 
@@ -496,4 +496,4 @@ function getValue(inputSelector) {
   }
 }
 
-export default Menu2
+export default BlackList

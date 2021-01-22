@@ -47,7 +47,7 @@ const styles = theme => ({
 
 })
 
-function Menu2() {
+function User() {
 
   /* http://localhost:5000 */
 
@@ -307,4 +307,4 @@ function Menu2() {
   );
 }
 
-export default Menu2
+export default User

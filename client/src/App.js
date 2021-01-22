@@ -9,7 +9,7 @@ import About from "./routes/About";
 import menu1 from "./routes/menu1";
 import menu2 from "./routes/menu2";
 import userinfo from "./routes/userinfo";
-import countInfo2 from "./routes/countInfo2";
+import countInfo from "./routes/countInfo2";
 import serialnum from "./routes/serialnum";
 import blacklist from "./routes/blacklist";
 import racog from "./routes/racog";
@@ -29,7 +29,7 @@ function App(){
       <Route path="/menu1" component={menu1}/>
       <Route path="/menu2" component={menu2}/>
       <Route path="/deviceinfo" component={userinfo}/>
-      <Route path="/countinfo" component={countInfo2}/>
+      <Route path="/countinfo" component={countInfo}/>
       <Route path="/serialnum" component={serialnum}/>
       <Route path="/blacklist" component={blacklist}/>
       <Route path="/racog" component={racog}/>
