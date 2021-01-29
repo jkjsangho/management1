@@ -159,33 +159,11 @@ function Serialnum() {
   };
   //AG-Grid Row_AutoSize
 
-  
-  /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
-  const searchBtn = () => {
-    //Search 클릭 시 Post 전송
-    console.log("searchposts = ", posts);
-    console.log("posts.data = ", posts.data);
-
-    axios.post('post', {
-      command: 'CMDCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
-    })
-      .then(function (response) {
-        console.log("response = ", response);
-      })
-      .catch(function (error) {
-        console.log("error = ", error);
-      });
-  }
-
-
   //Left
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
 
@@ -208,47 +186,148 @@ function Serialnum() {
   const [count, setCount] = useState();
   console.log("count start", count)
 
+  function lpad(str, padLen, padStr) {
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str;
+    }
+    str += ""; // 문자로
+    padStr += ""; // 문자로
+    while (str.length < padLen)
+        str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    console.log("lpad.length ===", str.length);
+    return str;
+}
 
-  //리스트 아이템 클릭 selected 작업
+  /* const onClick = index => () => { */
+  /* const searchBtn = () => { */
+  const GETSN = () => {
+    //Search 클릭 시 Post 전송
+    console.log("searchposts = ", posts);
+    console.log("posts.data = ", posts.data);
+    console.log("posts.data[0].selected = ", posts.data[0].selected);
+    /* console.log("posts.data[0].selected = ", posts.data[1].selected); */
+
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+        console.log("index = ", index);
+        console.log("MAC = ", list.MACADDR);
+/*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
+        console.log("MM = ", list.CLIENTID.substring(4, 6));
+        console.log("DD = ", list.CLIENTID.substring(6, 8)); */
+
+        axios.post('post', {
+          command: 'GETSNOI',
+          MacAddr: posts.data[index].MACADDR,
+          msn:lpad(posts.data[index].MACHINESN, 20, " "),
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+        const getBreeds = async () => {
+          try {
+            return axios.get('/getserialinfo').then(({ data }) => setCount(data));
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count);
+      }
+    })
+
+    /*     const getBreeds = async () => {
+          try {
+            return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+    
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count); */
+
+    /*     axios.post('post', {
+          command: 'CMDCNTI',
+          clientid: posts.data[0].CLIENTID,
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          }); */
+  }
+
+
+  //Left Click Start(json에 selected 추가해서 true false로 체크박스 확인)
   const onClick = index => () => {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
 
-    const getBreeds = async () => {
-      try {
-        return axios.get('/GetSerialInfo').then(({ data }) => setCount(data));;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  
-    const countBreeds = async () => {
-      const breeds = getBreeds();
-      setCount(breeds);
-      console.log("Breeds = ", count);
-   
-    };
+    /*     const getBreeds = async () => {
+          try {
+            return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+          } catch (error) {
+            console.error(error);
+          }
+        };
     
-    //getcountinfo 호출
-
-    console.log("count.item1 : ", count);
-    countBreeds();
-    console.log("count.item2 : ", count);
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+    
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count); */
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    console.log("flag 변경 전 index = ", index);
+    console.log("index flag 변경 전 = ", posts.data[index].selected);
+
+    if (posts.data[index].selected == null) {
       posts.data[index].selected = true;
-      flag = true;
-    }else if(flag == true){
+      console.log("index flag = ", posts.data[index].selected);
+      /* flag = true; */
+    } else if (posts.data[index].selected == true) {
       posts.data[index].selected = false;
-      flag = false;
-    }else if(flag == false){
-      flag = true;
+      console.log("index flag = ", posts.data[index].selected);
+      /* flag = false; */
+    } else if (posts.data[index].selected == false) {
+      /* flag = true; */
       posts.data[index].selected = true;
+      console.log("index flag = ", posts.data[index].selected);
     }
+
+    console.log("index flag 변경 후 = ", posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
+    console.log("flag 변경 후 index = ", index);
 
     /*    const item = items[index]; */
     const item = posts.data[index];
@@ -267,8 +346,6 @@ function Serialnum() {
     console.log("item = ", item);
     console.log("=================");
 
-    //왼쪽 리스트 목록을 지속적으로 RESTAPI에서 받아와서 selected 초기값 null로 인식
-
     console.log("flag2 = ", flag);
     const newItems = [...items];
     console.log("newItems = ", newItems);
@@ -282,32 +359,26 @@ function Serialnum() {
     console.log("selected : ", posts.data.selected);
     console.log("count.itemEND : ", count);
 
-    //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETSNOI',
-      clientid: posts.data[index].CLIENTID,
-      date: '2020110120201216'
-    })
-      .then(function (response) {
-        console.log(response)
-        console.log('response')
-      })
-      .catch(function (error) {
-        console.log(error)
-        console.log('error')
-      });
+    //Left List 아이템 클릭 시 Post 전송
+    /*     axios.post('post',
+          {
+            command: 'GETCNTI',
+            clientid: posts.data[index].CLIENTID
+          })
+          .then(function (response) {
+            console.log(response)
+            console.log('response')
+          })
+          .catch(function (error) {
+            console.log(error)
+            console.log('error')
+          }); */
   };
-  //Left
+  //Left Click End
   console.log("count end", count)
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
           <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '15%', height: '75%' }}>
@@ -351,21 +422,15 @@ function Serialnum() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="OPERID" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          rowData={count && count.data} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}>
+          <AgGridColumn field="MACHINESN" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="SN_DATE" sortable={true} filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
+          <AgGridColumn field="SN_TIME" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="DENOM" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="SERIALNO" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="DATE" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IMG_HEIGHT" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="SN_ISREJECT" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="IMG_DATA" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IMG_WIDTH" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="REJECT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="TIME" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -379,7 +444,9 @@ function Serialnum() {
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Get SN</Button>
+        <Button variant="contained" color="primary" onClick={() => GETSN()}>Get SN</Button>
+        &nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => GETSN()}>Get SN with IMAGE</Button>
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
@@ -430,12 +497,27 @@ function Serialnum() {
 var filterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
-    var dateParts = dateAsString.split('/');
+/*     console.log("dateAsString = ", dateAsString);
+        var dateParts = dateAsString.split('/');
+    
+        var cellDate = new Date(
+          Number(dateParts[2]),
+          Number(dateParts[1]) - 1,
+          Number(dateParts[0])
+        ); */
+    var YYYY = dateAsString.substring(0, 4);
+    var MM = dateAsString.substring(4, 6);
+    var DD = dateAsString.substring(6, 8);
     var cellDate = new Date(
-      Number(dateParts[2]),
-      Number(dateParts[1]) - 1,
-      Number(dateParts[0])
-    );
+      Number(YYYY),
+      Number(MM) - 1,
+      Number(DD)
+    ); 
+    console.log("YYYY = ", Number(YYYY));
+    console.log("MM = ", Number(MM));
+    console.log("DD = ", Number(DD));
+    console.log("cellDate = ", cellDate);
+
     if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
       return 0;
     }

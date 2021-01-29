@@ -58,46 +58,6 @@ function Upgrade() {
     setGridColumnApi(params.columnApi);
   };
 
-  const onBtnExport = () => {
-    var params = getParams();
-    console.log(params)
-    if (params.suppressQuotes || params.columnSeparator) {
-      alert(
-        'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-      );
-    }
-    gridApi.exportDataAsCsv(params);
-  };
-
-  function getParams() {
-    return {
-      suppressQuotes: getValue('#suppressQuotes'),
-      columnSeparator: getValue('#columnSeparator'),
-      customHeader: getValue('#customHeader'),
-      customFooter: getValue('#customFooter'),
-    };
-  }
-
-  const onGridSizeChanged = (params) => {
-    var gridWidth = document.getElementById('root').offsetWidth;
-    var columnsToShow = [];
-    var columnsToHide = [];
-    var totalColsWidth = 0;
-    var allColumns = params.columnApi.getAllColumns();
-    for (var i = 0; i < allColumns.length; i++) {
-      var column = allColumns[i];
-      totalColsWidth += column.getMinWidth();
-      if (totalColsWidth > gridWidth) {
-        columnsToHide.push(column.colId);
-      } else {
-        columnsToShow.push(column.colId);
-      }
-    }
-    params.columnApi.setColumnsVisible(columnsToShow, true);
-    params.columnApi.setColumnsVisible(columnsToHide, false);
-    params.api.sizeColumnsToFit();
-  };
-
   //Left
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
@@ -221,8 +181,9 @@ function Upgrade() {
   //Left Click End
 
   let jsonFileList = new Array();
-  console.log("jsonFileList fffffffffffffffffffffffffffff", jsonFileList.length);
-  
+
+  console.log("jsonFileList check length", jsonFileList.length);
+
   const [imgBase64, setImgBase64] = useState(""); // 파일 base64
   const [imgFile, setImgFile] = useState(null);	//파일
 
@@ -240,25 +201,41 @@ function Upgrade() {
       }
     } */
 
+    jsonFileList = new Array();
+
     const curFiles = event.target.files;
     var i = 0;
 
-    jsonFileList = new Array();
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+        console.log("index = ", index);
+        console.log("MAC1 = ", list.MACADDR);
 
-    while (i < curFiles.length) {
-      var files = curFiles[i];
-      jsonFileList.push({
-        img: files
-      })
-      i++;
-    }
+        while (i < curFiles.length) {
+          console.log("MAC2 = ", list.MACADDR);
+
+          var files = curFiles[i];
+
+          jsonFileList.push({
+            MAC: list.MACADDR,
+            img: files
+          })
+          i++;
+        }
+        i = 0;
+        console.log("jsonFileList.map0 = ", jsonFileList);
+      }
+      console.log("jsonFileList.map1 = ", jsonFileList);
+    })
+    console.log("jsonFileList.map00 = ", jsonFileList[0]);
+    console.log("jsonFileList.map11 = ", jsonFileList[1]);
 
     console.log("jsonFileList = ", jsonFileList);
     console.log("event.target.files = ", event.target.files);
     console.log("jsonFileList[0] = ", jsonFileList[0]);
-    console.log("jsonFileList[0].img = ", jsonFileList[0].img);
+    /* console.log("jsonFileList[0].img = ", jsonFileList[0].img); */
     console.log("event.target.files[0] = ", event.target.files[0]);
-    console.log("jsonFileList[0].img.name = ", jsonFileList[0].img.name);
+    /* console.log("jsonFileList[0].img.name = ", jsonFileList[0].img.name); */
     console.log("jsonFileList.length", jsonFileList.length);
 
     /*     if (event.target.files[0]) {
@@ -266,6 +243,7 @@ function Upgrade() {
       setImgFile(event.target.files[0]); // 파일 상태 업데이트
       console.log("FileState = ", event.target.files[0]);
     } */
+    FileList();
   }
 
   const handlePost = () => {
@@ -278,7 +256,10 @@ function Upgrade() {
 
     /* formData.append('file', imgFile); */
 
+    console.log("file post start");
+
     while (i < jsonFileList.length) {
+      formData.append('mac', jsonFileList[i].MAC);
       formData.append('file', jsonFileList[i].img);
 
       console.log("file post end");
@@ -286,26 +267,29 @@ function Upgrade() {
       console.log("handlePost Count = ", jsonFileList.length);
       console.log("handlePost File", jsonFileList);
       console.log("handlePost File[" + i + "] = ", jsonFileList[i]);
-      console.log("handlePost File[" + i + "].img = ", jsonFileList[i].img.name);
+      console.log("handlePost File[" + i + "].img.name = ", jsonFileList[i].img.name);
 
-      for (var key of formData.keys()) {
+      for (var pair of formData.entries()) { console.log("formData = ", pair[0]+ ', ' + pair[1]); }
+
+/*       for (var key of formData.keys()) {
         console.log("key1 = ", key);
       }
       for (var value of formData.values()) {
         console.log("value1 = ", value);
-      }
+      } */
       i++;
       console.log("i = ", i);
     }
-    axios.post('api/up', formData, { headers: { "Content-Type": "multipart/form-data" } })
+    return axios.post('api/up', formData, { headers: { "Content-Type": "multipart/form-data" } })
       .then(res => {
         alert('성공')
-        for (var key of formData.keys()) {
+        for (var pair of formData.entries()) { console.log("formData = ", pair[0]+ ', ' + pair[1]); }
+        /* for (var key of formData.keys()) {
           console.log("key2 = ", key);
         }
         for (var value of formData.values()) {
           console.log("value2 = ", value);
-        }
+        } */
       })
       .catch(err => {
         alert('실패')
@@ -318,24 +302,53 @@ function Upgrade() {
       })
   }
 
-function filelist(){
-  console.log("================================================filelist 진입")
-  return(
-    jsonFileList.map((item)=>
-            <List>
-              {/* <ListItemText Primary={jsonFileList}/> */}
-              <ListItemText primary={item.name}/>
-            </List>
-          )
-  );
-}
+  function FileList(props) {
+    console.log("================================================filelist 진입")
+    console.log("JsonListFile length FileList =", jsonFileList.length);
 
-function filelist2(){
-  console.log("==================================================filelist2 진입")
-  return(
-    <Button>내용이 없어</Button>
-  );
-}
+    /* <List>
+    {posts && posts.data.map((post, index) => (
+      <ListItem
+        key={index}
+        button
+        selected={post.selected}
+        onClick={onClick(index)}
+      >
+        <ListItemText primary={post.MACHINEID} />
+        <ListItemText primary={post.USERSTATUS} secondary={post.MACADDR} />
+        <ListItemIcon>
+          <MaybeSelectedIcon
+            selected={post.selected}
+            Icon={DevicesIcon}
+          />
+        </ListItemIcon>
+      </ListItem>
+    ))}
+  </List> */
+    console.log("1111111111filelist jsonFileList = ", jsonFileList);
+    return (
+      <List>
+        <Button>업로드 파일이 있음</Button>
+        {jsonFileList&&jsonFileList.map((item, index) => (
+          <ListItem
+            key={index}
+          >
+            <ListItemText primary={item.img.name} />
+          </ListItem>
+        ))}
+      </List>
+    );
+    window.location.replace("/");
+    this.getPosts();
+  }
+
+  function FileList2(props) {
+    console.log("==================================================filelist2 진입")
+    console.log("2222222222JsonListFile length FileList2 =", jsonFileList.length);
+    return (
+      <Button>업로드 파일이 없음</Button>
+    );
+  }
 
   console.log("count end", count)
   return (
@@ -371,9 +384,8 @@ function filelist2(){
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
           rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
-          Components={{ agDateInput: CustomDateComponent }}/* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* modules={AllCommunityModules} */
-          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
-          <AgGridColumn field="DATETIME" ></AgGridColumn>
+          Components={{ agDateInput: CustomDateComponent }}>
+{/*           <AgGridColumn field="DATETIME" ></AgGridColumn>
           <AgGridColumn field="IPADDR" ></AgGridColumn>
           <AgGridColumn field="MACADDR" ></AgGridColumn>
           <AgGridColumn field="MACHINEID" ></AgGridColumn>
@@ -384,7 +396,7 @@ function filelist2(){
           <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
           <AgGridColumn field="STACKCNT" ></AgGridColumn>
           <AgGridColumn field="REJECTCNT" ></AgGridColumn>
-          <AgGridColumn field="DOUBLECNT" ></AgGridColumn>
+          <AgGridColumn field="DOUBLECNT" ></AgGridColumn> */}
         </AgGridReact>
       </div>
 
@@ -395,56 +407,17 @@ function filelist2(){
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input type="file" name="imgFile" id="imgFile" multiple onChange={handleChangeFile} />
         <div className="App">
-          <div style={{ "backgroundColor": "#efefef", "width": "150px", "height": "150px" }}>
-          <ListItemText>AAA</ListItemText>
-          <ol>
-            {(jsonFileList.length)>0 ? <filelist/>:<filelist2/>}
-          </ol>
-          <ListItemText>BBB</ListItemText>
+          <div style={{ "backgroundColor": "#efefef", width: '15%', height: '75%' }}>
+            <ListItemText>============</ListItemText>
+            <div>
+              &nbsp;&nbsp;
+            {(jsonFileList.length) !== 0 ? <FileList /> : <FileList2 />}
+            &nbsp;&nbsp;
+            </div>
+            <ListItemText>============</ListItemText>
           </div>
         </div>
         <Footer />
-      </div>
-      <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
-        <div>
-          <div className="row">0
-            <label>suppressQuotes = </label>
-            <select id="suppressQuotes">
-              <option value="none">(default)</option>
-              <option value="true">true</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>columnSeparator = </label>
-            <select id="columnSeparator">
-              <option value="none">(default)</option>
-              <option value="tab">tab</option>
-              <option value="|">bar (|)</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginLeft: '10px' }}>
-          <div className="row">
-            <label>customHeader = </label>
-            <select id="customHeader">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-                  </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>customFooter = </label>
-            <select id="customFooter">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-              </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -470,63 +443,5 @@ var filterParams = {
     }
   },
 };
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    default:
-      return text;
-  }
-}
 
 export default Upgrade

@@ -91,6 +91,20 @@ function User() {
     params.columnApi.setColumnsVisible(columnsToHide, false);
     params.api.sizeColumnsToFit();
   };
+
+  function lpad(str, padLen, padStr) {
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str;
+    }
+    str += ""; // 문자로
+    padStr += ""; // 문자로
+    while (str.length < padLen)
+        str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    return str;
+}
+
   const addBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("posts = ", posts);
@@ -99,8 +113,8 @@ function User() {
     axios.post('post', {
       command: 'ADDUSER',
       /* mid: posts.data[0].CLIENTID, */
-      mid: value,
-      sn: valueSN
+      mid: lpad(value, 20, " "),
+      msn: lpad(valueSN, 20, " "),
     })
       .then(function (response) {
         console.log("response = ", response);
@@ -118,8 +132,8 @@ function User() {
 
     axios.post('post', {
       command: 'DELUSER',
-      mid: value,
-      sn: valueSN
+      mid: lpad(value, 20, " "),
+      msn: lpad(valueSN, 20, " "),
     })
       .then(function (response) {
         console.log("response = ", response);
@@ -266,37 +280,21 @@ function User() {
           <Grid itemName="SN">
             <TextField ID="SN" label="Serial Number" />
           </Grid> */}
-          <div>
-          <TextField inputProps = {{maxLength :  3,}} id="MID" label="Machine ID *" value={value} onChange={handleChange} color="secondary" />
-          </div>
-          <br></br>
-          <TextField inputProps = {{maxLength :  7,}}id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary"/>
-          <div>
-          <br></br>
-          <TextField id="filled" label="MachineID_Copy"  value={value} onChange={handleChange} variant="filled" color="secondary"/>
-          </div>
-          <div>
-          <br></br>
-          <TextField id="outlined" label="Password"  type = "password" value={valueSN} onChange={handleChangeSN} variant="outlined" color="secondary"/>
-          </div>
         {/* </Grid> */}
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
-        <AgGridReact
-          rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="ALIAS" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
-          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
-        </AgGridReact>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: '#ffcdd2', width: '80%', height: '75%', minHeight: '400px' }}>
+      <TextField inputProps = {{maxLength :  3,}} id="MID" label="Machine ID *" value={value} onChange={handleChange} color="secondary" />
+          <br></br>
+          <br></br>
+          <TextField inputProps = {{maxLength :  7,}}id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary"/>
+          <br></br>
+          <br></br>
+          <TextField id="filled" label="MachineID_Copy"  value={value} onChange={handleChange} variant="filled" color="secondary"/>
+          <br></br>
+          <br></br>
+          <TextField id="outlined" label="Password"  type = "password" value={valueSN} onChange={handleChangeSN} variant="outlined" color="secondary"/>
       </div>
-
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => addBtn()}>Add</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;

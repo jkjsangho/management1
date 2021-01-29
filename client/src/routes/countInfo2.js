@@ -125,6 +125,20 @@ function CountInfo() {
   const [count, setCount] = useState();
   console.log("count start", count)
 
+  function lpad(str, padLen, padStr) {
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str;
+    }
+    str += ""; // 문자로
+    padStr += ""; // 문자로
+    while (str.length < padLen)
+        str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    console.log("lpad.length ===", str.length);
+    return str;
+}
+
   /* const onClick = index => () => { */
   /* const searchBtn = () => { */
   const searchBtn = () => {
@@ -145,6 +159,7 @@ function CountInfo() {
         axios.post('post', {
           command: 'GETCNTI',
           MacAddr: posts.data[index].MACADDR,
+          msn:lpad(posts.data[index].MACHINESN, 20, " "),
         })
           .then(function (response) {
             console.log("response = ", response);

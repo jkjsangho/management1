@@ -152,13 +152,13 @@ const MyToolbar = withStyles(styles)(
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <InputBase
+            {/* <InputBase
               placeholder="검색하기"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput
               }}
-            />
+            /> */}
           </div>
         </Toolbar>
       </AppBar>
@@ -285,7 +285,14 @@ function Header({ classes }) {
 
   const handleChange = (e, value) => {
     setValue(value);
+    console.log("handlechange 진입 = ", value);
   };
+
+  const titlechange = (e, title) => {
+    setTitle(title);
+    console.log("titlechange 진입 = ", title);
+  };
+
 
   console.log("title 초기값 = ", title);
   
@@ -304,7 +311,7 @@ function Header({ classes }) {
 
   return (
     <div className={classes.root}>
-      <MyToolbar title={title} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
+      <MyToolbar title={titlechange} onchange={titlechange} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
 
       {/*Navigation으로 빼서 분활?*/}
       <MyDrawer

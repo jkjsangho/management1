@@ -58,26 +58,6 @@ function Userinfo() {
     setGridApi(params.api);
   };
 
-  const onBtnExport = () => {
-    var params = getParams();
-    console.log(params)
-    if (params.suppressQuotes || params.columnSeparator) {
-      alert(
-        'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-      );
-    }
-    gridApi.exportDataAsCsv(params);
-  };
-
-  function getParams() {
-    return {
-      suppressQuotes: getValue('#suppressQuotes'),
-      columnSeparator: getValue('#columnSeparator'),
-      customHeader: getValue('#customHeader'),
-      customFooter: getValue('#customFooter'),
-    };
-  }
-
   //REST API에서 받아옴
   /*   const [data, setData] = useState({ hits: [] });
   
@@ -159,6 +139,20 @@ function Userinfo() {
   };
   /* const onClick = index => () => { */
   /* const searchBtn = () => { */
+
+    function lpad(str, padLen, padStr) {
+      if (padStr.length > padLen) {
+          console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+          return str;
+      }
+      str += ""; // 문자로
+      padStr += ""; // 문자로
+      while (str.length < padLen)
+          str = padStr + str;
+      str = str.length >= padLen ? str.substring(0, padLen) : str;
+      return str;
+  }
+
   const searchBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("posts = ", posts);
@@ -297,7 +291,7 @@ function Userinfo() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText secondary={post.CLIENTID} />
+                <ListItemText secondary={post.STATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -315,14 +309,14 @@ function Userinfo() {
         <AgGridReact
           rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="USERSTATUS" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
           <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
           <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="USERSTATUS" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -339,51 +333,7 @@ function Userinfo() {
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
         <Footer />
-      </div>
-      <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
-        <div>
-          <div className="row">0
-            <label>suppressQuotes = </label>
-            <select id="suppressQuotes">
-              <option value="none">(default)</option>
-              <option value="true">true</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>columnSeparator = </label>
-            <select id="columnSeparator">
-              <option value="none">(default)</option>
-              <option value="tab">tab</option>
-              <option value="|">bar (|)</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginLeft: '10px' }}>
-          <div className="row">
-            <label>customHeader = </label>
-            <select id="customHeader">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-                  </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>customFooter = </label>
-            <select id="customFooter">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-              </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -409,63 +359,5 @@ var filterParams = {
     }
   },
 };
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    default:
-      return text;
-  }
-}
 
 export default Userinfo
