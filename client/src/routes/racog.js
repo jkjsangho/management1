@@ -208,6 +208,20 @@ function Racog() {
   console.log("count start", count)
 
 
+  function lpad(str, padLen, padStr) {
+    if (padStr.length > padLen) {
+        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+        return str;
+    }
+    str += ""; // 문자로
+    padStr += ""; // 문자로
+    while (str.length < padLen)
+        str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+    console.log("lpad.length ===", str.length);
+    return str;
+}
+
   //리스트 아이템 클릭 selected 작업
   const onClick = index => () => {
     console.log("index = ", index)
@@ -216,7 +230,7 @@ function Racog() {
 
     const getBreeds = async () => {
       try {
-        return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+        return axios.get('/getrecogusageinfo').then(({ data }) => setCount(data));;
       } catch (error) {
         console.error(error);
       }
@@ -284,9 +298,9 @@ function Racog() {
     //Left 클릭 시 Post 전송
     axios.post('post',
       {
-        command: 'GETCNTI',
-        clientid: posts.data[0].CLIENTID,
-        date: '2020110120201216'
+        command: 'GETRCUI',
+        MacAddr: posts.data[index].MACADDR,
+        msn:lpad(posts.data[index].MACHINESN, 20, " "),
       })
       .then(function (response) {
         console.log(response)
@@ -302,11 +316,9 @@ function Racog() {
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
+        {/* <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
+        
+        </div> */}
         <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>

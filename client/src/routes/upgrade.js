@@ -205,19 +205,20 @@ function Upgrade() {
 
     const curFiles = event.target.files;
     var i = 0;
-
+    //list.MACHINESN으로 수정 필요
+    //전송완료 후 새로고침 필요할듯
     posts.data.map((list, index) => {
       if (list.selected == true) {
         console.log("index = ", index);
-        console.log("MAC1 = ", list.MACADDR);
+        console.log("MAC1 = ", list.MACHINESN);
 
         while (i < curFiles.length) {
-          console.log("MAC2 = ", list.MACADDR);
+          console.log("MAC2 = ", list.MACHINESN);
 
           var files = curFiles[i];
 
           jsonFileList.push({
-            MAC: list.MACADDR,
+            MAC: list.MACHINESN,
             img: files
           })
           i++;
@@ -302,9 +303,22 @@ function Upgrade() {
       })
   }
 
-  function FileList(props) {
+  function refreshPage() {
+    window.location.reload(false);
+  }
+
+  const [cart, setCart] = useState([]);
+
+  function addItemToCart(e) {
+    const item = e.target.value;
+    console.log(item);
+    setCart(cart => [...cart, item]);
+  }
+
+  function FileList() {
     console.log("================================================filelist 진입")
     console.log("JsonListFile length FileList =", jsonFileList.length);
+
 
     /* <List>
     {posts && posts.data.map((post, index) => (
@@ -328,10 +342,11 @@ function Upgrade() {
     console.log("1111111111filelist jsonFileList = ", jsonFileList);
     return (
       <List>
-        <Button>업로드 파일이 있음</Button>
-        {jsonFileList&&jsonFileList.map((item, index) => (
+        <Button value="" onClick={addItemToCart}>업로드 파일이 있음</Button>
+        {jsonFileList.map((item, index) => (
           <ListItem
             key={index}
+            value={item.img.name}
           >
             <ListItemText primary={item.img.name} />
           </ListItem>

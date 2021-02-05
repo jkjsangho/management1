@@ -141,11 +141,12 @@ const MyToolbar = withStyles(styles)(
           </Typography>
           <div className={classes.grow} />
           <div className={classes.Tab}>
-            <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+            {/* 탭 설정 위치 */}
+            {/* <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
               <Tab label="HOME Tab1" component={Link} to="/" />
               <Tab label="Menu1 Tab2" component={Link} to="/about" />
               <Tab label="Menu2 Tab3" component={Link} to="/menu2" />
-            </Tabs>
+            </Tabs> */}
           </div>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -250,7 +251,7 @@ const MyDrawer = withStyles(styles)(
 
         <ListItem button component={Link} to="/upgrade" replace onClick={onItemClick('upgrade')}>
           <WebIcon color="primary" />
-          <ListItemText>Upgrade</ListItemText>
+          <ListItemText>F/W Upgrade</ListItemText>
         </ListItem>
 
         <Divider />
@@ -278,7 +279,7 @@ function Header({ classes }) {
   const [drawer, setDrawer] = useState(false);
 
   /* 타이틀 수정 */
-  const [title, setTitle] = useState("");
+  let [title, setTitle] = useState('');
 
   /* 탭 */
   const [value, setValue] = useState(0);
@@ -311,7 +312,7 @@ function Header({ classes }) {
 
   return (
     <div className={classes.root}>
-      <MyToolbar title={titlechange} onchange={titlechange} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
+      <MyToolbar title={title} onchange={titlechange} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
 
       {/*Navigation으로 빼서 분활?*/}
       <MyDrawer

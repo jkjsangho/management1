@@ -158,17 +158,17 @@ function Userinfo() {
     console.log("posts = ", posts);
     console.log("posts.data = ", posts.data);
 
-    axios.post('post', {
-      command: 'CMDCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
+/*     axios.post('post', {
+      command: 'GETCNTI',
+      MacAddr: posts.data[index].MACADDR,
+      msn: lpad(posts.data[index].MACHINESN, 20, " "),
     })
       .then(function (response) {
         console.log("response = ", response);
       })
       .catch(function (error) {
         console.log("error = ", error);
-      });
+      }); */
   }
 
 
@@ -254,10 +254,11 @@ function Userinfo() {
     console.log("selected : ", posts.data.selected);
 
     //Left 클릭 시 Post 전송
-    axios.post('post',
+/*     axios.post('post',
       {
         command: 'GETCNTI',
-        clientid: posts.data[index].CLIENTID,
+        MacAddr: posts.data[index].MACADDR,
+        msn: lpad(posts.data[index].MACHINESN, 20, " "),
       })
       .then(function (response) {
         console.log(response)
@@ -266,7 +267,7 @@ function Userinfo() {
       .catch(function (error) {
         console.log(error)
         console.log('error')
-      });
+      }); */
   };
   //Left
 

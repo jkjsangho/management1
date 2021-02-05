@@ -363,18 +363,13 @@ function CountInfo() {
           rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
           Components={{ agDateInput: CustomDateComponent }}/* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* modules={AllCommunityModules} */
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
-          <AgGridColumn field="DATETIME" ></AgGridColumn>
-          <AgGridColumn field="IPADDR" ></AgGridColumn>
-          <AgGridColumn field="MACADDR" ></AgGridColumn>
-          <AgGridColumn field="MACHINEID" ></AgGridColumn>
-          <AgGridColumn field="ALIAS" ></AgGridColumn>
           <AgGridColumn field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
           <AgGridColumn field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
+          <AgGridColumn field="DATETIME" ></AgGridColumn>
           <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
+          <AgGridColumn field="MACHINEID" ></AgGridColumn>
           <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
           <AgGridColumn field="STACKCNT" filter="agNumberColumnFilter"></AgGridColumn>
-          <AgGridColumn field="REJECTCNT" ></AgGridColumn>
-          <AgGridColumn field="DOUBLECNT" ></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
