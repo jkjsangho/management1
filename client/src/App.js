@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   HashRouter,
-  Route,
+  Route
 } from "react-router-dom";
 import Home from "./routes/Home";
 /* import Navigation from "./components/Navigation"; */
@@ -12,16 +12,18 @@ import userinfo from "./routes/userinfo";
 import countInfo from "./routes/countInfo2";
 import serialnum from "./routes/serialnum";
 import blacklist from "./routes/blacklist";
-import racog from "./routes/racog";
+import recog from "./routes/recog";
 import settings from "./routes/settings";
 import upgrade from "./routes/upgrade";
 import user from "./routes/user";
 import user2 from "./routes/user2";
+import modal from "./routes/modalpage";
 import './App.css';
 //import CustomerAdd from './components/CustomerAdd';
 
 
 function App(){
+
   return(
     <HashRouter>
       <Route path="/" exact={true} component={userinfo}/>
@@ -32,11 +34,12 @@ function App(){
       <Route path="/countinfo" component={countInfo}/>
       <Route path="/serialnum" component={serialnum}/>
       <Route path="/blacklist" component={blacklist}/>
-      <Route path="/racog" component={racog}/>
+      <Route path="/recog" component={recog}/>
       <Route path="/settings" component={settings}/>
       <Route path="/upgrade" component={upgrade}/>
       <Route path="/user" component={user}/>
       <Route path="/user2" component={user2}/>
+      <Route path="/modal" component={modal}/>
       {/* <Navigation /> */}
       {/* <Route path="/movie-detail" component={Detail}/> */}
     </HashRouter>

@@ -209,21 +209,21 @@ const MyDrawer = withStyles(styles)(
         </ListItem> */}
         <ListItem button component={Link} to="/deviceinfo" replace onClick={onItemClick('DeviceInfo')}>
           <WebIcon color="primary" />
-          <ListItemText>DeviceInfo</ListItemText>
+          <ListItemText>Device</ListItemText>
         </ListItem>
 
         <Divider />
 
         <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
           <WebIcon color="secondary" />
-          <ListItemText>CountInfo</ListItemText>
+          <ListItemText>Count</ListItemText>
         </ListItem>
 
         <Divider />
 
         <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
           <WebIcon color="action" />
-          <ListItemText>SerialNum</ListItemText>
+          <ListItemText>S/N</ListItemText>
         </ListItem>
 
         <Divider />
@@ -235,9 +235,9 @@ const MyDrawer = withStyles(styles)(
 
         <Divider />
 
-        <ListItem button component={Link} to="/racog" replace onClick={onItemClick('Racog')}>
+        <ListItem button component={Link} to="/recog" replace onClick={onItemClick('Recog')}>
           <WebIcon style={{ color: green[500] }} />
-          <ListItemText>Racog</ListItemText>
+          <ListItemText>Recog</ListItemText>
         </ListItem>
 
         <Divider />
@@ -264,6 +264,13 @@ const MyDrawer = withStyles(styles)(
         <ListItem button component={Link} to="/user2" replace onClick={onItemClick('User2')}>
           <WebIcon color="primary" />
           <ListItemText>User2</ListItemText>
+        </ListItem>
+
+        <Divider />
+
+        <ListItem button component={Link} to="/modal" replace onClick={onItemClick('Modal')}>
+          <WebIcon color="primary" />
+          <ListItemText>Modal</ListItemText>
         </ListItem>
 
         <Divider />

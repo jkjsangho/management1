@@ -248,9 +248,11 @@ function BlackList() {
    }, 5000); */
   }
 
+  var newCount = new Array();
+  var blkpostend;
+
   const blkAddBtn = () => {
 
-    var newCount = new Array();
     var newArray = new Array();
 
     var LOC = category2.LOC;
@@ -298,7 +300,6 @@ function BlackList() {
 
         var blkpost;
         var tmp = "";
-        var blkpostend;
 
         newCount.data.map((list, index3) => {
 
@@ -366,6 +367,27 @@ function BlackList() {
     console.log("setCount(newCount) = ", count)
     redrawAllRows();
     /* scrambleAndRefreshAll(); */
+  }
+
+  const blkSaveBtn = () =>{
+
+    posts.data.map((list, index1) => {
+      console.log("map inside && index1", index1);
+
+      if (list.selected == true) {
+    axios.post('post', {
+      command: 'SETBLSN',
+      MacAddr: posts.data[index1].MACADDR,
+      msn: lpad(posts.data[index1].MACHINESN, 20, " "),
+      BlackList: lpad(newCount.data.length, 2, 0) + blkpostend,
+    })
+      .then(function (response) {
+        console.log("response = ", response);
+      })
+      .catch(function (error) {
+        console.log("error = ", error);
+      });
+    }})
   }
 
   /* const onClickCurrency = index => () => {
@@ -762,51 +784,6 @@ function BlackList() {
       <div className='title' style={{ height: '10%', backgroundColor: 'silver' }}>
         <div className="Button1" style={{ padding: '0.1%', marginLeft: '1%', marginTop: '3%' }}>
           <Fragment>
-            {/* <FormControl className={classes.control}>
-              <InputLabel htmlFor="categories">Category</InputLabel>
-              <Select
-                value={category.id}
-                onChange={onChange}
-                inputProps={{
-                  name: 'categories',
-                  id: 'categories'
-                }}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {categories.map(category => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl
-              className={classes.control}
-              disabled={category.id === ''}
-            >
-              <InputLabel htmlFor="Products">Product</InputLabel>
-              <Select
-                value={product.id}
-                onChange={onChange}
-                inputProps={{
-                  name: 'products',
-                  id: 'values'
-                }}
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                {products
-                  .filter(product => product.category === category.id)
-                  .map(product => (
-                    <MenuItem key={product.id} value={product.id}>
-                      {product.label}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl> */}
             <FormControl className={classes.control}>
               <InputLabel htmlFor="categories2">Currency</InputLabel>
               <Select
@@ -862,7 +839,7 @@ function BlackList() {
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'gray', width: '20%', height: '75%' }}>
         <Paper className='paper'>
-          {/* <Right/> */}
+          {/* <left/> */}
 
           <List>
             {posts && posts.data.map((post, index) => (
@@ -883,55 +860,6 @@ function BlackList() {
               </ListItem>
             ))}
           </List>
-          {/* <List>
-            <ListItem button onClick={handleClick}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Currency" />
-              {open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {posts2 && posts2.data.map((post2, index) => (
-                  <ListItem
-                    key={index}
-                    button
-                    selected={post2.selected}
-                    onClick={onClickCurrency(index)}
-                  >
-                    <ListItemIcon>
-                      <StarBorder />
-                    </ListItemIcon>
-                    <ListItemText primary={post2.CURRENCYKIND} />
-                    <ListItemIcon>
-                      <MaybeSelectedIcon2
-                        selected={post2.selected}
-                        Icon={DevicesIcon}
-                      />
-                    </ListItemIcon>
-                  </ListItem>
-                ))}
-              </List>
-            </Collapse>
-            <ListItem button onClick={handleClick2}>
-              <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Denomination" />
-              {open2 ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={open2} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <ListItemText primary="Starred" />
-                </ListItem>
-              </List>
-            </Collapse>
-          </List> */}
         </Paper>
 
       </div>
@@ -949,9 +877,11 @@ function BlackList() {
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => blkGetBtn()}>Get</Button>
+        <Button variant="contained" color="primary" onClick={() => blkGetBtn()}>GET</Button>
           &nbsp;&nbsp;&nbsp;
-        <Button variant="contained" color="primary" onClick={() => blkAddBtn()}>Add</Button>
+        <Button variant="contained" color="primary" onClick={() => blkAddBtn()}>ADD</Button>
+        &nbsp;&nbsp;&nbsp;
+        {/* <Button variant="contained" color="primary" onClick={() => blkSaveBtn()}>SAVE</Button> */}
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>

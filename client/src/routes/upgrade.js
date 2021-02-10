@@ -15,6 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DevicesIcon from '@material-ui/icons/Devices';
@@ -34,6 +35,8 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
+
+import InputFileList from "../components/FileList";
 
 let flag;
 
@@ -181,12 +184,9 @@ function Upgrade() {
   //Left Click End
 
   let jsonFileList = new Array();
+  let inputlistArray = new Array();
 
   console.log("jsonFileList check length", jsonFileList.length);
-
-  const [imgBase64, setImgBase64] = useState(""); // 파일 base64
-  const [imgFile, setImgFile] = useState(null);	//파일
-
 
   /* const jsonFileList = new Array(); */
 
@@ -244,7 +244,36 @@ function Upgrade() {
       setImgFile(event.target.files[0]); // 파일 상태 업데이트
       console.log("FileState = ", event.target.files[0]);
     } */
-    FileList();
+    console.log("setTotalsetTotalsetTotalsetTotalsetTotal")
+    setTotal((currentTotal) => currentTotal + 1);
+
+    let inputlistArray = new Array();
+
+    jsonFileList.map((list, index) => {
+
+      inputlistArray.push({
+        name: list.img.name
+      })
+
+      console.log("inputlistArray = ", inputlistArray);
+    })
+
+    const uniquefilelist = inputlistArray.map(function (val, index) {
+      return val['name'];
+    }).filter(function (val, index, arr) {
+      return arr.indexOf(val) === index;
+    });
+
+    console.log(uniquefilelist);
+
+    setinputlist(uniquefilelist);
+
+    /*     inputlist.map((list2, index) => {
+          console.log("inputlist map = ", list2[index].img.name);
+        }) */
+
+    console.log("inputlistinputlistinputlistinputlist = ", inputlist);
+    /* FileList(); */
   }
 
   const handlePost = () => {
@@ -270,21 +299,21 @@ function Upgrade() {
       console.log("handlePost File[" + i + "] = ", jsonFileList[i]);
       console.log("handlePost File[" + i + "].img.name = ", jsonFileList[i].img.name);
 
-      for (var pair of formData.entries()) { console.log("formData = ", pair[0]+ ', ' + pair[1]); }
+      for (var pair of formData.entries()) { console.log("formData = ", pair[0] + ', ' + pair[1]); }
 
-/*       for (var key of formData.keys()) {
-        console.log("key1 = ", key);
-      }
-      for (var value of formData.values()) {
-        console.log("value1 = ", value);
-      } */
+      /*       for (var key of formData.keys()) {
+              console.log("key1 = ", key);
+            }
+            for (var value of formData.values()) {
+              console.log("value1 = ", value);
+            } */
       i++;
       console.log("i = ", i);
     }
     return axios.post('api/up', formData, { headers: { "Content-Type": "multipart/form-data" } })
       .then(res => {
         alert('성공')
-        for (var pair of formData.entries()) { console.log("formData = ", pair[0]+ ', ' + pair[1]); }
+        for (var pair of formData.entries()) { console.log("formData = ", pair[0] + ', ' + pair[1]); }
         /* for (var key of formData.keys()) {
           console.log("key2 = ", key);
         }
@@ -311,15 +340,21 @@ function Upgrade() {
 
   function addItemToCart(e) {
     const item = e.target.value;
-    console.log(item);
+    console.log("addItemToCart = ", item);
     setCart(cart => [...cart, item]);
   }
 
   function FileList() {
     console.log("================================================filelist 진입")
     console.log("JsonListFile length FileList =", jsonFileList.length);
+    console.log("JsonListFile FileList =", jsonFileList);
+    //console.log("JsonListFile.img FileList =", jsonFileList[0].img.name);
 
+    jsonFileList.map((list, index) => {
+      console.log("FileList map = ", list.img.name);
+    })
 
+    console.log("================================================filelist 중간")
     /* <List>
     {posts && posts.data.map((post, index) => (
       <ListItem
@@ -342,7 +377,6 @@ function Upgrade() {
     console.log("1111111111filelist jsonFileList = ", jsonFileList);
     return (
       <List>
-        <Button value="" onClick={addItemToCart}>업로드 파일이 있음</Button>
         {jsonFileList.map((item, index) => (
           <ListItem
             key={index}
@@ -352,6 +386,7 @@ function Upgrade() {
           </ListItem>
         ))}
       </List>
+      //<Button value="" onClick={addItemToCart}>업로드 파일이 있음</Button>
     );
     window.location.replace("/");
     this.getPosts();
@@ -363,6 +398,13 @@ function Upgrade() {
     return (
       <Button>업로드 파일이 없음</Button>
     );
+  }
+
+  const [total, setTotal] = useState(0);
+  const [inputlist, setinputlist] = useState([]);
+
+  const incrementTotal = () => {
+    setTotal((currentTotal) => currentTotal + 1);
   }
 
   console.log("count end", count)
@@ -400,7 +442,7 @@ function Upgrade() {
         <AgGridReact
           rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
           Components={{ agDateInput: CustomDateComponent }}>
-{/*           <AgGridColumn field="DATETIME" ></AgGridColumn>
+          {/*           <AgGridColumn field="DATETIME" ></AgGridColumn>
           <AgGridColumn field="IPADDR" ></AgGridColumn>
           <AgGridColumn field="MACADDR" ></AgGridColumn>
           <AgGridColumn field="MACHINEID" ></AgGridColumn>
@@ -422,14 +464,18 @@ function Upgrade() {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <input type="file" name="imgFile" id="imgFile" multiple onChange={handleChangeFile} />
         <div className="App">
-          <div style={{ "backgroundColor": "#efefef", width: '15%', height: '75%' }}>
-            <ListItemText>============</ListItemText>
-            <div>
-              &nbsp;&nbsp;
-            {(jsonFileList.length) !== 0 ? <FileList /> : <FileList2 />}
-            &nbsp;&nbsp;
-            </div>
-            <ListItemText>============</ListItemText>
+          <div style={{ "backgroundColor": "#efefef", width: '20%', height: '75%' }}>
+            <List>
+            <ListSubheader>{'Upload List'}</ListSubheader>
+              {inputlist && inputlist.map((list, index) => (
+                <ListItem
+                  key={index}
+                >
+                  <ListItemText primary={list} />
+                </ListItem>
+              ))}
+            </List>
+            <ListItemText>======================</ListItemText>
           </div>
         </div>
         <Footer />

@@ -44,7 +44,7 @@ const styles = theme => ({
 
 })
 
-function Racog() {
+function Recog() {
 
   /* http://localhost:5000 */
 
@@ -521,4 +521,4 @@ function getValue(inputSelector) {
   }
 }
 
-export default Racog
+export default Recog

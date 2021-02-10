@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Customer from '../components/Customer'
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
@@ -23,6 +23,12 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 //달력
 import CustomDateComponent from '../components/customDateComponent';
 
+/* import {makeStyles} from '@material-ui/styles'; */
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -33,11 +39,11 @@ import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
 
-let flag;
+
+
+let flag = 0;
 
 const styles = theme => ({
-
-
 
 })
 
@@ -47,6 +53,206 @@ function Settings() {
 
   var frameworkComponents = { agDateInput: CustomDateComponent };
 
+  const getBreeds = async () => {
+    try {
+      axios.get('/getblacklistinfo').then(({ data }) => setCount(data));
+      return console.log("Async Count", count);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  var newCount = new Array();
+  var newArray = new Array();
+
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '10%',
+      backgroundColor: theme.palette.background.paper,
+    },
+    nested: {
+      paddingLeft: theme.spacing(3),
+    },
+    control: { margin: theme.spacing(2), minWidth: 200 }
+  }));
+
+  const classes = useStyles();
+
+  const [categories, setCategories] = useState([""]);
+  const [categories2, setCategories2] = useState([""]);
+  const [categories3, setCategories3] = useState([""]);
+  const [categories4, setCategories4] = useState([""]);
+
+  const setters = {
+    categories: setCategories,
+    categories2: setCategories2,
+    categories3: setCategories3,
+    categories4: setCategories4,
+  };
+
+  const collections = { categories };
+
+  var DenoData = new Array();
+
+  const onChange = e => {
+    const setCollection = setters[e.target.name];
+
+    console.log('e.target.name = ', e.target.name);
+    console.log('e.target.name = ', collections[e.target.name]);
+
+    const collection = collections[e.target.name].map(item => ({
+      ...item,
+      selected: false
+    }));
+
+    console.log('collections = ', collections);
+    console.log('collection = ', collection);
+
+    const index = collection.findIndex(
+      item => item.id === e.target.value,
+    );
+
+    console.log("e.target.namee.target.name", e.target.name)
+    console.log("e.target.valuee.target.value", e.target.value)
+
+    console.log("indexindex = ", index)
+
+    collection[index] = { ...collection[index], selected: true };
+    setCollection(collection);
+/* 
+    if (e.target.name != "products2") {
+      console.log("if in e.target.name = ", e.target.name);
+      //Currency select
+      console.log('collection2collection2 = ', collection2[index].LOC);
+      categoriesCurr = collection2[index].LOC;
+      console.log('categoriesCurrcategoriesCurr = ', categoriesCurr);
+      console.log("posts3.dataposts3.data = ", posts3.data);
+      console.log("product2 indexindex = ", index)
+
+      posts3.data.map((abc, index) => {
+        if (categoriesCurr == posts3.data[index].CURRENCY) {
+          jsonFileList2 = posts3.data[index].DENOMINATION;
+        }
+      })
+
+      console.log("jsonFileList2 = ", posts3.data[index].DENOMINATION);
+
+      var dateParts2 = jsonFileList2.split(/[,]+/);
+      console.log("dateParts2 = ", dateParts2);
+
+      dateParts2.map((list, index) => {
+        if (dateParts2[index] != "") {
+          DenoData.push({
+            Curr: categoriesCurr,
+            Deno: dateParts2[index],
+            id: index + 1
+          })
+        }
+      })
+      console.log("setProducts2 inside");
+      setProducts2(DenoData);
+      console.log("products2products2", products2);
+    }
+    console.log("products2products2products2", products2); */
+  }
+
+  const category = categories.find(category => category.selected) || {
+    id: ''
+  };
+
+  const Infobtn = () => {
+    //Search 클릭 시 Post 전송
+    console.log("searchposts = ", posts);
+    console.log("posts.data = ", posts.data);
+    console.log("posts.data[0].selected = ", posts.data[0].selected);
+    /* console.log("posts.data[0].selected = ", posts.data[1].selected); */
+
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+        console.log("index = ", index);
+        console.log("MAC = ", list.MACADDR);
+        /*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
+                console.log("MM = ", list.CLIENTID.substring(4, 6));
+                console.log("DD = ", list.CLIENTID.substring(6, 8)); */
+
+        axios.post('post', {
+          command: 'GETBLSI',
+          MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
+          msn: lpad(posts.data[index].MACHINESN, 20, " "),
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+        const getBreeds = async () => {
+          try {
+            axios.get('/getblacklistinfo').then(({ data }) => setCount(data));
+            return console.log("Async Count", count);
+          } catch (error) {
+            console.error(error);
+          }
+        };
+
+        var newCount = new Array();
+        var newArray = new Array();
+
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+
+          console.log("breedsbreeds = ", breeds);
+
+          /*           posts.data.map((list, index1) => {
+                      console.log("map inside && index1", index1);
+                
+                      if (list.selected == true) {
+                        console.log("map inside && index1", index1);
+                
+                        newArray.data = (breeds.data).filter(x => {
+                          return x.MACADDR == posts.data[index1].MACADDR
+                        });
+          
+                        console.log("newArray", newArray);
+                        console.log("newCount = ", newCount);
+                        console.log("newCount.data.length = ", newCount.data.length);
+                      }
+                    }) */
+
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count);
+      }
+      jsonFileList = posts.data[index].CURRENCYKIND;
+
+      var dateParts = jsonFileList.split('[');
+
+      var LocData = new Array();
+
+      dateParts.map((list, index) => {
+        if (dateParts[index] != "") {
+          LocData.push({
+            LOC: dateParts[index].substring(0, 3),
+            id: index
+          })
+        }
+      })
+
+      console.log("jsonFileListjsonFileList5 = ", jsonFileList);
+      console.log("datePartsdateParts = ", dateParts);
+      console.log("aaa aaa aaa aaa = ", LocData);
+
+      setCategories(LocData);
+      console.log("categories2categories", categories);
+    })
+    /* setTimeout(function(){
+      alert("blkget Sleep 5sec"); 
+   }, 5000); */
+  }
 
   console.log("flag 초기값 = ", flag);
 
@@ -54,17 +260,6 @@ function Settings() {
 
   function onGridReady(params) {
     setGridApi(params.api);
-  };
-
-  const onBtnExport = () => {
-    var params = getParams();
-    console.log(params)
-    if (params.suppressQuotes || params.columnSeparator) {
-      alert(
-        'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-      );
-    }
-    gridApi.exportDataAsCsv(params);
   };
 
   function getParams() {
@@ -75,66 +270,6 @@ function Settings() {
       customFooter: getValue('#customFooter'),
     };
   }
-
-  //REST API에서 받아옴
-/*   const [data, setData] = useState({ hits: [] });
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios.get(
-        '/GetUserInfo'
-      );
-      setData(result.data);
-      console.log("result.data = ", result.data);
-      console.log("result.data.data = ", result.data.data);
-    };
-    fetchData();
-  }, []);
-
-  console.log('1================1');
-  console.log("Right = ", Right);
-  console.log("data =", data);
-  console.log("data.data = ", data.data);
-  console.log('1================1'); */
-
-
-
-  /*   const [data, setData] = useState({ hits: [] });
-   
-    useEffect(async () => {
-      const result = await axios(
-        '/GetUserInfo',
-      );
-   
-      setData(result.data);
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-    useEffect(() => {
-      axios.get("api/customers")
-        .then(({data}) => setRowData({data}));
-    }, []); */
-
-  /*   const [rowData, setRowData] = useState([]);
-  
-    useEffect(() => {
-      fetch('/GetUserInfo')
-        .then(res => res.json())
-        .then(rowData => setRowData(rowData.UserInfo))
-    }, []);
-  
-    const [rowCount, setCount] = useState([]);
-    useEffect(() => {
-      fetch('/GetCountInfo')
-        .then(res1 => res1.json())
-        .then(rowCount => setCount(rowCount.CountInfo))
-    }, []); */
-
-  /*   console.log('================');
-    console.log(result.UserInfo);
-    console.log('================');
-    console.log(rowCount);
-    console.log('================'); */
 
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
@@ -155,24 +290,55 @@ function Settings() {
     params.columnApi.setColumnsVisible(columnsToHide, false);
     params.api.sizeColumnsToFit();
   };
-  /* const onClick = index => () => { */
-    /* const searchBtn = () => { */
+  
+  function lpad(str, padLen, padStr) {
+    if (padStr.length > padLen) {
+      console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+      return str;
+    }
+    str += ""; // 문자로
+    padStr += ""; // 문자로
+    while (str.length < padLen)
+      str = padStr + str;
+    str = str.length >= padLen ? str.substring(0, padLen) : str;
+
+    return str;
+  }
+
   const searchBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
+    posts.data.map((list, index) => {
+      console.log("map inside && index1", index);
 
-    axios.post('post', {
-      command: 'CMDCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201205'
+      if (list.selected == true) {
+        /*         axios.post('post', {
+                  command: 'GETSETI',
+                  MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
+                  msn: lpad(posts.data[index].MACHINESN, 20, " ")
+                })
+                  .then(function (response) {
+                    console.log("response = ", response);
+                  })
+                  .catch(function (error) {
+                    console.log("error = ", error);
+                  }); */
+
+        /*           axios.post('post', {
+                    command: 'GETBLBI',
+                    MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
+                    msn: lpad(posts.data[index].MACHINESN, 20, " ")
+                  })
+                    .then(function (response) {
+                      console.log("response = ", response);
+                    })
+                    .catch(function (error) {
+                      console.log("error = ", error);
+                    }); */
+      }
     })
-      .then(function (response) {
-        console.log("response = ", response);
-      })
-      .catch(function (error) {
-        console.log("error = ", error);
-      });
+
   }
 
 
@@ -180,9 +346,10 @@ function Settings() {
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-/*   console.log("data.data2 = ", data.data); */
+  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
+  const [posts2, setPosts2] = useState();
 
   useEffect(() => {
     axios
@@ -190,7 +357,14 @@ function Settings() {
       .then(({ data }) => setPosts(data));
   }, []);
 
+  useEffect(() => {
+    axios
+      .get("/getsettinginfo")
+      .then(({ data }) => setPosts2(data));
+  }, []);
+
   console.log("posts = ", posts);
+  console.log("posts2 = ", posts2);
 
   const [items, setItems] = useState([]
     /*     [
@@ -203,50 +377,76 @@ function Settings() {
   const [count, setCount] = useState();
   console.log("count start", count)
 
+  let jsonFileList;
+  let jsonFileList2;
+  let categoriesCurr;
 
   //리스트 아이템 클릭 selected 작업
   const onClick = index => () => {
+
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
-
-    const getBreeds = async () => {
-      try {
-        return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-  
-    const countBreeds = async () => {
-      const breeds = getBreeds();
-      setCount(breeds);
-      console.log("Breeds = ", count);
-   
-    };
-    
-    //getcountinfo 호출
-
-    console.log("count.item1 : ", count);
-    countBreeds();
-    console.log("count.item2 : ", count);
+    console.log("post.data[index] : ", posts.data[index]);
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
-    if(flag == null){
+    console.log("flag 변경 전 index = ", index);
+    console.log("index flag 변경 전 = ", posts.data[index].selected);
+
+    if (posts.data[index].selected == null && flag == 0) {
+
       posts.data[index].selected = true;
-      flag = true;
-    }else if(flag == true){
+      flag = 1;
+      console.log("index flag if진입 = ", posts.data[index].selected);
+
+    } else if (posts.data[index].selected == true && flag == 1) {
       posts.data[index].selected = false;
-      flag = false;
-    }else if(flag == false){
-      flag = true;
+      flag = 0;
+      console.log("index flag elseif1 진입 = ", posts.data[index].selected);
+    } else if (posts.data[index].selected == false && flag == 0) {
+      flag = 1;
       posts.data[index].selected = true;
-    }
+      console.log("index flag if진입 = ", posts.data[index].selected);
+    } /* else if (posts.data[index].selected == null && flag == 1) {
+      flag = 1;
+      posts.data[index].selected = true;
+      console.log("index flag if진입 = ", posts.data[index].selected);
+    } */
+
+    console.log("index flag 변경 후 = ", posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
+    console.log("flag 변경 후 index = ", index);
+
+    /* if (posts.data[index].selected == true) {
+
+      jsonFileList = posts.data[index].CURRENCYKIND;
+
+      var dateParts = jsonFileList.split('[');
+
+      var LocData = new Array();
+
+      dateParts.map((list, index) => {
+        if (dateParts[index] != "") {
+          LocData.push({
+            LOC: dateParts[index].substring(0, 3),
+            id: index
+          })
+        }
+      })
+
+      console.log("jsonFileListjsonFileList5 = ", jsonFileList);
+      console.log("datePartsdateParts = ", dateParts);
+      console.log("aaa aaa aaa aaa = ", LocData);
+
+      setCategories(LocData);
+      console.log("categories2categories", categories);
+    } */
+
+    //EE7 선택이 없을 시 기존에 저장된 값 초기화가 필요함
 
     /*    const item = items[index]; */
-    const item = posts.data[index];
+    let item = posts.data[index];
 
     /* let item; */
 
@@ -262,8 +462,6 @@ function Settings() {
     console.log("item = ", item);
     console.log("=================");
 
-    //왼쪽 리스트 목록을 지속적으로 RESTAPI에서 받아와서 selected 초기값 null로 인식
-
     console.log("flag2 = ", flag);
     const newItems = [...items];
     console.log("newItems = ", newItems);
@@ -276,39 +474,17 @@ function Settings() {
     console.log("index : ", index);
     console.log("selected : ", posts.data.selected);
     console.log("count.itemEND : ", count);
-
-    //Left 클릭 시 Post 전송
-    axios.post('post', 
-    {
-      command: 'GETCNTI',
-      clientid: posts.data[0].CLIENTID,
-      date: '2020110120201216'
-    })
-      .then(function (response) {
-        console.log(response)
-        console.log('response')
-      })
-      .catch(function (error) {
-        console.log(error)
-        console.log('error')
-      });
   };
   //Left
   console.log("count end", count)
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
-        <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-          <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
-            CSV Export
-        </Button>
-        </div>
-          <Header />
+        <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
-
           <List>
             {posts && posts.data.map((post, index) => (
               <ListItem
@@ -318,6 +494,7 @@ function Settings() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
+                <ListItemText primary={post.STATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -327,7 +504,7 @@ function Settings() {
               </ListItem>
             ))}
           </List>
-{/*           <List>
+          {/*           <List>
           <ListItemText>afsafasfa</ListItemText>
             {count &&count.data.map((ccc, index) => (
               <ListItem
@@ -343,79 +520,60 @@ function Settings() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
-        <AgGridReact
-          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged.bind(this)} floatingFilter={true} frameworkComponents={frameworkComponents}>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="COUNT_DATE" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
-          <AgGridColumn field="COUNT_TIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="COUNT_MODE" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="STACKCNT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="REJECTCNT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="DOUBLECNT" sortable={true} filter={true}></AgGridColumn>
-        </AgGridReact>
-
-        {/*         <AgGridReact
-            modules={this.state.modules}
-            columnDefs={this.state.columnDefs}
-            defaultColDef={this.state.defaultColDef}
-            rowData={this.state.rowData}
-            frameworkComponents={this.state.frameworkComponents}
-            onGridReady={this.onGridReady}
-          /> */}
+      <div>
+        <Fragment>
+          <FormControl className={classes.control}>
+            <InputLabel htmlFor="categories">Currency</InputLabel>
+            <Select
+              value={category.id}
+              onChange={onChange}
+              inputProps={{
+                name: 'categories',
+                id: 'categories'
+              }}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {categories.map(category => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.LOC}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Fragment>
+      </div>
+      <div className="right" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '30%', height: '75%', minHeight: '400px' }}>
+        <Paper className='paper'>
+          <List>
+            {posts2 && posts2.data.map((post, index) => (
+              <ListItem
+                key={index}
+                button
+                selected={post.selected}
+                onClick={onClick(index)}
+              >
+                <ListItemText primary={post.CURRENCYNAME} />
+                <ListItemText primary={post.CNT_MODE} />
+                <ListItemIcon>
+                  <MaybeSelectedIcon
+                    selected={post.selected}
+                    Icon={DevicesIcon}
+                  />
+                </ListItemIcon>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
       </div>
 
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+          &nbsp;&nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => Infobtn()}>GET</Button>
         <Footer />
       </div>
-      <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
-        <div>
-          <div className="row">0
-            <label>suppressQuotes = </label>
-            <select id="suppressQuotes">
-              <option value="none">(default)</option>
-              <option value="true">true</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>columnSeparator = </label>
-            <select id="columnSeparator">
-              <option value="none">(default)</option>
-              <option value="tab">tab</option>
-              <option value="|">bar (|)</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginLeft: '10px' }}>
-          <div className="row">
-            <label>customHeader = </label>
-            <select id="customHeader">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-                  </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>customFooter = </label>
-            <select id="customFooter">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-              </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
+  </div>
   );
 }
 

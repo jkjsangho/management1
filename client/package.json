@@ -19,7 +19,8 @@
     "react-flatpickr": "^3.10.6",
     "react-scripts": "3.4.3",
     "react-virtualized": "^9.22.2",
-    "socket.io-client": "^3.0.3"
+    "socket.io-client": "^3.0.3",
+    "styled-components": "^5.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
