@@ -39,7 +39,6 @@ function App(){
       <Route path="/upgrade" component={upgrade}/>
       <Route path="/user" component={user}/>
       <Route path="/user2" component={user2}/>
-      <Route path="/modal" component={modal}/>
       {/* <Navigation /> */}
       {/* <Route path="/movie-detail" component={Detail}/> */}
     </HashRouter>

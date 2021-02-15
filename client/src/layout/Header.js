@@ -15,6 +15,9 @@ import { green } from '@material-ui/core/colors';
 
 import Divider from '@material-ui/core/Divider';
 
+import Modal from '@material-ui/core/Modal';
+import { makeStyles } from '@material-ui/core/styles';
+
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import InputBase from '@material-ui/core/InputBase';
@@ -37,6 +40,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { closestIndexTo } from 'date-fns';
+
+import upgrade from '../routes/upgrade';
 
 const styles = theme => ({
   menu: {
@@ -183,102 +188,45 @@ const MyToolbar = withStyles(styles)(
   )
 );
 
-const MyDrawer = withStyles(styles)(
 
-  ({ open, onClose, onItemClick }) => (
-    <Drawer open={open} onClose={onClose}>
-      <List>
+/* const [modalStyle] = useState(getModalStyle); */
 
-        <Divider />
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
 
-        <ListItem button component={Link} to="/" replace onClick={onItemClick('Home')}>
-          <WebIcon color="primary" />
-          <ListItemText>Home</ListItemText>
-        </ListItem>
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
 
-        <Divider />
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
 
-        {/*         <ListItem button component={Link} to="/about" replace onClick={onItemClick('Menu 1')}>
-        <TurnedInIcon color="primary"/>
-          <ListItemText>Menu 1</ListItemText>
-        </ListItem>
-        <ListItem button component={Link} to="/menu2" replace onClick={onItemClick('Menu 2')}> */}
-        {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
-        {/*           <TurnedInIcon color="primary"/>
-          <ListItemText>Menu 2</ListItemText>
-        </ListItem> */}
-        <ListItem button component={Link} to="/deviceinfo" replace onClick={onItemClick('DeviceInfo')}>
-          <WebIcon color="primary" />
-          <ListItemText>Device</ListItemText>
-        </ListItem>
+/* const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
-        <Divider />
+const classes = useStyles();
 
-        <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
-          <WebIcon color="secondary" />
-          <ListItemText>Count</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
-          <WebIcon color="action" />
-          <ListItemText>S/N</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/blacklist" replace onClick={onItemClick('BlackList')}>
-          <WebIcon color="disabled" />
-          <ListItemText>BlackList</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/recog" replace onClick={onItemClick('Recog')}>
-          <WebIcon style={{ color: green[500] }} />
-          <ListItemText>Recog</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
-          <WebIcon color="primary" />
-          <ListItemText>Settings</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/upgrade" replace onClick={onItemClick('upgrade')}>
-          <WebIcon color="primary" />
-          <ListItemText>F/W Upgrade</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/user" replace onClick={onItemClick('User')}>
-          <WebIcon color="primary" />
-          <ListItemText>User</ListItemText>
-        </ListItem>
-
-        <ListItem button component={Link} to="/user2" replace onClick={onItemClick('User2')}>
-          <WebIcon color="primary" />
-          <ListItemText>User2</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-        <ListItem button component={Link} to="/modal" replace onClick={onItemClick('Modal')}>
-          <WebIcon color="primary" />
-          <ListItemText>Modal</ListItemText>
-        </ListItem>
-
-        <Divider />
-
-      </List>
-    </Drawer >
-  )
-);
+const body = (
+  <div style={getModalStyle} className={classes.paper}>
+    <h2 id="simple-modal-title">Text in a modal</h2>
+    <p id="simple-modal-description">
+      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+    </p>
+  </div>
+); */
 
 function Header({ classes }) {
 
@@ -303,11 +251,12 @@ function Header({ classes }) {
 
 
   console.log("title 초기값 = ", title);
-  
+
   console.log("value 초기값 = ", value);
 
   const toggleDrawer = () => {
     setDrawer(!drawer);
+    setOpen(false);
   };
 
   const onItemClick = title => () => {
@@ -317,16 +266,149 @@ function Header({ classes }) {
     console.log("title2 =", title);
   };
 
+  const [open2, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+    console.log("handleopen 들어옴");
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    console.log("handleclose 들어옴")
+  };
+
+  const useStyles = makeStyles((theme) => ({
+    paper: {
+      position: 'absolute',
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      border: '2px solid #000',
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(2, 4, 3),
+    },
+  }));
+
+  const classess = useStyles();
+
+  const [modalStyle] = React.useState(getModalStyle);
+
+  const body = (
+    <div style={modalStyle} className={classess.paper}>
+      <h2 id="simple-modal-title">Text in a modal</h2>
+      <p id="simple-modal-description">
+        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+      </p>
+    </div>
+  );
+
   return (
     <div className={classes.root}>
       <MyToolbar title={title} onchange={titlechange} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
 
       {/*Navigation으로 빼서 분활?*/}
-      <MyDrawer
-        open={drawer}
-        onClose={toggleDrawer}
-        onItemClick={onItemClick}
-      />
+      <Drawer open={drawer} onClose={toggleDrawer}>
+        <List>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/" replace onClick={onItemClick('Home')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;Home</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          {/*         <ListItem button component={Link} to="/about" replace onClick={onItemClick('Menu 1')}>
+        <TurnedInIcon color="primary"/>
+          <ListItemText>Menu 1</ListItemText>
+        </ListItem>
+        <ListItem button component={Link} to="/menu2" replace onClick={onItemClick('Menu 2')}> */}
+          {/* <ListItem button containerElement={<Link to="/menu1" replace />} onClick={onItemClick('Page 3')}> */}
+          {/*           <TurnedInIcon color="primary"/>
+          <ListItemText>Menu 2</ListItemText>
+        </ListItem> */}
+          <ListItem button component={Link} to="/deviceinfo" replace onClick={onItemClick('DeviceInfo')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;Device</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;Count</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/serialnum" replace onClick={onItemClick('SerialNum')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;S/N</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/blacklist" replace onClick={onItemClick('BlackList')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;BlackList</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/recog" replace onClick={onItemClick('Recog')}>
+            <WebIcon color="primary" />
+            {/* <WebIcon style={{ color: green[500] }} /> */}
+            <ListItemText>&nbsp;&nbsp;<del>Recog</del></ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;<del>Settings</del></ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/upgrade" replace onClick={onItemClick('upgrade')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;F/W Upgrade</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem button component={Link} to="/user" replace onClick={onItemClick('User')}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;User</ListItemText>
+          </ListItem>
+
+          <Divider />
+
+          {/* <ListItem button component={Link} to="/user2" replace onClick={onItemClick('User2')}>
+            <WebIcon color="primary" />
+            <ListItemText>User2</ListItemText>
+          </ListItem>
+
+          <Divider /> */}
+
+          <div>
+          <ListItem button onClick={handleOpen}>
+            <WebIcon color="primary" />
+            <ListItemText>&nbsp;&nbsp;Modal</ListItemText>
+          </ListItem>
+            <Modal
+              open={open2}
+              onClose={toggleDrawer}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+            >
+              {body}
+            </Modal>
+          </div>
+
+        </List>
+      </Drawer >
     </div>
   )
 }

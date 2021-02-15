@@ -40,6 +40,9 @@ import InputFileList from "../components/FileList";
 
 let flag;
 
+let jsonFileList = new Array();
+let inputlistArray = new Array();
+
 const styles = theme => ({
 
 
@@ -183,9 +186,6 @@ function Upgrade() {
   };
   //Left Click End
 
-  let jsonFileList = new Array();
-  let inputlistArray = new Array();
-
   console.log("jsonFileList check length", jsonFileList.length);
 
   /* const jsonFileList = new Array(); */
@@ -200,8 +200,9 @@ function Upgrade() {
         setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
       }
     } */
-
+    
     jsonFileList = new Array();
+    console.log("jsonFileList 초기화");
 
     const curFiles = event.target.files;
     var i = 0;
@@ -247,7 +248,7 @@ function Upgrade() {
     console.log("setTotalsetTotalsetTotalsetTotalsetTotal")
     setTotal((currentTotal) => currentTotal + 1);
 
-    let inputlistArray = new Array();
+    inputlistArray = new Array();
 
     jsonFileList.map((list, index) => {
 
@@ -264,9 +265,11 @@ function Upgrade() {
       return arr.indexOf(val) === index;
     });
 
-    console.log(uniquefilelist);
+    console.log("uniquefilelist1 = ", uniquefilelist);
 
     setinputlist(uniquefilelist);
+
+    console.log("uniquefilelist2 = ", uniquefilelist);
 
     /*     inputlist.map((list2, index) => {
           console.log("inputlist map = ", list2[index].img.name);
@@ -285,6 +288,7 @@ function Upgrade() {
     /* console.log("selectedFile1 = ", imgFile); */
 
     /* formData.append('file', imgFile); */
+    console.log("jsonFileList", jsonFileList);
 
     console.log("file post start");
 
@@ -331,81 +335,10 @@ function Upgrade() {
         }
       })
   }
-
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
-  const [cart, setCart] = useState([]);
-
-  function addItemToCart(e) {
-    const item = e.target.value;
-    console.log("addItemToCart = ", item);
-    setCart(cart => [...cart, item]);
-  }
-
-  function FileList() {
-    console.log("================================================filelist 진입")
-    console.log("JsonListFile length FileList =", jsonFileList.length);
-    console.log("JsonListFile FileList =", jsonFileList);
-    //console.log("JsonListFile.img FileList =", jsonFileList[0].img.name);
-
-    jsonFileList.map((list, index) => {
-      console.log("FileList map = ", list.img.name);
-    })
-
-    console.log("================================================filelist 중간")
-    /* <List>
-    {posts && posts.data.map((post, index) => (
-      <ListItem
-        key={index}
-        button
-        selected={post.selected}
-        onClick={onClick(index)}
-      >
-        <ListItemText primary={post.MACHINEID} />
-        <ListItemText primary={post.USERSTATUS} secondary={post.MACADDR} />
-        <ListItemIcon>
-          <MaybeSelectedIcon
-            selected={post.selected}
-            Icon={DevicesIcon}
-          />
-        </ListItemIcon>
-      </ListItem>
-    ))}
-  </List> */
-    console.log("1111111111filelist jsonFileList = ", jsonFileList);
-    return (
-      <List>
-        {jsonFileList.map((item, index) => (
-          <ListItem
-            key={index}
-            value={item.img.name}
-          >
-            <ListItemText primary={item.img.name} />
-          </ListItem>
-        ))}
-      </List>
-      //<Button value="" onClick={addItemToCart}>업로드 파일이 있음</Button>
-    );
-    window.location.replace("/");
-    this.getPosts();
-  }
-
-  function FileList2(props) {
-    console.log("==================================================filelist2 진입")
-    console.log("2222222222JsonListFile length FileList2 =", jsonFileList.length);
-    return (
-      <Button>업로드 파일이 없음</Button>
-    );
-  }
-
+  
   const [total, setTotal] = useState(0);
-  const [inputlist, setinputlist] = useState([]);
 
-  const incrementTotal = () => {
-    setTotal((currentTotal) => currentTotal + 1);
-  }
+  const [inputlist, setinputlist] = useState([]);
 
   console.log("count end", count)
   return (
@@ -413,10 +346,9 @@ function Upgrade() {
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '15%', height: '75%' }}>
-        <Paper className='paper'>
-          {/* <Right/> */}
 
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '20%' }}>
+        <Paper className='paper'>
           <List>
             {posts && posts.data.map((post, index) => (
               <ListItem
@@ -426,7 +358,7 @@ function Upgrade() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText primary={post.USERSTATUS} secondary={post.MACADDR} />
+                <ListItemText primary={post.STATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -437,72 +369,30 @@ function Upgrade() {
             ))}
           </List>
         </Paper>
-      </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
-        <AgGridReact
-          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
-          Components={{ agDateInput: CustomDateComponent }}>
-          {/*           <AgGridColumn field="DATETIME" ></AgGridColumn>
-          <AgGridColumn field="IPADDR" ></AgGridColumn>
-          <AgGridColumn field="MACADDR" ></AgGridColumn>
-          <AgGridColumn field="MACHINEID" ></AgGridColumn>
-          <AgGridColumn field="ALIAS" ></AgGridColumn>
-          <AgGridColumn field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
-          <AgGridColumn field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
-          <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
-          <AgGridColumn field="STACKCNT" ></AgGridColumn>
-          <AgGridColumn field="REJECTCNT" ></AgGridColumn>
-          <AgGridColumn field="DOUBLECNT" ></AgGridColumn> */}
-        </AgGridReact>
+        <div>
+          <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <Button variant="contained" color="primary" onClick={() => handlePost()}>Upload</Button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="file" name="imgFile" id="imgFile" multiple onChange={handleChangeFile} />
+        </div>
       </div>
 
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
-        <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <Button variant="contained" color="primary" onClick={() => handlePost()}>Upload</Button>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <input type="file" name="imgFile" id="imgFile" multiple onChange={handleChangeFile} />
-        <div className="App">
-          <div style={{ "backgroundColor": "#efefef", width: '20%', height: '75%' }}>
-            <List>
-            <ListSubheader>{'Upload List'}</ListSubheader>
-              {inputlist && inputlist.map((list, index) => (
-                <ListItem
-                  key={index}
-                >
-                  <ListItemText primary={list} />
-                </ListItem>
-              ))}
-            </List>
-            <ListItemText>======================</ListItemText>
-          </div>
+      <div className="App">
+        <div style={{ float: 'left', "backgroundColor": "#efefef" }}>
+          <List style={{ maxHeight: 250, position: 'relative', overflow: 'auto' }} subheader='====Upload List===='>
+            {inputlist && inputlist.map((list, index) => (
+              <ListItem
+                key={index}
+              >
+                <ListItemText primary={list} />
+              </ListItem>
+            ))}
+          </List>
         </div>
-        <Footer />
       </div>
     </div>
   );
 }
-
-var filterParams = {
-  comparator: function (filterLocalDateAtMidnight, cellValue) {
-    var dateAsString = cellValue;
-    var dateParts = dateAsString.split('/');
-    var cellDate = new Date(
-      Number(dateParts[2]),
-      Number(dateParts[1]) - 1,
-      Number(dateParts[0])
-    );
-    if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-      return 0;
-    }
-    if (cellDate < filterLocalDateAtMidnight) {
-      return -1;
-    }
-    if (cellDate > filterLocalDateAtMidnight) {
-      return 1;
-    }
-  },
-};
 
 export default Upgrade

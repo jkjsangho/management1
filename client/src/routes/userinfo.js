@@ -280,7 +280,7 @@ function Userinfo() {
         <Header />
       </div>
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'pink', width: '20%', height: '75%' }}>
-        <Paper className='paper'>
+        <Paper style={{overflow: 'auto'}} className='paper'>
           {/* <left/> */}
           <List>
             <Divider />
@@ -313,11 +313,10 @@ function Userinfo() {
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINESN" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          {/* <AgGridColumn field="DATETIME" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn> */}
           <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CLIENTID" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="USERSTATUS" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="STATUS" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact

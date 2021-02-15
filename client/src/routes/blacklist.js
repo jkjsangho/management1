@@ -884,47 +884,6 @@ function BlackList() {
         {/* <Button variant="contained" color="primary" onClick={() => blkSaveBtn()}>SAVE</Button> */}
         <Footer />
       </div>
-      <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
-        <div>
-          <div className="row">0
-            <label>suppressQuotes = </label>
-            <select id="suppressQuotes">
-              <option value="none">(default)</option>
-              <option value="true">true</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>columnSeparator = </label>
-            <select id="columnSeparator">
-              <option value="none">(default)</option>
-              <option value="tab">tab</option>
-              <option value="|">bar (|)</option>
-            </select>
-          </div>
-        </div>
-        <div style={{ marginLeft: '10px' }}>
-          <div className="row">
-            <label>customHeader = </label>
-            <select id="customHeader">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-                  </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-          <div className="row">
-            <label>customFooter = </label>
-            <select id="customFooter">
-              <option>none</option>
-              <option value="array">
-                ExcelCell[][] (recommended format)
-              </option>
-              <option value="string">string (legacy format)</option>
-            </select>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
