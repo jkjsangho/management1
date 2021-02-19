@@ -317,10 +317,10 @@ function CountInfo() {
 
   return (
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
-      <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
+      <div className='title' style={{ height: '9%', backgroundColor: 'purple' }}>
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '15%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '85%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
 
@@ -333,7 +333,7 @@ function CountInfo() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText primary={post.USERSTATUS} secondary={post.MACADDR} />
+                <ListItemText secondary={post.STATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -358,18 +358,18 @@ function CountInfo() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '85%', minHeight: '400px' }}>
         <AgGridReact
           rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
           Components={{ agDateInput: CustomDateComponent }}/* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* modules={AllCommunityModules} */
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
-          <AgGridColumn field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
-          <AgGridColumn field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
-          <AgGridColumn field="DATETIME" ></AgGridColumn>
-          <AgGridColumn field="COUNT_MODE" ></AgGridColumn>
-          <AgGridColumn field="MACHINEID" ></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" ></AgGridColumn>
-          <AgGridColumn field="STACKCNT" filter="agNumberColumnFilter"></AgGridColumn>
+          <AgGridColumn headerName="DATE" field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
+          <AgGridColumn headerName="TIME" field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
+          {/* <AgGridColumn headerName="S/N" field="DATETIME" ></AgGridColumn> */}
+          <AgGridColumn field="MACHINESN" ></AgGridColumn>
+          <AgGridColumn headerName="MODE" field="COUNT_MODE" ></AgGridColumn>
+          <AgGridColumn headerName="CURRENCY" field="CURRENCYNAME" ></AgGridColumn>
+          <AgGridColumn headerName="COUNT" field="STACKCNT" filter="agNumberColumnFilter"></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -382,7 +382,7 @@ function CountInfo() {
           /> */}
       </div>
 
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static', height: '90%', width: '100%' }}>
+      <div className="list" style={{ backgroundColor: '#5C6BC0', position: 'static', height: '90%', width: '100%' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => onBtnExport()}>

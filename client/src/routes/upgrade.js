@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Customer from '../components/Customer'
 import Header from '../layout/Header';
-import Footer from '../layout/Footer';
-import Right from '../layout/right';
 
 import Button from '@material-ui/core/Button';
-
-import { List as VirtualList, AutoSizer } from 'react-virtualized';
 
 import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
@@ -17,14 +12,10 @@ import Paper from '@material-ui/core/Paper';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DevicesIcon from '@material-ui/icons/Devices';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 //달력
-import CustomDateComponent from '../components/customDateComponent';
-
-import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -33,21 +24,11 @@ import 'ag-grid-community/dist/styles/ag-theme-material.css';
 /* import { AllCommunityModules } from '@ag-grid-community/all-modules'; */
 
 import axios from "axios";
-import { result } from 'lodash';
-import { post } from 'request';
-
-import InputFileList from "../components/FileList";
 
 let flag;
 
 let jsonFileList = new Array();
 let inputlistArray = new Array();
-
-const styles = theme => ({
-
-
-
-})
 
 function Upgrade() {
 
@@ -67,8 +48,6 @@ function Upgrade() {
   //Left
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
-
-  /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
 
@@ -200,7 +179,7 @@ function Upgrade() {
         setImgBase64(base64.toString()); // 파일 base64 상태 업데이트
       }
     } */
-    
+
     jsonFileList = new Array();
     console.log("jsonFileList 초기화");
 
@@ -235,16 +214,9 @@ function Upgrade() {
     console.log("jsonFileList = ", jsonFileList);
     console.log("event.target.files = ", event.target.files);
     console.log("jsonFileList[0] = ", jsonFileList[0]);
-    /* console.log("jsonFileList[0].img = ", jsonFileList[0].img); */
     console.log("event.target.files[0] = ", event.target.files[0]);
-    /* console.log("jsonFileList[0].img.name = ", jsonFileList[0].img.name); */
     console.log("jsonFileList.length", jsonFileList.length);
 
-    /*     if (event.target.files[0]) {
-      reader.readAsDataURL(event.target.files[0]); // 1. 파일을 읽어 버퍼에 저장합니다.
-      setImgFile(event.target.files[0]); // 파일 상태 업데이트
-      console.log("FileState = ", event.target.files[0]);
-    } */
     console.log("setTotalsetTotalsetTotalsetTotalsetTotal")
     setTotal((currentTotal) => currentTotal + 1);
 
@@ -276,7 +248,6 @@ function Upgrade() {
         }) */
 
     console.log("inputlistinputlistinputlistinputlist = ", inputlist);
-    /* FileList(); */
   }
 
   const handlePost = () => {
@@ -285,9 +256,6 @@ function Upgrade() {
 
     console.log("file post start");
 
-    /* console.log("selectedFile1 = ", imgFile); */
-
-    /* formData.append('file', imgFile); */
     console.log("jsonFileList", jsonFileList);
 
     console.log("file post start");
@@ -335,19 +303,25 @@ function Upgrade() {
         }
       })
   }
-  
+
   const [total, setTotal] = useState(0);
 
   const [inputlist, setinputlist] = useState([]);
 
   console.log("count end", count)
   return (
+    /*       <div style={modalStyle} className={classess.paper}>
+            <h2 id="simple-modal-title">Text in a modal</h2>
+            <p id="simple-modal-description">
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </p>
+          </div> */
     <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
         <Header />
       </div>
 
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '20%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '15%', height: '20%' }}>
         <Paper className='paper'>
           <List>
             {posts && posts.data.map((post, index) => (
@@ -369,28 +343,29 @@ function Upgrade() {
             ))}
           </List>
         </Paper>
-        <div>
+        <div style={{ float: 'left', position: 'static', backgroundColor: 'yellow'}}>
+        <input type="file" name="imgFile" id="imgFile" multiple onChange={handleChangeFile} />
+        </div>
+        <div style={{ float: 'left', position: 'static', backgroundColor: 'yellow'}}>
           <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Button variant="contained" color="primary" onClick={() => handlePost()}>Upload</Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <input type="file" name="imgFile" id="imgFile" multiple onChange={handleChangeFile} />
         </div>
       </div>
-
-      <div className="App">
-        <div style={{ float: 'left', "backgroundColor": "#efefef" }}>
-          <List style={{ maxHeight: 250, position: 'relative', overflow: 'auto' }} subheader='====Upload List===='>
-            {inputlist && inputlist.map((list, index) => (
-              <ListItem
-                key={index}
-              >
-                <ListItemText primary={list} />
-              </ListItem>
-            ))}
-          </List>
+      <div className="FileList">
+          <div style={{ float: 'left', "backgroundColor": "white" }}>
+            <List style={{ maxHeight: 220, position: 'relative', overflow: 'auto' }} subheader='======Upload List======'>
+              {inputlist && inputlist.map((list, index) => (
+                <ListItem
+                  key={index}
+                >
+                  <ListItemText primary={list} />
+                </ListItem>
+              ))}
+            </List>
+          </div>
         </div>
-      </div>
     </div>
   );
 }

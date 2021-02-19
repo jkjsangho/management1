@@ -270,16 +270,15 @@ function Userinfo() {
       }); */
   };
   //Left
-
+  
   return (
-    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
-      <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
+    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: '#5C6BC0', height: '100%', width: '100%' }}>
+      <div className='title' style={{ height: '9%', backgroundColor: 'purple' }}>
 {/*         <div className="Button1" style={{ padding: '0.5%', marginLeft: '88%', marginTop: '4%' }}>
-
         </div> */}
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'pink', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '85%' }}>
         <Paper style={{overflow: 'auto'}} className='paper'>
           {/* <left/> */}
           <List>
@@ -306,9 +305,9 @@ function Userinfo() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '85%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={frameworkComponents}>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>
@@ -330,10 +329,9 @@ function Userinfo() {
 
       </div>
 
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+      <div className="list" style={{ backgroundColor: '#5C6BC0', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <Footer />
       </div>
     </div>
   );

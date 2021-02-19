@@ -309,7 +309,7 @@ function BlackList() {
         })
         console.log("blkpostend = ", blkpostend);
 
-/*         axios.post('post', {
+        axios.post('post', {
           command: 'SETBLSN',
           MacAddr: posts.data[index1].MACADDR,
           msn: lpad(posts.data[index1].MACHINESN, 20, " "),
@@ -320,7 +320,7 @@ function BlackList() {
           })
           .catch(function (error) {
             console.log("error = ", error);
-          }); */
+          });
 
         console.log("BlackList Add After setCount(newCount)", count);
       }
@@ -673,7 +673,7 @@ function BlackList() {
     nested: {
       paddingLeft: theme.spacing(3),
     },
-    control: { margin: theme.spacing(2), minWidth: 200 }
+    control: { margin: theme.spacing(1), minWidth: 200 }
   }));
 
   const classes = useStyles();
@@ -780,8 +780,8 @@ function BlackList() {
   };
 
   return (
-    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
-      <div className='title' style={{ height: '10%', backgroundColor: 'silver' }}>
+    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: '#5C6BC0', height: '98.5%', width: '100%' }}>
+      <div className='title' style={{ height: '10%', backgroundColor: '#EDE7F6' }}>
         <div className="Button1" style={{ padding: '0.1%', marginLeft: '1%', marginTop: '3%' }}>
           <Fragment>
             <FormControl className={classes.control}>
@@ -829,7 +829,7 @@ function BlackList() {
                   ))}
               </Select>
             </FormControl>
-            <TextField inputProps={{ maxLength: 20 }} id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary" />
+            <TextField className={classes.control} inputProps={{ maxLength: 20 }} id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary" />
           </Fragment>
         </div>
         {/*         <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
@@ -837,7 +837,7 @@ function BlackList() {
         </Button> */}
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'gray', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '80%' }}>
         <Paper className='paper'>
           {/* <left/> */}
 
@@ -850,7 +850,7 @@ function BlackList() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText primary={post.STATUS} />
+                <ListItemText secondary={post.STATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -863,7 +863,7 @@ function BlackList() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '80%', minHeight: '400px' }}>
         <AgGridReact
           rowData={count && count.data} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
           onGridSizeChanged={onGridSizeChanged.bind(this)} frameworkComponents={frameworkComponents}>
@@ -876,7 +876,7 @@ function BlackList() {
         </AgGridReact>
       </div>
 
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+      <div className="list" style={{ backgroundColor: '#5C6BC0', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => blkGetBtn()}>GET</Button>
           &nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => blkAddBtn()}>ADD</Button>

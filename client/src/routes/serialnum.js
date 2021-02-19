@@ -377,11 +377,11 @@ function Serialnum() {
   //Left Click End
   console.log("count end", count)
   return (
-    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
-      <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
+    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: '#5C6BC0', height: '100%', width: '100%' }}>
+      <div className='title' style={{ height: '9%', backgroundColor: 'purple' }}>
           <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '15%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '85%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
 
@@ -394,7 +394,7 @@ function Serialnum() {
                 onClick={onClick(index)}
               >
                 <ListItemText primary={post.MACHINEID} />
-                <ListItemText secondary={post.USERSTATUS} />
+                <ListItemText secondary={post.STATUS} />
                 <ListItemIcon>
                   <MaybeSelectedIcon
                     selected={post.selected}
@@ -420,17 +420,17 @@ function Serialnum() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '85%', minHeight: '400px' }}>
         <AgGridReact
           rowData={count && count.data} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}>
-          <AgGridColumn field="MACHINESN" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="SN_DATE" sortable={true} filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
-          <AgGridColumn field="SN_TIME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="DENOM" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="SERIALNO" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="SN_ISREJECT" sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="IMG_DATA" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="Device S/N" field="MACHINESN" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="DATE" field="SN_DATE" sortable={true} filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
+          <AgGridColumn headerName="TIME" field="SN_TIME" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="Currency" field="CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="Denomination" field="DENOM" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="S/N" field="SERIALNO" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="Rej." field="SN_ISREJECT" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn headerName="Image" field="IMG_DATA" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact
@@ -443,7 +443,7 @@ function Serialnum() {
           /> */}
       </div>
 
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+      <div className="list" style={{ backgroundColor: '#5C6BC0', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => GETSN()}>Get SN</Button>
         &nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => GETSN()}>Get SN with IMAGE</Button>
