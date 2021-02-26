@@ -55,13 +55,13 @@ function User() {
 
   console.log("flag 초기값 = ", flag);
 
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
 
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
-  const [valueSN, setSN] = React.useState('');
+  const [valueSN, setSN] = useState('');
 
   const handleChangeSN = (event) => {
     setSN(event.target.value);

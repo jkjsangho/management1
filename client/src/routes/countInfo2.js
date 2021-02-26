@@ -364,12 +364,12 @@ function CountInfo() {
           Components={{ agDateInput: CustomDateComponent }}/* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* modules={AllCommunityModules} */
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
           <AgGridColumn headerName="DATE" field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
-          <AgGridColumn headerName="TIME" field="COUNT_TIME" filter="agNumberColumnFilter"></AgGridColumn>
+          <AgGridColumn headerName="TIME" field="COUNT_TIME" ></AgGridColumn>
           {/* <AgGridColumn headerName="S/N" field="DATETIME" ></AgGridColumn> */}
           <AgGridColumn field="MACHINESN" ></AgGridColumn>
           <AgGridColumn headerName="MODE" field="COUNT_MODE" ></AgGridColumn>
           <AgGridColumn headerName="CURRENCY" field="CURRENCYNAME" ></AgGridColumn>
-          <AgGridColumn headerName="COUNT" field="STACKCNT" filter="agNumberColumnFilter"></AgGridColumn>
+          <AgGridColumn headerName="COUNT" field="STACKCNT"></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact

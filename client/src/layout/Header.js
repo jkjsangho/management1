@@ -103,7 +103,7 @@ const styles = theme => ({
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing(1),
       width: 'auto',
     },
   },
@@ -124,9 +124,9 @@ const styles = theme => ({
     flexGrow: 1
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+    paddingTop: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     paddingLeft: theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -286,6 +286,7 @@ function Header({ classes }) {
     setDrawer(!drawer);
     setOpen(false);
     setOpen2(false);
+    setTitle(title);
 
     //Modal Close 시 초기화
     setValues();
@@ -427,7 +428,8 @@ function Header({ classes }) {
     console.log("setTotalsetTotalsetTotalsetTotalsetTotal")
     setTotal((currentTotal) => currentTotal + 1);
 
-    inputlistArray = new Array();
+    //초기화 수정
+    inputlistArray = [];
 
     jsonFileList.map((list, index) => {
 
@@ -695,7 +697,7 @@ function Header({ classes }) {
 
   return (
     <div className={classes.root}>
-      <MyToolbar title={title} onchange={titlechange} onMenuClick={toggleDrawer} value={value} handleChange={handleChange} />
+      <MyToolbar title={title} onchange={titlechange} onMenuClick={toggleDrawer} value={value} /* handleChange={handleChange} */ />
 
       {/*Navigation으로 빼서 분활?*/}
       <Drawer open={drawer} onClose={toggleDrawer}>
@@ -760,7 +762,8 @@ function Header({ classes }) {
 
           <ListItem button component={Link} to="/settings" replace onClick={onItemClick('Settings')}>
             <WebIcon color="primary" />
-            <ListItemText style={{ color: 'red' }}>&nbsp;&nbsp;<del>Settings</del></ListItemText>
+            {/* <ListItemText style={{ color: 'red' }}>&nbsp;&nbsp;<del>Settings</del></ListItemText> */}
+            <ListItemText>&nbsp;&nbsp;Settings</ListItemText>
           </ListItem>
           {/* 
           <Divider />

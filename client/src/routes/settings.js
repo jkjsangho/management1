@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
-import Customer from '../components/Customer'
+import React, { useState, useEffect, Fragment } from 'react';
+import { useInterval } from 'react-use';
+
 import Header from '../layout/Header';
-import Footer from '../layout/Footer';
-import Right from '../layout/right';
 
 import Button from '@material-ui/core/Button';
-
-import { List as VirtualList, AutoSizer } from 'react-virtualized';
 
 import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
@@ -14,16 +11,21 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 
+import Box from '@material-ui/core/Box';
+
 import TextField from '@material-ui/core/TextField';
 
+/* import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
+import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
+import DateTimePicker from "@material-ui/lab/DateTimePicker"; */
+
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DevicesIcon from '@material-ui/icons/Devices';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
-//달력
-import CustomDateComponent from '../components/customDateComponent';
 
 /* import {makeStyles} from '@material-ui/styles'; */
 import InputLabel from '@material-ui/core/InputLabel';
@@ -31,21 +33,22 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 import axios from "axios";
-import { result } from 'lodash';
-import { post } from 'request';
-
-
+import Moment from "react-moment"
+import { Typography } from '@material-ui/core';
 
 let flag = 0;
 let marker = '';
 let marker2 = '';
+let marker3 = '';
+let marker4 = '';
+
+var blackboxjson = new Array();
 
 const styles = theme => ({
 
@@ -55,66 +58,91 @@ function Settings() {
 
   /* http://localhost:5000 */
 
-  var frameworkComponents = { agDateInput: CustomDateComponent };
-
-  const getBreeds = async () => {
-    try {
-      axios.get('/getblacklistinfo').then(({ data }) => setCount(data));
-      return console.log("Async Count", count);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  var newCount = new Array();
-  var newArray = new Array();
-
   const useStyles = makeStyles((theme) => ({
     root: {
-      width: '10%',
-      backgroundColor: theme.palette.background.paper,
+      display: 'flex',
+      flexWrap: 'wrap',
+      '& > *': {
+        margin: theme.spacing(2),
+        width: theme.spacing(50),
+        height: theme.spacing(50),
+      },
+      /*       width: '10%',
+            backgroundColor: theme.palette.background.paper, */
     },
     nested: {
       paddingLeft: theme.spacing(3),
     },
-    control: { margin: theme.spacing(2), minWidth: 200 }
+    control: { margin: theme.spacing(2), minWidth: 140 },
+    container: {
+      display: "flex",
+      flexWrap: "wrap"
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 250
+      //width: '88%'
+    }
   }));
+
+  const [posts, setPosts] = useState();
+  const [posts2, setPosts2] = useState();
+  const [blackbox, setblackbox] = useState();
+
+  useEffect(() => {
+    axios
+      .get("/getuserinfo")
+      .then(({ data }) => setPosts(data));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("/getsettinginfo")
+      .then(({ data }) => setPosts2(data));
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("/getblackbox")
+      .then(({ data }) => setblackbox(data));
+  }, []);
 
   const classes = useStyles();
 
   const [categories, setCategories] = useState([""]);
   const [categories2, setCategories2] = useState([
-    { label: 'Free', id: 1 },
-    { label: 'Value', id: 2 },
-    { label: 'Face', id: 3 },
-    { label: 'Orient', id: 4 },
-    { label: 'FaceOrient', id: 5 },
-    { label: 'Ticket', id: 6 },
-    { label: 'SerialNumber', id: 7 },
-    { label: 'MultiAuto', id: 8 },
-    { label: 'MultiMix', id: 9 },
-    { label: 'ValueSerial', id: 10 },
-    { label: 'FitnessSort', id: 11 },
-    { label: 'Check', id: 12 },
-    { label: 'EditionSort', id: 13 },
-    { label: 'TapeDetection', id: 14 },
-    { label: 'Graffiti', id: 15 },
-    { label: 'ATMFit', id: 16 },
-    { label: 'AutoFace', id: 17 },
-    { label: 'AutoOrient', id: 18 },
-    { label: 'AutoFitness', id: 19 },
-    { label: 'AutoSNRFit', id: 20 },
+    { label: 'Free', id: 0 },
+    { label: 'Value', id: 1 },
+    { label: 'Face', id: 2 },
+    { label: 'Orient', id: 3 },
+    { label: 'FaceOrient', id: 4 },
+    { label: 'Ticket', id: 5 },
+    { label: 'SerialNumber', id: 6 },
+    { label: 'MultiAuto', id: 7 },
+    { label: 'MultiMix', id: 8 },
+    { label: 'ValueSerial', id: 9 },
+    { label: 'FitnessSort', id: 10 },
+    { label: 'Check', id: 11 },
+    { label: 'EditionSort', id: 12 },
+    { label: 'TapeDetection', id: 13 },
+    { label: 'Graffiti', id: 14 },
+    { label: 'ATMFit', id: 15 },
+    { label: 'AutoFace', id: 16 },
+    { label: 'AutoOrient', id: 17 },
+    { label: 'AutoFitness', id: 18 },
+    { label: 'AutoSNRFit', id: 19 },
   ]);
   const [categories3, setCategories3] = useState([
-    { label: 'Count', id: 1 },
-    { label: 'Amount', id: 2 },
+    { label: 'Count', id: 0 },
+    { label: 'Amount', id: 1 },
   ]);
   const [categories4, setCategories4] = useState([
-    { label: 'Speed1200NPM', id: 1 },
-    { label: 'Speed1000NPM', id: 2 },
-    { label: 'Speed800NPM', id: 3 },
-    { label: 'Speed600NPM', id: 4 },
-    { label: 'Speed1500NPM', id: 5 },
+    { label: 'Speed1200NPM', id: 0 },
+    { label: 'Speed1000NPM', id: 1 },
+    { label: 'Speed800NPM', id: 2 },
+    { label: 'Speed600NPM', id: 3 },
+    { label: 'Speed1500NPM', id: 4 },
   ]);
 
   const setters = {
@@ -151,6 +179,8 @@ function Settings() {
 
     collection[index] = { ...collection[index], selected: true };
     setCollection(collection);
+    console.log('collectionscollections = ', collections);
+    console.log("collectioncollection = ", collection);
     /* 
         if (e.target.name != "products2") {
           console.log("if in e.target.name = ", e.target.name);
@@ -195,10 +225,10 @@ function Settings() {
     id: marker2
   };
   const category3 = categories3.find(category => category.selected) || {
-    id: ''
+    id: marker3
   };
   const category4 = categories4.find(category => category.selected) || {
-    id: ''
+    id: marker4
   };
 
   const Infobtn = () => {
@@ -210,20 +240,10 @@ function Settings() {
 
     posts.data.map((list, index) => {
       if (list.selected == true) {
-        console.log("index = ", index);
-        console.log("MAC = ", list.MACADDR);
-        /*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
-                console.log("MM = ", list.CLIENTID.substring(4, 6));
-                console.log("DD = ", list.CLIENTID.substring(6, 8)); */
 
-/*                 axios.post('post', {
-                  command: 'GETRCUI',
-                  MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
-                  msn: lpad(posts.data[index].MACHINESN, 20, " "),
-                }) */
-
-/*         axios.post('post', {
-          command: 'GETBLSI',
+        //setting 최신화 요청
+        axios.post('post', {
+          command: 'GETSETI',
           MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
           msn: lpad(posts.data[index].MACHINESN, 20, " "),
         })
@@ -232,7 +252,10 @@ function Settings() {
           })
           .catch(function (error) {
             console.log("error = ", error);
-          }); */
+          });
+
+        console.log("index = ", index);
+        console.log("MAC = ", list.MACADDR);
 
         jsonFileList = posts.data[index].CURRENCYKIND;
 
@@ -244,7 +267,7 @@ function Settings() {
           if (list != "") {
             LocData.push({
               LOC: list.substring(0, 3),
-              id: index
+              id: index - 1 //전송 편의를 위해 -1
             })
           }
         })
@@ -265,27 +288,80 @@ function Settings() {
 
         //marker 초기화
         //선택한 Device의 Settting - Currency 값을 초기값으로 적용하는 로직
-        marker = "";
+        marker = '';
+        marker2 = '';
+        marker3 = '';
+        marker4 = '';
 
         console.log("posts2 == ", posts2)
 
-        posts2.data.map((list2, index2) => {
+        posts2.data.map((list2) => {
           if (list2.MACADDR == list.MACADDR) {
 
+            //SET_DATE 20210209
+            //SET_TIME 173853
+
+            //datedate = year + "-" + lpad(month, 2, 0) + "-" + lpad(date, 2, 0) + "T" + lpad(hours, 2, 0) + ":" + lpad(minutes, 2, 0) + ":" + lpad(secondss, 2, 0);
+            //datedate = list2.SET_DATE.substring(0,4) + "-" + list2.SET_DATE.substring(4,6) + "-" + list2.SET_DATE.substring(6,8) +"T"+list2.SET_TIME.substring(0,2)+":"+list2.SET_TIME.substring(2,4)
+            var abc = list2.SET_DATE.substring(0, 4) + "-" + list2.SET_DATE.substring(4, 6) + "-" + list2.SET_DATE.substring(6, 8) + "T" + list2.SET_TIME.substring(0, 2) + ":" + list2.SET_TIME.substring(2, 4) + ":" + list2.SET_TIME.substring(4, 6)
+            setdatedate(abc)
+
+            console.log("get datedate", abc)
+
+            console.log("list == ", list)
             console.log("list2 == ", list2)
 
             let checkcheck
+            let checkcheck2
+            let checkcheck3
+
             checkcheck = categories2.find(function (n) {
-              if(n.label===list2.CNT_MODE)
+              if (n.label === list2.CNT_MODE)
                 return n.label
-          });
-          
+            });
+
+            checkcheck2 = categories3.find(function (n) {
+              if (n.label === list2.BATCH_MODE)
+                return n.label
+            });
+
+            checkcheck3 = categories4.find(function (n) {
+              if (n.label === list2.CNT_SPEED)
+                return n.label
+            });
+
+            console.log("list2.CNT = ", list2.BATCH_CNT);
+            console.log("list2.AMT = ", list2.BATCH_AMT);
+
+            //handleCNT(list2.BATCH_CNT);
+            //handleAMT(list2.BATCH_AMT);
+
+            setCNT(list2.BATCH_CNT);
+            setAMT(list2.BATCH_AMT);
+
+            //CNT = list2.BATCH_CNT
+            //AMT = list2.BATCH_AMT
+
+            console.log("CNT = ", CNT);
+            console.log("AMT = ", AMT);
+
             console.log("checkcheck = ", checkcheck);
             console.log("checkcheck.id = ", checkcheck.id);
+            console.log("checkcheck2 = ", checkcheck2);
+            console.log("checkcheck2.id = ", checkcheck2.id);
+            console.log("checkcheck3 = ", checkcheck3);
+            console.log("checkcheck3.id = ", checkcheck3.id);
+
             marker2 = checkcheck.id
             category2.id = marker2;
 
-            LocData.map((list3, index3) => {
+            marker3 = checkcheck2.id
+            category3.id = marker3;
+
+            marker4 = checkcheck3.id
+            category4.id = marker4;
+
+            LocData.map((list3) => {
               if (list3.LOC == list2.CURRENCYNAME) {
                 marker = list3.id
                 console.log("LocData[index2].LOC = ", list3.LOC);
@@ -308,42 +384,147 @@ function Settings() {
    }, 5000); */
   }
 
-  console.log("flag 초기값 = ", flag);
+  const Savebtn = () => {
+    console.log("Savebtn collections = ", collections);
+    console.log("category = ", category);
+    console.log("category.id = " + category.id + " category2.id = " + category2.id + " category3.id = " + category3.id + " category4.id = " + category4.id +
+      " BATCH_CNT = " + CNT + " BATCH_AMT = " + AMT);
 
-  const [gridApi, setGridApi] = useState(null);
+    var setcount
 
-  function onGridReady(params) {
-    setGridApi(params.api);
-  };
+    categories.map((aaa) => {
+      if (aaa.id == category.id) {
+        console.log("category.LOC", aaa.LOC)
 
-  function getParams() {
-    return {
-      suppressQuotes: getValue('#suppressQuotes'),
-      columnSeparator: getValue('#columnSeparator'),
-      customHeader: getValue('#customHeader'),
-      customFooter: getValue('#customFooter'),
-    };
+        //setcount = Date + Time + CountMode + CurrencyName + BatchMode + BatchCount + BatchAmount + CountSpeed
+        setcount = datedate.substring(0, 4) + datedate.substring(5, 7) + datedate.substring(8, 10) + datedate.substring(11, 13) + datedate.substring(14, 16) + datedate.substring(17, 19) + lpad(category2.id, 2, 0) + aaa.LOC + lpad(category3.id, 2, 0) + lpad(CNT, 7, 0) + lpad(AMT, 8, 0) + lpad(category4.id, 2, 0)
+      }
+    })
+
+    console.log("save DateDate", datedate);
+    console.log("setcount = ", setcount);
+
+    //전송부분
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+        axios.post('post', {
+          command: 'SETSETI',
+          MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
+          msn: lpad(posts.data[index].MACHINESN, 20, " "),
+          Setting: setcount,
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+      }
+    })
   }
 
-  const onGridSizeChanged = (params) => {
-    var gridWidth = document.getElementById('root').offsetWidth;
-    var columnsToShow = [];
-    var columnsToHide = [];
-    var totalColsWidth = 0;
-    var allColumns = params.columnApi.getAllColumns();
-    for (var i = 0; i < allColumns.length; i++) {
-      var column = allColumns[i];
-      totalColsWidth += column.getMinWidth();
-      if (totalColsWidth > gridWidth) {
-        columnsToHide.push(column.colId);
-      } else {
-        columnsToShow.push(column.colId);
+  const Blackboxbtn = () => {
+
+    const getBlackbox = () => {
+      try {
+        axios.get('/getblackbox').then(({ data }) => setblackbox(data));
+        return console.log("Async blackbox", blackbox);
+      } catch (error) {
+        console.error(error);
       }
-    }
-    params.columnApi.setColumnsVisible(columnsToShow, true);
-    params.columnApi.setColumnsVisible(columnsToHide, false);
-    params.api.sizeColumnsToFit();
-  };
+    };
+
+    const getBlkbox = () => {
+      const blkbox = getBlackbox();
+
+      console.log("Breeds = ", blackbox);
+      console.log("BreedsBreeds = ", blkbox);
+
+      setblackbox(blkbox);
+    };
+    //getcountinfo 호출
+    console.log("Before blackbox : ", blackbox);
+    getBlkbox();
+    console.log("After blackbox", blackbox);
+
+    blackboxjson = new Array();
+
+    posts.data.map((list) => {
+      if (list.selected == true) {
+        console.log("if case blackbox", blackbox);
+        {
+          blackbox && blackbox.data.map((boxlist, index2) => {
+            if (boxlist.MACADDR == list.MACADDR) {
+
+              console.log("OPER_HOUR = ", boxlist.OPER_HOUR);
+              console.log("POWERON_HOUR = ", boxlist.POWERON_HOUR);
+              console.log("DIVERTER_CNT = ", boxlist.DIVERTER_CNT);
+              console.log("blackboxblackbox = ", boxlist.PICKUP_HOUR);
+
+              //선택 한 Device의 Blackbox 값 재정렬 작업
+              //**REST 서버에서 쿼리로 MAC을 기준으로 열을 행으로 바꿔서 데이터 제공 필요
+              blackboxjson.push({
+                ITEM: "Operating Hour",
+                VALUE: boxlist.OPER_HOUR
+              })
+              blackboxjson.push({
+                ITEM: "Power on Count",
+                VALUE: boxlist.POWERON_HOUR
+              })
+              blackboxjson.push({
+                ITEM: "Diverter Count",
+                VALUE: boxlist.DIVERTER_CNT
+              })
+              blackboxjson.push({
+                ITEM: "Pick-up Count",
+                VALUE: boxlist.PICKUP_HOUR
+              })
+              blackboxjson.push({
+                ITEM: "Stack Count",
+                VALUE: boxlist.STACK_CNT
+              })
+              blackboxjson.push({
+                ITEM: "Reject Count",
+                VALUE: boxlist.REJECT_CNT
+              })
+              blackboxjson.push({
+                ITEM: "Error 20 Count",
+                VALUE: boxlist.ERR_20CNT
+              })
+              blackboxjson.push({
+                ITEM: "Error 25 Count",
+                VALUE: boxlist.ERR_25CNT
+              })
+              blackboxjson.push({
+                ITEM: "Error 31 Count",
+                VALUE: boxlist.ERR_31CNT
+              })
+              blackboxjson.push({
+                ITEM: "Error 32 Count",
+                VALUE: boxlist.ERR_32CNT
+              })
+              blackboxjson.push({
+                ITEM: "Error 33 Count",
+                VALUE: boxlist.ERR_33CNT
+              })
+              blackboxjson.push({
+                ITEM: "Total Error Count",
+                VALUE: boxlist.TOTERRCNT
+              })
+
+
+              console.log("blackboxjson", blackboxjson)
+              console.log("boxlist.MACADDR = ", boxlist.MACADDR)
+              console.log("boxlist.OPER_HOUR = ", boxlist.OPER_HOUR)
+              console.log("blackboxblackbox = ", blackbox);
+            }
+          })
+        }
+      }
+    })
+  }
+
+  console.log("flag 초기값 = ", flag);
 
   function lpad(str, padLen, padStr) {
     if (padStr.length > padLen) {
@@ -364,21 +545,6 @@ function Settings() {
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
   /*   console.log("data.data2 = ", data.data); */
-
-  const [posts, setPosts] = useState();
-  const [posts2, setPosts2] = useState();
-
-  useEffect(() => {
-    axios
-      .get("/getuserinfo")
-      .then(({ data }) => setPosts(data));
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get("/getsettinginfo")
-      .then(({ data }) => setPosts2(data));
-  }, []);
 
   console.log("posts = ", posts);
   console.log("posts2 = ", posts2);
@@ -482,14 +648,108 @@ function Settings() {
     console.log("selected : ", posts.data.selected);
     console.log("count.itemEND : ", count);
   };
+
+  const [CNT, setCNT] = useState('');
+  const [AMT, setAMT] = useState('');
+  const [datedate, setdatedate] = useState("");
+
+  const handleCNT = (event) => {
+    setCNT(event.target.value);
+  };
+
+  const handleAMT = (event) => {
+    setAMT(event.target.value);
+  };
+
+  const handleDATE = (event) => {
+    console.log("event = ", event)
+    console.log("event.target.value = ", event.target.value)
+    setdatedate(event.target.value);
+  };
+
+  const [seconds, setSeconds] = useState(Date.now());
+
+  //var datedate = "";
+
+  //실시간 시간 업로드
+  const LiveTimeContainer = () => {
+
+    // useInterval
+    useInterval(() => {
+      setSeconds(Date.now());
+    }, 1000);
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const date = today.getDate();
+    const hours = today.getHours();
+    const minutes = today.getMinutes();
+    const secondss = today.getSeconds();
+
+    /*     console.log("Date(seconds)", Date(seconds));
+        console.log("seconds", seconds);
+        console.log("Date.now()", Date.now());
+        console.log("new Date()", Date());
+    
+        var timeInMs = Date.now();
+    
+        console.log("timeInMs", timeInMs); */
+    //2017-05-24T10:30
+    console.log(today); // Thu May 16 2019 17:39:30 GMT+0900 (한국 표준시)
+
+    //setdatedate(year +"-0"+ month+"-"+date+"T"+hours+":"+minutes);
+    //datedate = year +"-0"+ month+"-"+date+"T"+hours+":"+minutes;
+    datedate = year + "-" + lpad(month, 2, 0) + "-" + lpad(date, 2, 0) + "T" + lpad(hours, 2, 0) + ":" + lpad(minutes, 2, 0) + ":" + lpad(secondss, 2, 0);
+    console.log(year + "-0" + month + "-" + date + "T" + hours + ":" + minutes);
+    console.log("datedate", datedate);
+
+    const startTime = new Date('2021-02-23T11:54'),
+      nowTimeFormat = new Date(seconds);
+
+    return (
+
+      //Date(seconds)
+
+      <Fragment>
+        <FormControl className={classes.control}>
+          <TextField
+            id="datetime-local"
+            label="Next appointment"
+            type="datetime-local"
+            value={datedate}
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+        </FormControl>
+      </Fragment>
+
+      /*         <>
+            {startTime - nowTimeFormat > 0 ? 
+             (<><Moment fromNow>{startTime}</Moment>&nbsp;접수 시작</>) : (<div>{'접수 중'}</div>)
+            }  
+            </> */
+    )
+  }
+
+  /*   const MomentDateChage = () => {
+      const nowTime = Date.now();
+      // Sun Aug 23 2020 15:43:49 GMT+0900
+      return <Moment interval = { 10000 }>{nowTime}</Moment>;
+    } */
+
+  //const [value, setValue] = React.useState(new Date());
+
   //Left
   console.log("count end", count)
   return (
-    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'green', height: '100%', width: '100%' }}>
+    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'grey', height: '100%', width: '100%' }}>
       <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '81.5%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
           <List>
@@ -525,7 +785,17 @@ function Settings() {
             ))}
           </List> */}
         </Paper>
-
+        {/*         <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateTimePicker
+            renderInput={(props) => <TextField {...props} />}
+            label="DateTimePicker"
+            value={seconds}
+            onChange={(newValue) => {
+              setSeconds(newValue);
+            }}
+          />
+        </LocalizationProvider> */}
+        {/* <LiveTimeContainer /> */}
       </div>
       <div>
         <Fragment>
@@ -617,120 +887,67 @@ function Settings() {
             </Select>
           </FormControl>
         </Fragment>
-        <TextField inputProps = {{maxLength :  3,}} id="MID" label="Batch" value={""} onChange={""} color="secondary" />
-        <TextField inputProps = {{maxLength :  3,}} id="MID" label="Batch Amount" value={""} onChange={""} color="secondary" />
-        <TextField inputProps = {{maxLength :  3,}} id="MID" label="Date/Time" value={""} onChange={""} color="secondary" />
+        <div>
+          <Fragment>
+            <FormControl className={classes.control}>
+              <TextField style={{ width: 140 }} inputProps={{ maxLength: 7, }} id="BATCH_CNT" label="Batch_Count" value={CNT} onChange={handleCNT} color="secondary" />
+            </FormControl>
+          </Fragment>
+          <Fragment>
+            <FormControl className={classes.control}>
+              <TextField style={{ width: 140 }} inputProps={{ maxLength: 8, }} id="BATCH_AMT" label="Batch Amount" value={AMT} onChange={handleAMT} color="secondary" />
+            </FormControl>
+          </Fragment>
+          <Fragment>
+            <FormControl className={classes.control}>
+              <TextField
+                id="datetime-local"
+                label="Next appointment"
+                type="datetime-local"
+                //defaultValue={datedate}
+                value={datedate}
+                onChange={handleDATE}
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true
+                }}
+              />
+            </FormControl>
+          </Fragment>
+        </div>
       </div>
-      <div className="right" style={{ float: 'left', position: 'static', backgroundColor: 'red', width: '30%', height: '75%', minHeight: '400px' }}>
-        <Paper className='paper'>
-          <List>
-            {posts2 && posts2.data.map((post, index) => (
-              <ListItem
-                key={index}
-                button
-                selected={post.selected}
-                onClick={onClick(index)}
-              >
-                <ListItemText primary={post.CURRENCYNAME} />
-                <ListItemText primary={post.CNT_MODE} />
-                <ListItemIcon>
-                  <MaybeSelectedIcon
+      <div className={classes.root}>
+        <Paper style={{ overflow: 'auto' }} elevation={3}>
+          <List subheader={<li />} subheader={<li><ListSubheader component="div" id="nested-list-subheader">ITEM / VALUE</ListSubheader></li>}>
+            <li style={{ backgroundColor: 'inherit' }}>
+              <ul style={{ backgroundColor: 'inherit', padding: 5 }}>
+                {blackboxjson.map((post, index) => (
+                  <ListItem
+                    key={index}
                     selected={post.selected}
-                    Icon={DevicesIcon}
-                  />
-                </ListItemIcon>
-              </ListItem>
-            ))}
+                  >
+                    <Box color="primary" textAlign="center" style={{ paddingRight: 5}}>
+                      {post.ITEM}
+                    </Box>
+                    <ListItemText secondary={post.VALUE} secondaryTypographyProps={{ align: "center", paddingRight: 50 }}/>
+                    {/* <ListItemText primary={post.VALUE} /> */}
+                  </ListItem>
+                ))}
+              </ul>
+            </li>
           </List>
         </Paper>
       </div>
-
-      <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
+      <div className="buttonlist" style={{ backgroundColor: '#5C6BC0', position: 'static', height: '8%' }}>
         &nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => Infobtn()}>GET</Button>
-        <Footer />
+        &nbsp;&nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => Savebtn()}>SAVE</Button>
+        &nbsp;&nbsp;&nbsp;
+        <Button variant="contained" color="primary" onClick={() => Blackboxbtn()}>BLACKBOX</Button>
       </div>
     </div>
   );
-}
-
-var filterParams = {
-  comparator: function (filterLocalDateAtMidnight, cellValue) {
-    var dateAsString = cellValue;
-    var dateParts = dateAsString.split('/');
-    var cellDate = new Date(
-      Number(dateParts[2]),
-      Number(dateParts[1]) - 1,
-      Number(dateParts[0])
-    );
-    if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-      return 0;
-    }
-    if (cellDate < filterLocalDateAtMidnight) {
-      return -1;
-    }
-    if (cellDate > filterLocalDateAtMidnight) {
-      return 1;
-    }
-  },
-};
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    default:
-      return text;
-  }
 }
 
 export default Settings
