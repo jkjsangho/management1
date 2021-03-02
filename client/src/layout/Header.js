@@ -59,7 +59,7 @@ import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
 
-let flag;
+let flag=0;
 let jsonFileList = new Array();
 let inputlistArray = new Array();
 
@@ -165,19 +165,18 @@ const MyToolbar = withStyles(styles)(
             {title}
           </Typography>
           <div className={classes.grow} />
-          11111
-          <div className={classes.Tab}>
+          <Typography variant="h5" fontSize="1">
+            EAGLE EYE 7 REMOTE SYSTEM
+          </Typography>
+          {/* <div className={classes.Tab}> */}
             {/* 탭 설정 위치 */}
             {/* <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
               <Tab label="HOME Tab1" component={Link} to="/" />
               <Tab label="Menu1 Tab2" component={Link} to="/about" />
               <Tab label="Menu2 Tab3" component={Link} to="/menu2" />
             </Tabs> */}
-            22222
-          </div>
-          33333
+          {/* </div> */}
           <div className={classes.grow} />
-          4444
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -493,7 +492,8 @@ function Header({ classes }) {
     }
     return axios.post('api/up', formData, { headers: { "Content-Type": "multipart/form-data" } })
       .then(res => {
-        alert('성공')
+        console.log("전송완료");
+        alert("F/W Upload Success");
         for (var pair of formData.entries()) { console.log("formData = ", pair[0] + ', ' + pair[1]); }
         /* for (var key of formData.keys()) {
           console.log("key2 = ", key);
@@ -503,7 +503,8 @@ function Header({ classes }) {
         } */
       })
       .catch(err => {
-        alert('실패')
+        console.log("실패");
+        alert("F/W Upload Failed");
         for (var key of formData.keys()) {
           console.log("key3 = ", key);
         }
@@ -624,6 +625,7 @@ function Header({ classes }) {
   /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
+
   useEffect(() => {
     axios
       .get("/GetUserInfo")

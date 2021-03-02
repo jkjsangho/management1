@@ -264,7 +264,12 @@ function BlackList() {
     let year = today.getFullYear(); // 년도
     let month = today.getMonth() + 1;  // 월
     let date = today.getDate();  // 날짜
-    let time = today.getHours();  // 시간
+    let hour = today.getHours();  // 시간
+    let min = today.getMinutes();
+    let sec = today.getSeconds();
+    
+    console.log("year+month+date", year,month,date);
+    console.log("hour mon sec", hour,min,sec);
 
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
@@ -284,8 +289,8 @@ function BlackList() {
         });
 
         newCount.data = [...newArray.data, {
-          BL_DATE: year,
-          BL_TIME: time,
+          BL_DATE: String(year)+String(lpad(month, 2, 0))+String(lpad(date, 2, 0)),
+          BL_TIME: String(hour)+String(lpad(min, 2,0))+String(lpad(sec, 2, 0)),
           MACHINESN: posts.data[index1].MACHINESN,
           MACADDR: posts.data[index1].MACADDR,
           BL_CURRENCYNAME: LOC,

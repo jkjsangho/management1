@@ -745,11 +745,12 @@ function Settings() {
   //Left
   console.log("count end", count)
   return (
-    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: 'grey', height: '100%', width: '100%' }}>
-      <div className='title' style={{ height: '10%', backgroundColor: 'purple' }}>
+    <div className="ag-theme-alpine" style={{ position: 'absolute ', backgroundColor: '#EDE7F6', height: '100%', width: '100%' }}>
+      <div className='title' style={{ height: '9%', backgroundColor: 'purple' }}>
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '81.5%' }}>
+      <div className="left" style={{ float: 'left', border: '1px solid black',position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '81.5%' }}>
+        {/* border: 1px solid rgba(0, 0, 0, 0.05) */}
         <Paper className='paper'>
           {/* <Right/> */}
           <List>
@@ -938,9 +939,9 @@ function Settings() {
           </List>
         </Paper>
       </div>
-      <div className="buttonlist" style={{ backgroundColor: '#5C6BC0', position: 'static', height: '8%' }}>
+      <div className="buttonlist" style={{ backgroundColor: '#5C6BC0', position: 'static', height: '9%' }}>
         &nbsp;&nbsp;&nbsp;
-        <Button variant="contained" color="primary" onClick={() => Infobtn()}>GET</Button>
+        <Button style={{position: 'static', top: '20px', left: '30px' }} variant="contained" color="primary" onClick={() => Infobtn()}>GET</Button>
         &nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => Savebtn()}>SAVE</Button>
         &nbsp;&nbsp;&nbsp;

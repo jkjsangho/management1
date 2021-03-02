@@ -39,7 +39,7 @@ import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
 
-let flag;
+let flag=0;
 
 const styles = theme => ({
 

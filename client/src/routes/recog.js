@@ -381,7 +381,7 @@ function Recog() {
         </div> */}
         <Header />
       </div>
-      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '20%', height: '75%' }}>
+      <div className="left" style={{ float: 'left', position: 'static', backgroundColor: 'yellow', width: '15%', height: '75%' }}>
       <Fragment>
             <FormControl className={classes.control}>
               <InputLabel htmlFor="categories2">Currency</InputLabel>
@@ -440,7 +440,7 @@ function Recog() {
         </Paper>
 
       </div>
-      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '80%', height: '75%', minHeight: '400px' }}>
+      <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '75%', minHeight: '400px' }}>
         <AgGridReact
           rowData={recougusa && recougusa.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{
             flex: 1,
@@ -449,7 +449,10 @@ function Recog() {
           }}
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ >
           <AgGridColumn field="FIT_DENOM" headerName="Deno." sortable={true} filter={true}></AgGridColumn>
-          <AgGridColumn field="USAGE_CF" headerName="CF" ></AgGridColumn>
+          <AgGridColumn field="USAGE_CF" headerName="CF" cellEditor="agSelectCellEditor"
+              cellEditorParams={{
+                values: ['TRUE','FALSE'],
+              }}></AgGridColumn>
           <AgGridColumn field="USAGE_MR" headerName="MR" ></AgGridColumn>
           <AgGridColumn field="USAGE_UV" headerName="UV" ></AgGridColumn>
           <AgGridColumn field="USAGE_BL" headerName="BL" ></AgGridColumn>
