@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
+import {Link} from "react-router-dom";
 import Customer from '../components/Customer'
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
@@ -34,6 +35,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
 
 import axios from "axios";
 
@@ -372,6 +376,7 @@ function Recog() {
     console.log("selected : ", posts.data.selected);
     console.log("count.itemEND : ", count);
   };
+
   //Left
   console.log("count end", count)
   return (
@@ -484,6 +489,12 @@ function Recog() {
       <div className="list" style={{ backgroundColor: 'lightblue', position: 'static' }}>
         <Button variant="contained" color="primary" onClick={() => searchBtn()}>Search</Button>
         <Footer />
+        <div style={{flexGrow: 1}}>
+        <Tabs /* value={value} onChange={handleChange} */ aria-label="simple tabs example">
+              <Tab label="Tab1" component={Link} to="/recog" />
+              <Tab label="Tab3" component={Link} to="/menu2" />
+        </Tabs>
+        </div>
         <ul className="modelsWrapper">
           {tabName.map((name, index) => {
             return (

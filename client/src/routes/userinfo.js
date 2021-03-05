@@ -316,6 +316,7 @@ function Userinfo() {
           <AgGridColumn field="IPADDR" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="LOCATION" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="STATUS" sortable={true} filter={true}></AgGridColumn>
+          <AgGridColumn field="ERRORCODE" sortable={true} filter={true}></AgGridColumn>
         </AgGridReact>
 
         {/*         <AgGridReact

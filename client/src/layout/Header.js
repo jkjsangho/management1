@@ -56,8 +56,9 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 import axios from "axios";
-import { result } from 'lodash';
-import { post } from 'request';
+
+
+import useReactRouter from 'use-react-router';
 
 let flag=0;
 let jsonFileList = new Array();
@@ -143,6 +144,17 @@ const styles = theme => ({
   }
 });
 
+const MyPath = () => {
+  const { history, location, match } = useReactRouter();
+  console.log("history = ",history)
+  console.log("location = ", location)
+  console.log("match = ", match)
+  return (
+    <div>
+      {location.pathname.slice(1)}
+    </div>
+  );
+};
 
 const MyToolbar = withStyles(styles)(
   ({ classes, title, onMenuClick, value, handleChange }) => (
@@ -162,7 +174,8 @@ const MyToolbar = withStyles(styles)(
             color="inherit"
             className={classes.flex}
           >
-            {title}
+            <MyPath/>
+            {/* {title} */}
           </Typography>
           <div className={classes.grow} />
           <Typography variant="h5" fontSize="1">
@@ -261,7 +274,7 @@ function Header({ classes }) {
   const [drawer, setDrawer] = useState(false);
 
   /* 타이틀 수정 */
-  let [title, setTitle] = useState('');
+  const [title, setTitle] = useState('');
 
   /* 탭 */
   const [value, setValue] = useState(0);
@@ -273,7 +286,7 @@ function Header({ classes }) {
 
   const titlechange = (e, title) => {
     setTitle(title);
-    console.log("titlechange 진입 = ", title);
+    console.log("titlechange 진입~~~~~~~~~ = ", title);
   };
 
 
@@ -286,6 +299,7 @@ function Header({ classes }) {
     setOpen(false);
     setOpen2(false);
     setTitle(title);
+
 
     //Modal Close 시 초기화
     setValues();
@@ -495,12 +509,13 @@ function Header({ classes }) {
         console.log("전송완료");
         alert("F/W Upload Success");
         for (var pair of formData.entries()) { console.log("formData = ", pair[0] + ', ' + pair[1]); }
-        /* for (var key of formData.keys()) {
+        for (var key of formData.keys()) {
           console.log("key2 = ", key);
         }
         for (var value of formData.values()) {
           console.log("value2 = ", value);
-        } */
+        }
+        //window.location.reload(false);
       })
       .catch(err => {
         console.log("실패");
@@ -511,6 +526,7 @@ function Header({ classes }) {
         for (var value of formData.values()) {
           console.log("value3 = ", value);
         }
+        //window.location.reload(false);
       })
   }
 
@@ -589,11 +605,13 @@ function Header({ classes }) {
         console.log("response = ", response);
         console.log("전송완료");
         alert("Device Registration Success");
+        //window.location.reload(false);
       })
       .catch(function (error) {
         console.log("error = ", error);
         console.log("에러");
         alert("Device Registration Failed");
+        //window.location.reload(false);
       });
   }
   const deleteBtn = () => {
@@ -610,11 +628,13 @@ function Header({ classes }) {
         console.log("response = ", response);
         console.log("전송완료");
         alert("Device Delete Success");
+        //window.location.reload(false);
       })
       .catch(function (error) {
         console.log("error = ", error);
         console.log("에러");
         alert("Device Delete Failed");
+        //window.location.reload(false);
       });
   }
 
@@ -699,12 +719,12 @@ function Header({ classes }) {
 
   return (
     <div className={classes.root}>
-      <MyToolbar title={title} onchange={titlechange} onMenuClick={toggleDrawer} value={value} /* handleChange={handleChange} */ />
+      <MyToolbar title={title} handleChange={titlechange} onMenuClick={toggleDrawer} value={value} /* handleChange={handleChange} */  />
 
       {/*Navigation으로 빼서 분활?*/}
       <Drawer open={drawer} onClose={toggleDrawer}>
         <List>
-
+        <MyPath/>
           <Divider />
 
           <ListItem button component={Link} to="/" replace onClick={onItemClick('Home')}>
@@ -733,7 +753,7 @@ function Header({ classes }) {
 
           <Divider />
 
-          <ListItem button component={Link} to="/countinfo" replace onClick={onItemClick('CountInfo')}>
+          <ListItem button component={Link} to="/countlog" replace onClick={onItemClick('countlog')}>
             <WebIcon color="primary" />
             <ListItemText>&nbsp;&nbsp;Count Log</ListItemText>
           </ListItem>
@@ -767,6 +787,7 @@ function Header({ classes }) {
             {/* <ListItemText style={{ color: 'red' }}>&nbsp;&nbsp;<del>Settings</del></ListItemText> */}
             <ListItemText>&nbsp;&nbsp;Settings</ListItemText>
           </ListItem>
+
           {/* 
           <Divider />
 
@@ -890,10 +911,10 @@ function Header({ classes }) {
                 </div>
               </div>
               <div className="right" style={{ float: 'center', position: 'static', backgroundColor: '' }}>
-                <TextField inputProps={{ maxLength: 3, }} id="MID" label="Machine ID *" value={values} onChange={handleChanges} color="secondary" />
+                <TextField inputProps={{ maxLength: 20, }} id="MID" label="Machine ID *" value={values} onChange={handleChanges} color="secondary" />
                 <br></br>
                 <br></br>
-                <TextField inputProps={{ maxLength: 7, }} id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary" />
+                <TextField inputProps={{ maxLength: 20, }} id="SN" label="Serial Number *" value={valueSN} maxLength={7} onChange={handleChangeSN} color="secondary" />
                 <br></br>
                 <br></br>
                 {/*                     <TextField id="filled" label="MachineID_Copy" value={values} onChange={handleChanges} variant="filled" color="secondary" />

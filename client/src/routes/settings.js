@@ -449,8 +449,21 @@ function Settings() {
 
     blackboxjson = new Array();
 
-    posts.data.map((list) => {
+    posts.data.map((list, index) => {
       if (list.selected == true) {
+
+        axios.post('post', {
+          command: 'GETBLBI',
+          MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
+          msn: lpad(posts.data[index].MACHINESN, 20, " "),
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+        
         console.log("if case blackbox", blackbox);
         {
           blackbox && blackbox.data.map((boxlist, index2) => {
