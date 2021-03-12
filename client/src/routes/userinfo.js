@@ -153,22 +153,29 @@ function Userinfo() {
       return str;
   }
 
-  const searchBtn = () => {
-    //Search 클릭 시 Post 전송
-    console.log("posts = ", posts);
-    console.log("posts.data = ", posts.data);
+  const [view, setView] = useState();
 
-/*     axios.post('post', {
-      command: 'GETCNTI',
-      MacAddr: posts.data[index].MACADDR,
-      msn: lpad(posts.data[index].MACHINESN, 20, " "),
+  const searchBtn = () => {
+    let newArray = new Array();
+    let newArray2 = new Array();
+
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+
+        if (posts !== null) {
+          newArray.data = (posts.data).filter(x => {
+            return x.MACADDR == list.MACADDR
+          });
+          newArray2 = [...newArray2, ...newArray.data];
+          console.log("IF_newArray1 = ", newArray);
+          console.log("IF_newArray2 = ", newArray2);
+        }
+      }
     })
-      .then(function (response) {
-        console.log("response = ", response);
-      })
-      .catch(function (error) {
-        console.log("error = ", error);
-      }); */
+    console.log("FN_newArray1 = ", newArray);
+    console.log("FN_newArray2 = ", newArray2);
+    setView(newArray2);
+    //redrawAllRows();
   }
 
 
@@ -179,6 +186,7 @@ function Userinfo() {
   /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
+
   useEffect(() => {
     axios
       .get("/GetUserInfo")
@@ -201,45 +209,59 @@ function Userinfo() {
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
 
+    /*     const getBreeds = async () => {
+          try {
+            return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
+          } catch (error) {
+            console.error(error);
+          }
+        };
+    
+        const countBreeds = async () => {
+          const breeds = getBreeds();
+          setCount(breeds);
+          console.log("Breeds = ", count);
+        };
+    
+        //getcountinfo 호출
+        console.log("count.item1 : ", count);
+        countBreeds();
+        console.log("count.item2 : ", count); */
+
+    //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
     console.log("flag 변경 전 index = ", index);
-    console.log("index flag 변경 전 = ",posts.data[index].selected);
-    
-    if(posts.data[index].selected == null){
+    console.log("index flag 변경 전 = ", posts.data[index].selected);
+
+    if (posts.data[index].selected == null) {
       posts.data[index].selected = true;
-      console.log("index flag = ",posts.data[index].selected);
+      console.log("index flag = ", posts.data[index].selected);
+      flag = 1;
       /* flag = true; */
-    }else if(posts.data[index].selected == true){
+    } else if (posts.data[index].selected == true) {
       posts.data[index].selected = false;
-      console.log("index flag = ",posts.data[index].selected);
+      console.log("index flag = ", posts.data[index].selected);
+      flag = 0;
       /* flag = false; */
-    }else if(posts.data[index].selected == false){
+    } else if (posts.data[index].selected == false) {
       /* flag = true; */
       posts.data[index].selected = true;
-      console.log("index flag = ",posts.data[index].selected);
+      flag = 1;
+      console.log("index flag = ", posts.data[index].selected);
     }
 
-    console.log("index flag 변경 후 = ",posts.data[index].selected);
+    console.log("index flag 변경 후 = ", posts.data[index].selected);
     console.log("flag 변경 후 = ", flag);
     console.log("flag 변경 후 index = ", index);
 
     /*    const item = items[index]; */
     const item = posts.data[index];
+
     /* let item; */
 
-    /*     if (item ==null){
-          item = posts.data[index];
-          console.log("=====true=====", item);
-        }
-        else{
-          item = items[index];
-          console.log("=====false=====", item);
-        } */
     console.log("=================");
     console.log("item = ", item);
     console.log("=================");
-
-    //왼쪽 리스트 목록을 지속적으로 RESTAPI에서 받아와서 selected 초기값 null로 인식
 
     console.log("flag2 = ", flag);
     const newItems = [...items];
@@ -252,22 +274,6 @@ function Userinfo() {
     console.log("items[index] : ", posts.data[index]);
     console.log("index : ", index);
     console.log("selected : ", posts.data.selected);
-
-    //Left 클릭 시 Post 전송
-/*     axios.post('post',
-      {
-        command: 'GETCNTI',
-        MacAddr: posts.data[index].MACADDR,
-        msn: lpad(posts.data[index].MACHINESN, 20, " "),
-      })
-      .then(function (response) {
-        console.log(response)
-        console.log('response')
-      })
-      .catch(function (error) {
-        console.log(error)
-        console.log('error')
-      }); */
   };
   //Left
   
@@ -282,7 +288,6 @@ function Userinfo() {
         <Paper style={{overflow: 'auto'}} className='paper'>
           {/* <left/> */}
           <List>
-            <Divider />
             {posts && posts.data.map((post, index) => (
               <ListItem
                 key={index}
@@ -300,14 +305,13 @@ function Userinfo() {
                 </ListItemIcon>
               </ListItem>
             ))}
-            <Divider />
           </List>
         </Paper>
 
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '85%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={items} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
+          rowData={view} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */ frameworkComponents={frameworkComponents}>
           <AgGridColumn field="CURRENCYKIND" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn field="MACHINEID" sortable={true} filter={true}></AgGridColumn>

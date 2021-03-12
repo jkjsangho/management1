@@ -35,7 +35,7 @@ import axios from "axios";
 import { result } from 'lodash';
 import { post } from 'request';
 
-let flag=0;
+let flag = 0;
 
 const styles = theme => ({
 
@@ -99,8 +99,8 @@ function CountInfo() {
   };
 
   //Left
-  const MaybeSelectedIcon = ({ selected, Icon }) =>
-    selected ? <CheckCircleOutlineIcon /> : <Icon />;
+  const MaybeSelectedIcon = ({ selected, Icon }) =>(selected ? <CheckCircleOutlineIcon /> : <Icon />)
+  //selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
   /*   console.log("data.data2 = ", data.data); */
 
@@ -123,25 +123,39 @@ function CountInfo() {
   );
 
   const [count, setCount] = useState();
+
+  useEffect(() => {
+    axios
+      .get("/getcountinfo")
+      .then(({ data }) => setCount(data));
+  }, []);
+
   console.log("count start", count)
+
+  const [count2, setCount2] = useState([]);
 
   function lpad(str, padLen, padStr) {
     if (padStr.length > padLen) {
-        console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
-        return str;
+      console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
+      return str;
     }
     str += ""; // 문자로
     padStr += ""; // 문자로
     while (str.length < padLen)
-        str = padStr + str;
+      str = padStr + str;
     str = str.length >= padLen ? str.substring(0, padLen) : str;
     console.log("lpad.length ===", str.length);
     return str;
-}
+  }
+
+  /*   function sleep (delay) {
+      var start = new Date().getTime();
+      while (new Date().getTime() < start + delay);
+   } */
 
   /* const onClick = index => () => { */
   /* const searchBtn = () => { */
-  const searchBtn = () => {
+  const testBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
@@ -152,14 +166,14 @@ function CountInfo() {
       if (list.selected == true) {
         console.log("index = ", index);
         console.log("MAC = ", list.MACADDR);
-/*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
-        console.log("MM = ", list.CLIENTID.substring(4, 6));
-        console.log("DD = ", list.CLIENTID.substring(6, 8)); */
+        /*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
+                console.log("MM = ", list.CLIENTID.substring(4, 6));
+                console.log("DD = ", list.CLIENTID.substring(6, 8)); */
 
         axios.post('post', {
           command: 'GETCNTI',
           MacAddr: posts.data[index].MACADDR,
-          msn:lpad(posts.data[index].MACHINESN, 20, " "),
+          msn: lpad(posts.data[index].MACHINESN, 20, " "),
         })
           .then(function (response) {
             console.log("response = ", response);
@@ -167,6 +181,7 @@ function CountInfo() {
           .catch(function (error) {
             console.log("error = ", error);
           });
+
         const getBreeds = async () => {
           try {
             return axios.get('/getcountinfo').then(({ data }) => setCount(data));
@@ -185,6 +200,16 @@ function CountInfo() {
         console.log("count.item1 : ", count);
         countBreeds();
         console.log("count.item2 : ", count);
+
+        if (count !== null) {
+          console.log("!NULL 조건 들어옴")
+          console.log("count.item3 : ", count);
+          console.log("count.item3 : ", count);
+
+          /*           newArray = (count).filter(x => {
+                      return x.MACADDR == posts.data[index].MACADDR
+                    }); */
+        }
       }
     })
 
@@ -217,7 +242,50 @@ function CountInfo() {
           .catch(function (error) {
             console.log("error = ", error);
           }); */
+    //testBtn();
   }
+
+  const redrawAllRows = () => {
+    /* progressColor(); */
+    gridApi.redrawRows();
+  };
+
+  const searchBtn = () => {
+
+    let newArray = new Array();
+    let newArray2 = new Array();
+
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+
+        if (count !== null) {
+          newArray.data = (count.data).filter(x => {
+            return x.MACADDR == list.MACADDR
+          });
+          newArray2 = [...newArray2, ...newArray.data];
+          console.log("IF_newArray1 = ", newArray);
+          console.log("IF_newArray2 = ", newArray2);
+        }
+
+        axios.post('post', {
+          command: 'GETCNTI',
+          MacAddr: posts.data[index].MACADDR,
+          msn: lpad(posts.data[index].MACHINESN, 20, " "),
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+      }
+    })
+    console.log("FN_newArray1 = ", newArray);
+    console.log("FN_newArray2 = ", newArray2);
+    setCount2(newArray2);
+    console.log("count2 = ", count2);
+    //redrawAllRows();
+  };
 
 
   //Left Click Start(json에 selected 추가해서 true false로 체크박스 확인)
@@ -253,14 +321,17 @@ function CountInfo() {
     if (posts.data[index].selected == null) {
       posts.data[index].selected = true;
       console.log("index flag = ", posts.data[index].selected);
+      flag = 1;
       /* flag = true; */
     } else if (posts.data[index].selected == true) {
       posts.data[index].selected = false;
       console.log("index flag = ", posts.data[index].selected);
+      flag = 0;
       /* flag = false; */
     } else if (posts.data[index].selected == false) {
       /* flag = true; */
       posts.data[index].selected = true;
+      flag = 1;
       console.log("index flag = ", posts.data[index].selected);
     }
 
@@ -323,7 +394,6 @@ function CountInfo() {
       <div className="left" style={{ float: 'left', position: 'static', backgroundColor: '#EDE7F6', width: '15%', height: '85%' }}>
         <Paper className='paper'>
           {/* <Right/> */}
-
           <List>
             {posts && posts.data.map((post, index) => (
               <ListItem
@@ -343,24 +413,12 @@ function CountInfo() {
               </ListItem>
             ))}
           </List>
-          {/*           <List>
-          <ListItemText>afsafasfa</ListItemText>
-            {count &&count.data.map((ccc, index) => (
-              <ListItem
-                key={index}
-                button
-                onClick={onClick(index)}
-              >
-                <ListItemText primary={ccc.CLIENTID} />
-              </ListItem>
-            ))}
-          </List> */}
         </Paper>
 
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '85%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={count && count.data} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
+          rowData={count2} pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}
           Components={{ agDateInput: CustomDateComponent }}/* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* modules={AllCommunityModules} */
           /* onGridSizeChanged={onGridSizeChanged.bind(this)} */ /* floatingFilter={true} */>
           <AgGridColumn headerName="DATE" field="COUNT_DATE" filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
@@ -388,6 +446,9 @@ function CountInfo() {
         <Button variant="contained" color="primary" onClick={() => onBtnExport()}>
           CSV Export
         </Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {/* <Button variant="contained" color="primary" onClick={() => testBtn()}>Tset</Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
         <Footer />
       </div>
       <div className="abc" style={{ display: 'none', backgroundColor: 'blue', height: '100%', width: '90%' }}>
@@ -438,14 +499,14 @@ function CountInfo() {
 var filterParams = {
   comparator: function (filterLocalDateAtMidnight, cellValue) {
     var dateAsString = cellValue;
-/*     console.log("dateAsString = ", dateAsString);
-        var dateParts = dateAsString.split('/');
-    
-        var cellDate = new Date(
-          Number(dateParts[2]),
-          Number(dateParts[1]) - 1,
-          Number(dateParts[0])
-        ); */
+    /*     console.log("dateAsString = ", dateAsString);
+            var dateParts = dateAsString.split('/');
+        
+            var cellDate = new Date(
+              Number(dateParts[2]),
+              Number(dateParts[1]) - 1,
+              Number(dateParts[0])
+            ); */
     var YYYY = dateAsString.substring(0, 4);
     var MM = dateAsString.substring(4, 6);
     var DD = dateAsString.substring(6, 8);
@@ -453,7 +514,7 @@ var filterParams = {
       Number(YYYY),
       Number(MM) - 1,
       Number(DD)
-    ); 
+    );
     console.log("YYYY = ", Number(YYYY));
     console.log("MM = ", Number(MM));
     console.log("DD = ", Number(DD));

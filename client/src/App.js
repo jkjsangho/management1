@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   HashRouter,
   Route
@@ -23,10 +23,9 @@ import './App.css';
 
 
 function App(){
-
   return(
     <HashRouter>
-      <Route path="/" /* exact={true} */ component={userinfo}/>
+      <Route path="/" exact={true} component={userinfo}/>
       <Route path="/about" component={About}/>
       <Route path="/menu1" component={menu1}/>
       <Route path="/menu2" component={menu2}/>

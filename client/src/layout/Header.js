@@ -59,6 +59,7 @@ import axios from "axios";
 
 
 import useReactRouter from 'use-react-router';
+import { transform, upperCase } from 'lodash';
 
 let flag=0;
 let jsonFileList = new Array();
@@ -150,7 +151,7 @@ const MyPath = () => {
   console.log("location = ", location)
   console.log("match = ", match)
   return (
-    <div>
+    <div style={{ textTransform: 'upperCase' }}>
       {location.pathname.slice(1)}
     </div>
   );
@@ -232,11 +233,11 @@ function rand() {
 }
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  let top = 50 + rand();
+  let left = 50 + rand();
 
-  console.log("1", top);
-  console.log("2", left);
+  console.log("toptoptoptop", top);
+  console.log("leftleftleftleft", left);
 
   return {
     top: `${top}%`,
@@ -724,7 +725,6 @@ function Header({ classes }) {
       {/*Navigation으로 빼서 분활?*/}
       <Drawer open={drawer} onClose={toggleDrawer}>
         <List>
-        <MyPath/>
           <Divider />
 
           <ListItem button component={Link} to="/" replace onClick={onItemClick('Home')}>

@@ -57,84 +57,6 @@ function Serialnum() {
     setGridApi(params.api);
   };
 
-  const onBtnExport = () => {
-    var params = getParams();
-    console.log(params)
-    if (params.suppressQuotes || params.columnSeparator) {
-      alert(
-        'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-      );
-    }
-    gridApi.exportDataAsCsv(params);
-  };
-
-  function getParams() {
-    return {
-      suppressQuotes: getValue('#suppressQuotes'),
-      columnSeparator: getValue('#columnSeparator'),
-      customHeader: getValue('#customHeader'),
-      customFooter: getValue('#customFooter'),
-    };
-  }
-
-  function getValue(inputSelector) {
-    var text = document.querySelector(inputSelector).value;
-    switch (text) {
-      case 'string':
-        return (
-          'Here is a comma, and a some "quotes". You can see them using the\n' +
-          'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-          'CSV file is opened in Excel because string content passed to\n' +
-          'customHeader and customFooter is not escaped.'
-        );
-      case 'array':
-        return [
-          [],
-          [
-            {
-              data: {
-                value: 'Here is a comma, and a some "quotes".',
-                type: 'String',
-              },
-            },
-          ],
-          [
-            {
-              data: {
-                value:
-                  'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-                type: 'String',
-              },
-            },
-          ],
-          [
-            {
-              data: {
-                value: 'this cell:',
-                type: 'String',
-              },
-              mergeAcross: 1,
-            },
-            {
-              data: {
-                value: 'is empty because the first cell has mergeAcross=1',
-                type: 'String',
-              },
-            },
-          ],
-          [],
-        ];
-      case 'none':
-        return;
-      case 'tab':
-        return '\t';
-      case 'true':
-        return true;
-      default:
-        return text;
-    }
-  }
-
   //AG-Grid Excel_Export
 
   //AG-Grid Row_AutoSize
@@ -184,7 +106,16 @@ function Serialnum() {
   );
 
   const [count, setCount] = useState();
+
+  useEffect(() => {
+    axios
+      .get("/getserialinfo")
+      .then(({ data }) => setCount(data));
+  }, []);
+
   console.log("count start", count)
+
+  const [count2, setCount2] = useState([]);
 
   function lpad(str, padLen, padStr) {
     if (padStr.length > padLen) {
@@ -203,19 +134,55 @@ function Serialnum() {
   /* const onClick = index => () => { */
   /* const searchBtn = () => { */
   const GETSN = () => {
+
+    let newArray = new Array();
+    let newArray2 = new Array();
+
+    posts.data.map((list, index) => {
+      if (list.selected == true) {
+        console.log("posts = ", list)
+        console.log("count = ", count)
+        console.log("count = ", count.data)
+        if (count !== null) {
+          newArray.data = (count.data).filter(x => {
+            return x.MACADDR == list.MACADDR
+          });
+          newArray2 = [...newArray2, ...newArray.data];
+          console.log("IF_newArray1 = ", newArray);
+          console.log("IF_newArray2 = ", newArray2);
+        }
+
+        axios.post('post', {
+          command: 'GETSNOI',
+          MacAddr: posts.data[index].MACADDR,
+          msn:lpad(posts.data[index].MACHINESN, 20, " "),
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+      }
+    })
+    console.log("FN_newArray1 = ", newArray);
+    console.log("FN_newArray2 = ", newArray2);
+    setCount2(newArray2);
+    console.log("count2 = ", count2);
+    //redrawAllRows();
+/* 
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
     console.log("posts.data[0].selected = ", posts.data[0].selected);
-    /* console.log("posts.data[0].selected = ", posts.data[1].selected); */
 
     posts.data.map((list, index) => {
       if (list.selected == true) {
         console.log("index = ", index);
         console.log("MAC = ", list.MACADDR);
-/*         console.log("YYYY = ", list.CLIENTID.substring(0, 4));
-        console.log("MM = ", list.CLIENTID.substring(4, 6));
-        console.log("DD = ", list.CLIENTID.substring(6, 8)); */
+        //console.log("YYYY = ", list.CLIENTID.substring(0, 4));
+        //console.log("MM = ", list.CLIENTID.substring(4, 6));
+        //console.log("DD = ", list.CLIENTID.substring(6, 8));
 
         axios.post('post', {
           command: 'GETSNOI',
@@ -246,38 +213,7 @@ function Serialnum() {
         console.log("count.item1 : ", count);
         countBreeds();
         console.log("count.item2 : ", count);
-      }
-    })
-
-    /*     const getBreeds = async () => {
-          try {
-            return axios.get('/getcountinfo').then(({ data }) => setCount(data));;
-          } catch (error) {
-            console.error(error);
-          }
-        };
-    
-        const countBreeds = async () => {
-          const breeds = getBreeds();
-          setCount(breeds);
-          console.log("Breeds = ", count);
-        };
-    
-        //getcountinfo 호출
-        console.log("count.item1 : ", count);
-        countBreeds();
-        console.log("count.item2 : ", count); */
-
-    /*     axios.post('post', {
-          command: 'CMDCNTI',
-          clientid: posts.data[0].CLIENTID,
-        })
-          .then(function (response) {
-            console.log("response = ", response);
-          })
-          .catch(function (error) {
-            console.log("error = ", error);
-          }); */
+      } */
   }
 
 
@@ -314,13 +250,16 @@ function Serialnum() {
     if (posts.data[index].selected == null) {
       posts.data[index].selected = true;
       console.log("index flag = ", posts.data[index].selected);
+      flag=1;
       /* flag = true; */
     } else if (posts.data[index].selected == true) {
       posts.data[index].selected = false;
       console.log("index flag = ", posts.data[index].selected);
+      flag=0;
       /* flag = false; */
     } else if (posts.data[index].selected == false) {
       /* flag = true; */
+      flag=1;
       posts.data[index].selected = true;
       console.log("index flag = ", posts.data[index].selected);
     }
@@ -422,7 +361,7 @@ function Serialnum() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '85%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={count && count.data} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}>
+          rowData={count2} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}>
           <AgGridColumn headerName="Device S/N" field="MACHINESN" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn headerName="DATE" field="SN_DATE" sortable={true} filter="agDateColumnFilter" filterParams={filterParams}></AgGridColumn>
           <AgGridColumn headerName="TIME" field="SN_TIME" sortable={true} filter={true}></AgGridColumn>

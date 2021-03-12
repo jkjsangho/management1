@@ -46,6 +46,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { empty } from 'statuses';
 
 var flag = 0;
 var SelectMAC;
@@ -75,26 +76,6 @@ function BlackList() {
     setGridApi(params.api);
   };
 
-  const onBtnExport = () => {
-    var params = getParams();
-    console.log(params)
-    if (params.suppressQuotes || params.columnSeparator) {
-      alert(
-        'NOTE: you are downloading a file with non-standard quotes or separators - it may not render correctly in Excel.'
-      );
-    }
-    gridApi.exportDataAsCsv(params);
-  };
-
-  function getParams() {
-    return {
-      suppressQuotes: getValue('#suppressQuotes'),
-      columnSeparator: getValue('#columnSeparator'),
-      customHeader: getValue('#customHeader'),
-      customFooter: getValue('#customFooter'),
-    };
-  }
-
   const onGridSizeChanged = (params) => {
     var gridWidth = document.getElementById('root').offsetWidth;
     var columnsToShow = [];
@@ -119,14 +100,14 @@ function BlackList() {
   const MaybeSelectedIcon = ({ selected, Icon }) =>
     selected ? <CheckCircleOutlineIcon /> : <Icon />;
 
-  const MaybeSelectedIcon2 = ({ selected, Icon }) =>
-    selected ? <CheckCircleOutlineIcon /> : <Icon />;
-
   /*   console.log("data.data2 = ", data.data); */
 
   const [posts, setPosts] = useState();
-  const [posts2, setPosts2] = useState();
   const [posts3, setPosts3] = useState();
+  const [blk, setblk] = useState();
+
+  let [count, setCount] = useState();
+  console.log("count start", count)
 
   useEffect(() => {
     axios
@@ -136,8 +117,8 @@ function BlackList() {
 
   useEffect(() => {
     axios
-      .get("/getuserinfo")
-      .then(({ data }) => setPosts2(data));
+      .get("/getblacklistinfo")
+      .then(({ data }) => setCount(data));
   }, []);
 
   useEffect(() => {
@@ -156,9 +137,6 @@ function BlackList() {
         ] */
   );
 
-  let [count, setCount] = useState();
-  console.log("count start", count)
-
   function lpad(str, padLen, padStr) {
     if (padStr.length > padLen) {
       console.log("오류 : 채우고자 하는 문자열이 요청 길이보다 큽니다");
@@ -175,6 +153,10 @@ function BlackList() {
 
   /* const onClick = index => () => { */
   /* const searchBtn = () => { */
+
+    let newArray = new Array();
+    let newArray2 = new Array();
+
   const blkGetBtn = () => {
     //Search 클릭 시 Post 전송
     console.log("searchposts = ", posts);
@@ -190,6 +172,14 @@ function BlackList() {
                 console.log("MM = ", list.CLIENTID.substring(4, 6));
                 console.log("DD = ", list.CLIENTID.substring(6, 8)); */
 
+        newArray.data = (count.data).filter(x => {
+          return x.MACADDR == list.MACADDR
+        });
+        newArray2.data = [...newArray2, ...newArray.data];
+
+        console.log("newArray2 = ", newArray2);
+        setblk(newArray2);
+
         axios.post('post', {
           command: 'GETBLSI',
           MacAddr: lpad(posts.data[index].MACADDR, 12, " "),
@@ -201,46 +191,27 @@ function BlackList() {
           .catch(function (error) {
             console.log("error = ", error);
           });
-        const getBreeds = async () => {
-          try {
-            axios.get('/getblacklistinfo').then(({ data }) => setCount(data));
-            return console.log("Async Count", count);
-          } catch (error) {
-            console.error(error);
-          }
-        };
 
-        var newCount = new Array();
-        var newArray = new Array();
-
-        const countBreeds = async () => {
-          const breeds = getBreeds();
-
-          console.log("breedsbreeds = ", breeds);
-
-          /*           posts.data.map((list, index1) => {
-                      console.log("map inside && index1", index1);
-                
-                      if (list.selected == true) {
-                        console.log("map inside && index1", index1);
-                
-                        newArray.data = (breeds.data).filter(x => {
-                          return x.MACADDR == posts.data[index1].MACADDR
-                        });
-          
-                        console.log("newArray", newArray);
-                        console.log("newCount = ", newCount);
-                        console.log("newCount.data.length = ", newCount.data.length);
-                      }
-                    }) */
-
-          setCount(breeds);
-          console.log("Breeds = ", count);
-        };
-        //getcountinfo 호출
-        console.log("count.item1 : ", count);
-        countBreeds();
-        console.log("count.item2 : ", count);
+        /*         const getBreeds = async () => {
+                  try {
+                    axios.get('/getblacklistinfo').then(({ data }) => setCount(data));
+                    return console.log("Async Count", count);
+                  } catch (error) {
+                    console.error(error);
+                  }
+                };
+        
+                const countBreeds = async () => {
+                  const breeds = getBreeds();
+        
+                  console.log("breedsbreeds = ", breeds);
+                  setCount(breeds);
+                  console.log("Breeds = ", count);
+                };
+                //getcountinfo 호출
+                console.log("count.item1 : ", count);
+                countBreeds();
+                console.log("count.item2 : ", count); */
       }
     })
     /* setTimeout(function(){
@@ -248,8 +219,8 @@ function BlackList() {
    }, 5000); */
   }
 
-  var newCount = new Array();
-  var blkpostend;
+  let newCount = new Array();
+  let blkpostend = 'a';
 
   const blkAddBtn = () => {
 
@@ -267,9 +238,9 @@ function BlackList() {
     let hour = today.getHours();  // 시간
     let min = today.getMinutes();
     let sec = today.getSeconds();
-    
-    console.log("year+month+date", year,month,date);
-    console.log("hour mon sec", hour,min,sec);
+
+    console.log("year+month+date", year, month, date);
+    console.log("hour mon sec", hour, min, sec);
 
     console.log("searchposts = ", posts);
     console.log("posts.data = ", posts.data);
@@ -288,9 +259,11 @@ function BlackList() {
           //return x.MACADDR == posts.data[index1].MACADDR && x.BL_CURRENCYNAME == LOC
         });
 
+        console.log("newArray0 = ", newArray);
+
         newCount.data = [...newArray.data, {
-          BL_DATE: String(year)+String(lpad(month, 2, 0))+String(lpad(date, 2, 0)),
-          BL_TIME: String(hour)+String(lpad(min, 2,0))+String(lpad(sec, 2, 0)),
+          BL_DATE: String(year) + String(lpad(month, 2, 0)) + String(lpad(date, 2, 0)),
+          BL_TIME: String(hour) + String(lpad(min, 2, 0)) + String(lpad(sec, 2, 0)),
           MACHINESN: posts.data[index1].MACHINESN,
           MACADDR: posts.data[index1].MACADDR,
           BL_CURRENCYNAME: LOC,
@@ -303,29 +276,29 @@ function BlackList() {
         console.log("newCount1 = ", newCount);
         console.log("newCount.data.length1 = ", newCount.data.length);
 
-        var blkpost;
-        var tmp = "";
-
-        newCount.data.map((list, index3) => {
-
-          blkpost = newCount.data[index3].BL_CURRENCYNAME + lpad(newCount.data[index3].BL_DENOM, 7, " ") + lpad(newCount.data[index3].BL_SNNUMBER, 20, " ")
-          tmp = tmp + blkpost;
-          blkpostend = tmp;
-        })
-        console.log("blkpostend = ", blkpostend);
-
-        axios.post('post', {
-          command: 'SETBLSN',
-          MacAddr: posts.data[index1].MACADDR,
-          msn: lpad(posts.data[index1].MACHINESN, 20, " "),
-          BlackList: lpad(newCount.data.length, 2, 0) + blkpostend,
-        })
-          .then(function (response) {
-            console.log("response = ", response);
-          })
-          .catch(function (error) {
-            console.log("error = ", error);
-          });
+        /*         var blkpost;
+                var tmp = "";
+        
+                newCount.data.map((list, index3) => {
+        
+                  blkpost = newCount.data[index3].BL_CURRENCYNAME + lpad(newCount.data[index3].BL_DENOM, 7, " ") + lpad(newCount.data[index3].BL_SNNUMBER, 20, " ")
+                  tmp = tmp + blkpost;
+                  blkpostend = tmp;
+                })
+                console.log("blkpostend = ", blkpostend);
+        
+                axios.post('post', {
+                  command: 'SETBLSN',
+                  MacAddr: posts.data[index1].MACADDR,
+                  msn: lpad(posts.data[index1].MACHINESN, 20, " "),
+                  BlackList: lpad(newCount.data.length, 2, 0) + blkpostend,
+                })
+                  .then(function (response) {
+                    console.log("response = ", response);
+                  })
+                  .catch(function (error) {
+                    console.log("error = ", error);
+                  }); */
 
         console.log("BlackList Add After setCount(newCount)", count);
       }
@@ -334,65 +307,55 @@ function BlackList() {
     console.log("Currency = " + LOC + " Denomination = " + DENO + " S/N = " + SN + "Blacklist = " + count);
     /* console.log("posts.data[0].selected = ", posts.data[1].selected); */
 
-    /* posts.data.map((list, index) => {
-      if (list.selected == true) {
-        console.log("index = ", index);
-        console.log("MAC = ", list.MACADDR);
-
-        const getBreeds = async () => {
-          try {
-              return axios.get('/getblacklistinfo').then(({ data }) => setCount(data));
-          } catch (error) {
-            console.error(error);
-          }
-        };
- 
-        const countBreeds = async () => {
-          const breeds = getBreeds();
-          console.log("breeds = ", breeds);
-          setCount(breeds);
-          console.log("setCount(breads) After = ", count);
-          breeds.map((list, index) => {
-            console.log("breeds.data = ",breeds)
-          })
-        };
- 
-        //getcountinfo 호출
-        console.log("count.item1 : ", count);
-        countBreeds();
-        console.log("count.item2 : ", count);
-      }
-    }) */
     /* setTimeout(function(){
       alert("Sup!"); 
    }, 5000); */
     /* blkGetBtn() */
     setCount(newCount);
+    setblk(newCount);
     console.log("newCount = ", newCount);
     console.log("setCount(newCount) = ", count)
     redrawAllRows();
     /* scrambleAndRefreshAll(); */
   }
 
-  const blkSaveBtn = () =>{
+  const blkSaveBtn = () => {
 
     posts.data.map((list, index1) => {
-      console.log("map inside && index1", index1);
+      console.log("count = ", count);
+
+      var blkpost;
+      var tmp = "";
 
       if (list.selected == true) {
-    axios.post('post', {
-      command: 'SETBLSN',
-      MacAddr: posts.data[index1].MACADDR,
-      msn: lpad(posts.data[index1].MACHINESN, 20, " "),
-      BlackList: lpad(newCount.data.length, 2, 0) + blkpostend,
+
+        count.data.map((list, index3) => {
+
+          blkpost = count.data[index3].BL_CURRENCYNAME + lpad(count.data[index3].BL_DENOM, 7, " ") + lpad(count.data[index3].BL_SNNUMBER, 20, " ")
+          tmp = tmp + blkpost;
+          blkpostend = tmp;
+        })
+        console.log("blkpostend = ", blkpostend);
+
+
+        axios.post('post', {
+          command: 'SETBLSN',
+          MacAddr: posts.data[index1].MACADDR,
+          msn: lpad(posts.data[index1].MACHINESN, 20, " "),
+          BlackList: lpad(count.data.length, 2, 0) + blkpostend,
+        })
+          .then(function (response) {
+            console.log("response = ", response);
+          })
+          .catch(function (error) {
+            console.log("error = ", error);
+          });
+      }
     })
-      .then(function (response) {
-        console.log("response = ", response);
-      })
-      .catch(function (error) {
-        console.log("error = ", error);
-      });
-    }})
+  }
+
+  const blkDelBtn = () => {
+
   }
 
   /* const onClickCurrency = index => () => {
@@ -513,7 +476,6 @@ function BlackList() {
     console.log("index = ", index)
     console.log("post.data.length = ", posts.data.length)
     console.log("post.data[index].MACHINEID : ", posts.data[index].MACHINEID);
-    console.log("post.data[index] : ", posts.data[index]);
 
     //flag로 selected 선택
     console.log("flag 변경 전 = ", flag);
@@ -521,21 +483,29 @@ function BlackList() {
     console.log("index flag 변경 전 = ", posts.data[index].selected);
 
     if (posts.data[index].selected == null && flag == 0) {
+      console.log("index flag first before = ", posts.data[index].selected);
       posts.data[index].selected = true;
       console.log("index flag = ", posts.data[index].selected);
       flag = 1;
+      console.log("=====flag if문 첫번째 들어옴=====");
 
       //선택된 MAC 다른곳에서 쓸까?
       SelectMAC = posts.data[index].MACADDR
       console.log("SelectMAC ", SelectMAC);
 
     } else if (posts.data[index].selected == true && flag == 1) {
+      console.log("index flag second before = ", posts.data[index].selected);
       posts.data[index].selected = false;
       console.log("index flag = ", posts.data[index].selected);
       flag = 0;
+      console.log("=====flag if문 두번째 들어옴=====")
+
     } else if (posts.data[index].selected == false && flag == 0) {
+      console.log("index flag third before = ", posts.data[index].selected);
       flag = 1;
       posts.data[index].selected = true;
+
+      console.log("=====flag if문 세번째 들어옴=====")
 
       //선택된 MAC 다른곳에서 쓸까?
       SelectMAC = posts.data[index].MACADDR
@@ -570,6 +540,7 @@ function BlackList() {
 
     //EE7 선택이 없을 시 기존에 저장된 값 초기화가 필요함
 
+    //Currency 설정 GET으로 이동 필요
     if (posts.data[index].selected == true) {
 
       jsonFileList = posts.data[index].CURRENCYKIND;
@@ -870,14 +841,14 @@ function BlackList() {
       </div>
       <div className="right" style={{ float: 'right', position: 'static', backgroundColor: 'red', width: '85%', height: '80%', minHeight: '400px' }}>
         <AgGridReact
-          rowData={count && count.data} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
-          onGridSizeChanged={onGridSizeChanged.bind(this)} frameworkComponents={frameworkComponents}>
+          rowData={blk && blk.data} rowSelection="multiple" pagination={true} paginationAutoPageSize={true} onGridReady={onGridReady}
+          onGridSizeChanged={onGridSizeChanged.bind(this)} frameworkComponents={frameworkComponents} defaultColDef={{ editable: true, sortable: true, flex: 1, filter: true, resizable: true }} colResizeDefault={'shift'}>
           <AgGridColumn headerName="DATE" field="BL_DATE" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn headerName="TIME" field="BL_TIME" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn headerName="MACHINESN" field="MACHINESN" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn headerName="Currency" field="BL_CURRENCYNAME" sortable={true} filter={true}></AgGridColumn>
           <AgGridColumn headerName="Deno." field="BL_DENOM" sortable={true} filter={true} ></AgGridColumn>
-          <AgGridColumn headerName="S/N" field="BL_SNNUMBER" sortable={true} filter={true} frameworkComponents={CustomDateComponent}></AgGridColumn>
+          <AgGridColumn headerName="S/N" field="BL_SNNUMBER" sortable={true} filter={true} ></AgGridColumn>
         </AgGridReact>
       </div>
 
@@ -886,7 +857,9 @@ function BlackList() {
           &nbsp;&nbsp;&nbsp;
         <Button variant="contained" color="primary" onClick={() => blkAddBtn()}>ADD</Button>
         &nbsp;&nbsp;&nbsp;
-        {/* <Button variant="contained" color="primary" onClick={() => blkSaveBtn()}>SAVE</Button> */}
+        <Button variant="contained" color="primary" onClick={() => blkSaveBtn()}>SAVE</Button>
+        &nbsp;&nbsp;&nbsp;
+        {/* <Button variant="contained" color="primary" onClick={() => blkDelBtn()}>SAVE</Button> */}
         <Footer />
       </div>
     </div>
@@ -913,63 +886,5 @@ var filterParams = {
     }
   },
 };
-
-function getValue(inputSelector) {
-  var text = document.querySelector(inputSelector).value;
-  switch (text) {
-    case 'string':
-      return (
-        'Here is a comma, and a some "quotes". You can see them using the\n' +
-        'api.getDataAsCsv() button but they will not be visible when the downloaded\n' +
-        'CSV file is opened in Excel because string content passed to\n' +
-        'customHeader and customFooter is not escaped.'
-      );
-    case 'array':
-      return [
-        [],
-        [
-          {
-            data: {
-              value: 'Here is a comma, and a some "quotes".',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value:
-                'They are visible when the downloaded CSV file is opened in Excel because custom content is properly escaped (provided that suppressQuotes is not set to true)',
-              type: 'String',
-            },
-          },
-        ],
-        [
-          {
-            data: {
-              value: 'this cell:',
-              type: 'String',
-            },
-            mergeAcross: 1,
-          },
-          {
-            data: {
-              value: 'is empty because the first cell has mergeAcross=1',
-              type: 'String',
-            },
-          },
-        ],
-        [],
-      ];
-    case 'none':
-      return;
-    case 'tab':
-      return '\t';
-    case 'true':
-      return true;
-    default:
-      return text;
-  }
-}
 
 export default BlackList
